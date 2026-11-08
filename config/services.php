@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'jobsuche' => [
+        'base_url' => env('JOBSUCHE_BASE_URL', 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service'),
+        'api_key' => env('JOBSUCHE_API_KEY', 'jobboerse-jobsuche'),
+        'timeout' => (int) env('JOBSUCHE_TIMEOUT', 10),
+        'connect_timeout' => (int) env('JOBSUCHE_CONNECT_TIMEOUT', 5),
+    ],
+
 ];
