@@ -75,6 +75,7 @@ Nexoma setzt ausschließlich technisch notwendige Cookies ein:
 
 - Sitzungs-Cookie (Name abhängig von der Konfiguration): hält Ihre Anmeldung und die gewählte Sprache aufrecht; Gültigkeit standardmäßig 120 Minuten Inaktivität.
 - „XSRF-TOKEN“: schützt Formulare und Anfragen vor Fälschung (Cross-Site-Request-Forgery); technisch notwendig.
+- „nexoma-theme“: speichert Ihre Wahl zwischen hellem und dunklem Erscheinungsbild für ein Jahr. Das Cookie wird nur gesetzt, wenn Sie den Schalter für den Dunkelmodus benutzen, und enthält keine personenbezogenen Daten.
 - „remember_web_…“: nur wenn Sie bei der Anmeldung „Angemeldet bleiben“ wählen; hält die Anmeldung länger aufrecht.
 
 Zur Sitzung werden auf dem Server Sitzungskennung, Benutzerkennung, IP-Adresse, Browserkennung (User-Agent) und Zeitpunkt der letzten Aktivität gespeichert. Außerdem werden zur Abwehr von Missbrauch (z. B. wiederholte Anmeldeversuche) kurzzeitig Zähler je IP-Adresse bzw. E-Mail-Adresse geführt.

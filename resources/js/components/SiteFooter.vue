@@ -11,10 +11,7 @@ const { t } = useTranslate();
         <div
             class="layout-container flex flex-col gap-3 py-8 text-sm text-muted"
         >
-            <p>
-                <span class="font-semibold text-ink">Nexoma</span>
-                · {{ t('footer.note') }}
-            </p>
+            <p class="font-semibold text-ink">Nexoma</p>
             <nav :aria-label="t('footer.legal')">
                 <ul class="flex flex-wrap gap-x-6">
                     <li>

@@ -47,6 +47,7 @@ test('details return the whitelist, the official url and the notice', function (
         ->where('refnr', MCP_TEST_REFNR)
         ->where('title', 'Pflegefachkraft (m/w/d)')
         ->where('officialUrl', 'https://www.arbeitsagentur.de/jobsuche/jobdetail/'.MCP_TEST_REFNR)
+        ->where('nexomaUrl', route('jobs.show', ['refnr' => MCP_TEST_REFNR]))
         ->where('applicationUrl', 'https://bewerbung.example/abc')
         ->where('applicationHost', 'bewerbung.example')
         ->where('workingTimes', ['fulltime'])

@@ -5,7 +5,8 @@
 
 /*
  * Nexoma Design-Tokens (Swiss Modernism + Editorial Design + dezente Pastelle).
- * Kein Dark Mode in Release 1.
+ * Hell und Dunkel: Die Farben unten gelten fuer Hell; unter :root[data-theme='dark'] werden dieselben
+ * Token fuer Dunkel ueberschrieben (siehe Block nach @theme). white ist im Dunkelmodus die Kartenflaeche.
  *
  * Farben (Kontrast nach WCAG 2.x, berechnet):
  *   ink    #1d2227  Text und primaere Flaechen; auf paper 15.4:1, auf allen Pastellen >= 12.4:1
@@ -57,10 +58,49 @@
 
     --shadow-*: initial;
     --shadow-card: 0 1px 2px rgb(29 34 39 / 0.06);
+    --shadow-header: 0 2px 12px rgb(29 34 39 / 0.1);
+}
+
+/* Dunkelmodus: ueberschreibt die Token; Kontrast >= 4.5:1 fuer Text, >= 3:1 fuer Rahmen und Fokus. */
+:root[data-theme='dark'] {
+    color-scheme: dark;
+    --color-white: #1a1e22;
+    --color-paper: #14171a;
+    --color-surface: #22272c;
+    --color-line: #2e353b;
+    --color-line-strong: #7b858f;
+    --color-ink: #ecebe7;
+    --color-ink-soft: #cfd2d4;
+    --color-muted: #a3abb3;
+    --color-link: #8db8ee;
+    --color-danger: #f08c8c;
+    --color-success: #7cd19b;
+    --color-focus: #8fb0ff;
+    --color-sage: #1f2c24;
+    --color-sky: #1b2a38;
+    --color-peach: #3a2a20;
+    --color-lilac: #2a2538;
+    --shadow-card: none;
+    --shadow-header: 0 2px 14px rgb(0 0 0 / 0.55);
+}
+
+:root[data-theme='light'] {
+    color-scheme: light;
 }
 
 @layer base {
+    /* Scrollbars sind ausgeblendet; Scrollen per Maus, Touch und Tastatur bleibt moeglich. */
+    * {
+        scrollbar-width: none;
+    }
+
+    *::-webkit-scrollbar {
+        display: none;
+    }
+
     html {
+        /* Platz fuer die feste Kopfzeile (4.5rem), damit Sprungziele und Fokus nicht darunter liegen. */
+        scroll-padding-top: 5.5rem;
         scroll-behavior: smooth;
     }
 
@@ -124,4 +164,31 @@
     &[aria-invalid='true'] {
         border-color: var(--color-danger);
     }
+}
+
+/*
+ * Ankunft eines Zustands (Suchergebnisse, Widerrufs-Rueckfrage): kurzes Einblenden mit
+ * leichter Bewegung. Der Standardzustand ist sichtbar; bei prefers-reduced-motion
+ * erscheint der Inhalt sofort (globale Regel in @layer base).
+ */
+@keyframes arrive {
+    from {
+        opacity: 0;
+        transform: translateY(0.375rem);
+    }
+}
+
+@utility motion-arrive {
+    animation: arrive 240ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes drawer {
+    from {
+        opacity: 0;
+        transform: translateX(1.5rem);
+    }
+}
+
+@utility motion-drawer {
+    animation: drawer 240ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
