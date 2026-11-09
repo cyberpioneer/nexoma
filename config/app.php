@@ -78,9 +78,28 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'de'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported UI Locales
+    |--------------------------------------------------------------------------
+    |
+    | Single source of truth for the languages of the user interface (code =>
+    | native name). It is independent of the language of the job postings.
+    |
+    */
+
+    'supported_locales' => [
+        'de' => 'Deutsch',
+        'en' => 'English',
+        'ru' => 'Русский',
+        'uk' => 'Українська',
+        'es' => 'Español',
+        'it' => 'Italiano',
+    ],
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
@@ -122,5 +141,21 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Vertrauenswuerdige Proxys und Hosts
+    |--------------------------------------------------------------------------
+    |
+    | TRUSTED_PROXIES: kommagetrennte IPs/CIDR-Bereiche; leer = kein Proxy-Vertrauen, `*` = alle (nur ausdruecklich).
+    | TRUSTED_HOSTS: kommagetrennte Hostnamen; leer = in Produktion der Host aus APP_URL.
+    |
+    */
+
+    'trusted_proxies' => env('TRUSTED_PROXIES', ''),
+
+    'trusted_hosts' => array_values(array_filter(
+        array_map(trim(...), explode(',', (string) env('TRUSTED_HOSTS', ''))),
+    )),
 
 ];

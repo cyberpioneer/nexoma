@@ -54,7 +54,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
+            'channels' => explode(',', (string) env('LOG_STACK', 'daily')),
             'ignore_exceptions' => false,
         ],
 
@@ -70,6 +70,15 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'max_files' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+        ],
+
+        // Audit-Trail der MCP-Zugriffe (nur IDs/Status, siehe App\Mcp\McpAuditLogger).
+        'mcp_audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/mcp-audit.log'),
+            'level' => 'info',
+            'days' => (int) env('MCP_AUDIT_LOG_DAYS', 90),
             'replace_placeholders' => true,
         ],
 

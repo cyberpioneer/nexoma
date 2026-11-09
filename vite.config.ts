@@ -12,8 +12,19 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.ts'],
             refresh: true,
             fonts: [
-                bunny('Instrument Sans', {
+                bunny('Inter', {
+                    alias: 'sans',
+                    variable: '--font-inter',
                     weights: [400, 500, 600],
+                    preload: false,
+                    subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext'],
+                }),
+                bunny('Source Serif 4', {
+                    alias: 'serif',
+                    variable: '--font-source-serif',
+                    weights: [400, 600],
+                    preload: false,
+                    subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext'],
                 }),
             ],
         }),
@@ -69,6 +80,7 @@ export default defineConfig({
         ignorePatterns: [
             '.github/**',
             'composer.json',
+            'PROJECT.md',
             'resources/js/components/ui/*',
             'resources/views/mail/*',
         ],
