@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -20,8 +21,11 @@ class AppServiceProvider extends ServiceProvider
     /** Anfragen pro Minute und Benutzer (sonst IP) fuer Stellendetails. */
     public const JOBDETAILS_ATTEMPTS_PER_MINUTE = 60;
 
-    /** Versuche pro Minute und E-Mail+IP fuer Login/Registrierung. */
+    /** Versuche pro Minute und E-Mail+IP fuer Login/Registrierung/Reset. */
     public const AUTH_ATTEMPTS_PER_MINUTE = 5;
+
+    /** Versuche pro Minute und IP (unabhaengig von der E-Mail) fuer Login/Registrierung/Reset. */
+    public const AUTH_IP_ATTEMPTS_PER_MINUTE = 20;
 
     /** Anfragen pro Minute und Benutzer (sonst IP) fuer MCP. */
     public const MCP_ATTEMPTS_PER_MINUTE = 60;
@@ -40,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureUrlGeneration();
         $this->configureRateLimiting();
     }
 
@@ -66,6 +71,19 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Erzwingt in Produktion APP_URL und HTTPS fuer generierte URLs (Mail-Links), unabhaengig vom Host-Header.
+     */
+    protected function configureUrlGeneration(): void
+    {
+        if (! app()->isProduction()) {
+            return;
+        }
+
+        URL::forceRootUrl(config('app.url'));
+        URL::forceScheme('https');
+    }
+
+    /**
      * Definiert die benannten Rate Limiter (Nutzung per Middleware `throttle:<name>`).
      */
     protected function configureRateLimiting(): void
@@ -76,12 +94,16 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('jobdetails', fn (Request $request): Limit => Limit::perMinute(self::JOBDETAILS_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));
 
-        RateLimiter::for('auth', function (Request $request): Limit {
+        RateLimiter::for('auth', function (Request $request): array {
             $email = $request->input('email');
-            $email = is_string($email) ? Str::lower($email) : '';
+            $email = is_string($email) ? Str::lower(mb_substr($email, 0, 255)) : '';
 
-            return Limit::perMinute(self::AUTH_ATTEMPTS_PER_MINUTE)
-                ->by(Str::transliterate($email.'|'.$request->ip()));
+            return [
+                Limit::perMinute(self::AUTH_ATTEMPTS_PER_MINUTE)
+                    ->by('email:'.Str::transliterate($email.'|'.$request->ip())),
+                Limit::perMinute(self::AUTH_IP_ATTEMPTS_PER_MINUTE)
+                    ->by('ip:'.$request->ip()),
+            ];
         });
 
         RateLimiter::for('mcp', fn (Request $request): Limit => Limit::perMinute(self::MCP_ATTEMPTS_PER_MINUTE)

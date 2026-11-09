@@ -18,6 +18,10 @@ pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature');
 
+// Teil A (Backend): Die Vue-Seiten entstehen erst in Teil B. Nach deren Abschluss diese Zeile entfernen,
+// damit Inertia die Existenz der Komponenten wieder prueft.
+pest()->beforeEach(fn () => config(['inertia.testing.ensure_pages_exist' => false]))->in('Feature/Auth');
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
