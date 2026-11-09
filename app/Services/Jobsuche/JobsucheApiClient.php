@@ -213,13 +213,18 @@ class JobsucheApiClient
 
     /**
      * Zaehlt einen ausgehenden Aufruf gegen das globale Minutenkontingent; false, wenn es ausgeschoepft ist.
+     * Ein Limit von 0 schaltet das globale Kontingent ab (Entscheidung des Nutzers); negative Werte fallen auf den Standard zurueck.
      * Fehler des Cache-Speichers werden vom Aufrufer wie ein Anfragefehler behandelt (null).
      */
     private function reserveGlobalQuota(): bool
     {
         $limit = (int) config('services.jobsuche.global_limit_per_minute', self::DEFAULT_GLOBAL_LIMIT_PER_MINUTE);
 
-        if ($limit < 1) {
+        if ($limit === 0) {
+            return true;
+        }
+
+        if ($limit < 0) {
             $limit = self::DEFAULT_GLOBAL_LIMIT_PER_MINUTE;
         }
 

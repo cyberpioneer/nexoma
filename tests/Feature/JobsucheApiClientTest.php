@@ -374,11 +374,20 @@ test('global quota is shared across calls and recovers after the window', functi
     Http::assertSentCount(2);
 });
 
-test('an invalid global limit falls back to the default instead of disabling or blocking', function () {
-    config()->set('services.jobsuche.global_limit_per_minute', 0);
+test('a negative global limit falls back to the default instead of blocking', function () {
+    config()->set('services.jobsuche.global_limit_per_minute', -5);
     Http::fake([SEARCH_URL => Http::response(searchPayload())]);
 
     expect((new JobsucheApiClient)->search('a'))->not->toBeNull();
+});
+
+test('a global limit of zero disables the global quota', function () {
+    config()->set('services.jobsuche.global_limit_per_minute', 0);
+    Http::fake([SEARCH_URL => Http::response(searchPayload())]);
+
+    foreach (range(1, 700) as $page) {
+        expect((new JobsucheApiClient)->search('a', page: $page))->not->toBeNull();
+    }
 });
 
 test('a failing cache store makes the client return null instead of throwing', function () {

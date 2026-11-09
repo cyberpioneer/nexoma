@@ -40,7 +40,7 @@ return [
         'api_key' => env('JOBSUCHE_API_KEY', 'jobboerse-jobsuche'),
         'timeout' => (int) env('JOBSUCHE_TIMEOUT', 10),
         'connect_timeout' => (int) env('JOBSUCHE_CONNECT_TIMEOUT', 5),
-        'global_limit_per_minute' => (int) env('JOBSUCHE_GLOBAL_LIMIT_PER_MINUTE', 600),
+        'global_limit_per_minute' => (int) env('JOBSUCHE_GLOBAL_LIMIT_PER_MINUTE', 0),
     ],
 
 ];
