@@ -2,15 +2,19 @@
 
 use Inertia\Testing\AssertableInertia as Assert;
 
-test('de and en define the same ui keys', function () {
-    $de = require lang_path('de/ui.php');
-    $en = require lang_path('en/ui.php');
+const SUPPORTED_LOCALES = ['de', 'en', 'ru', 'uk', 'es', 'it'];
 
-    expect(array_keys($de))->toEqualCanonicalizing(array_keys($en))
-        ->and(array_keys($de))->toContain('auth.login.title', 'auth.verify.link_sent', 'nav.logout', 'dashboard.title', 'common.processing');
+test('all supported locales define the same ui keys', function () {
+    $de = require lang_path('de/ui.php');
+
+    foreach (SUPPORTED_LOCALES as $locale) {
+        expect(array_keys(require lang_path("{$locale}/ui.php")))->toEqualCanonicalizing(array_keys($de), $locale);
+    }
+
+    expect(array_keys($de))->toContain('auth.login.title', 'auth.verify.link_sent', 'nav.logout', 'dashboard.title', 'common.processing');
 });
 
-test('de and en define the framework auth and password keys', function (string $locale) {
+test('all supported locales define the framework auth and password keys', function (string $locale) {
     foreach (['failed', 'password', 'throttle'] as $key) {
         expect(trans("auth.{$key}", [], $locale))->not->toBe("auth.{$key}");
     }
@@ -18,20 +22,18 @@ test('de and en define the framework auth and password keys', function (string $
     foreach (['reset', 'sent', 'throttled', 'token', 'user'] as $key) {
         expect(trans("passwords.{$key}", [], $locale))->not->toBe("passwords.{$key}");
     }
-})->with(['de', 'en']);
+})->with(SUPPORTED_LOCALES);
 
 test('neutral messages do not reveal whether an account exists', function (string $locale) {
     expect(trans('passwords.throttled', [], $locale))->toBe(trans('passwords.sent', [], $locale))
         ->and(trans('passwords.user', [], $locale))->toBe(trans('passwords.token', [], $locale));
-})->with(['de', 'en']);
+})->with(SUPPORTED_LOCALES);
 
-test('translations are shared per locale and differ between de and en', function () {
+test('translations are shared per locale and differ between the locales', function () {
     $titles = [];
 
-    foreach (['de', 'en'] as $locale) {
-        app()->setLocale($locale);
-
-        $this->get(route('login'))->assertInertia(function (Assert $page) use ($locale, &$titles) {
+    foreach (SUPPORTED_LOCALES as $locale) {
+        $this->withSession(['locale' => $locale])->get(route('login'))->assertInertia(function (Assert $page) use ($locale, &$titles) {
             $page->where('locale', $locale)
                 ->where('translations', function ($translations) use (&$titles, $locale): bool {
                     $titles[$locale] = collect($translations)->get('auth.login.title');
@@ -41,10 +43,10 @@ test('translations are shared per locale and differ between de and en', function
         });
     }
 
-    expect($titles['de'])->not->toBe($titles['en']);
+    expect(array_unique($titles))->toHaveCount(count(SUPPORTED_LOCALES));
 });
 
-test('every translation key used in the vue files exists in de and en', function () {
+test('every translation key used in the vue files exists in every supported locale', function () {
     $files = array_merge(
         glob(resource_path('js/{pages,layouts,components}/{,auth/}*.vue'), GLOB_BRACE) ?: [],
     );
@@ -55,10 +57,11 @@ test('every translation key used in the vue files exists in de and en', function
         $used = [...$used, ...$matches[1]];
     }
 
-    $de = array_keys(require lang_path('de/ui.php'));
-    $en = array_keys(require lang_path('en/ui.php'));
+    expect(array_unique($used))->not->toBeEmpty();
 
-    expect(array_unique($used))->not->toBeEmpty()
-        ->and(array_diff($used, $de))->toBeEmpty()
-        ->and(array_diff($used, $en))->toBeEmpty();
+    foreach (SUPPORTED_LOCALES as $locale) {
+        $defined = array_keys(require lang_path("{$locale}/ui.php"));
+
+        expect(array_diff($used, $defined))->toBeEmpty($locale);
+    }
 });

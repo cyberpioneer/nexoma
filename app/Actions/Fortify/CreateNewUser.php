@@ -37,6 +37,8 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            // Nur die von der Middleware aufgeloeste Sprache, nie die Eingabe.
+            'locale' => app()->getLocale(),
         ]);
     }
 }

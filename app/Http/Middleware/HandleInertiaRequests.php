@@ -44,8 +44,25 @@ class HandleInertiaRequests extends Middleware
             ],
             'status' => $request->session()->get('status'),
             'locale' => app()->getLocale(),
+            'availableLocales' => $this->availableLocales(),
             'translations' => fn () => trans('ui'),
         ];
+    }
+
+    /**
+     * Auswahl fuer den Sprachumschalter: Code und Eigenbezeichnung der Sprache.
+     *
+     * @return list<array{code: string, name: string}>
+     */
+    private function availableLocales(): array
+    {
+        $locales = [];
+
+        foreach (config('app.supported_locales') as $code => $name) {
+            $locales[] = ['code' => $code, 'name' => $name];
+        }
+
+        return $locales;
     }
 
     /**
