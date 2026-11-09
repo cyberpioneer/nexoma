@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -118,11 +119,32 @@ test('the access matrix holds for every protected get route without parameters',
     expect($uris)->not->toBeEmpty();
 
     foreach ($uris as $uri) {
+        // actingAs() aus dem vorigen Durchlauf wirkt sonst auf den Gast-Aufruf.
+        auth()->forgetGuards();
+
         $this->get($uri)->assertRedirect(route('login'));
         $this->actingAs(User::factory()->unverified()->create())->get($uri)->assertRedirect(route('verification.notice'));
         $this->actingAs(User::factory()->unverified()->create())->getJson($uri)->assertForbidden();
         $this->actingAs(User::factory()->create())->get($uri)->assertOk();
     }
+});
+
+test('the access matrix holds for the job details route with a fixed reference number', function () {
+    config()->set('services.jobsuche.base_url', 'https://jobsuche.test');
+    config()->set('inertia.ssr.enabled', false);
+    Http::preventStrayRequests();
+    Http::fake(['https://jobsuche.test/pc/v4/jobdetails/*' => Http::response(['referenznummer' => '10001-1234567890-S', 'stellenangebotsTitel' => 'Pflege'])]);
+
+    $url = route('jobs.show', '10001-1234567890-S');
+
+    $this->get($url)->assertRedirect(route('login'));
+    $this->getJson($url)->assertUnauthorized();
+    $this->actingAs(User::factory()->unverified()->create())->get($url)->assertRedirect(route('verification.notice'));
+    $this->actingAs(User::factory()->unverified()->create())->getJson($url)->assertForbidden();
+    Http::assertNothingSent();
+
+    $this->actingAs(User::factory()->create())->get($url)->assertOk();
+    Http::assertSentCount(1);
 });
 
 test('trusted hosts and proxies are intentionally not configured yet', function () {

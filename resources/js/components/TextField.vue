@@ -7,8 +7,15 @@ withDefaults(
         autocomplete?: string;
         error?: string;
         value?: string;
+        required?: boolean;
     }>(),
-    { type: 'text', autocomplete: 'off', error: undefined, value: undefined },
+    {
+        type: 'text',
+        autocomplete: 'off',
+        error: undefined,
+        value: undefined,
+        required: true,
+    },
 );
 </script>
 
@@ -23,7 +30,7 @@ withDefaults(
             :autocomplete="autocomplete"
             :aria-invalid="error ? 'true' : undefined"
             :aria-describedby="error ? `${name}-error` : undefined"
-            required
+            :required="required"
             class="field-control w-full"
         />
         <p
