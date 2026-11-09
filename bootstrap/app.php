@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Middleware\EnforceOAuthAuthorizationRequest;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocale;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Sessions werden nach Passwortaenderung/-reset ungueltig (Abgleich des Passwort-Hashs je Anfrage).
         $middleware->authenticateSessions();
 
+        // Die OAuth-Pruefung (PKCE S256) muss vor `auth` laufen, damit auch Gaeste vor dem Login abgewiesen werden.
+        $middleware->prependToPriorityList(AuthenticatesRequests::class, EnforceOAuthAuthorizationRequest::class);
+
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('dashboard'));
 
@@ -30,7 +35,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Maschinenclients (MCP/OAuth) erhalten JSON statt Weiterleitungen/HTML. `oauth/authorize` ist
+        // bewusst ausgenommen: das ist die Browserseite mit Login-Weiterleitung.
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
+            fn (Request $request) => $request->is('api/*', 'mcp', 'mcp/*', '.well-known/*', 'oauth/token', 'oauth/register')
+                || $request->expectsJson(),
         );
     })->create();

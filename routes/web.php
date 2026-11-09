@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\ConnectedAppController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Middleware\EnforceOAuthAuthorizationRequest;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware\EncryptHistory;
+use Laravel\Passport\Http\Controllers\ApproveAuthorizationController;
+use Laravel\Passport\Http\Controllers\AuthorizationController;
+use Laravel\Passport\Http\Controllers\DenyAuthorizationController;
 
 Route::inertia('/', 'Welcome')->name('home');
 
@@ -20,4 +25,17 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
         ->where('refnr', '[A-Za-z0-9._-]{1,100}')
         ->middleware('throttle:jobdetails')
         ->name('jobs.show');
+
+    Route::get('/connected-apps', [ConnectedAppController::class, 'index'])->middleware('throttle:connected-apps')->name('connected-apps.index');
+    Route::delete('/connected-apps/{clientId}', [ConnectedAppController::class, 'destroy'])
+        ->whereUuid('clientId')
+        ->middleware('throttle:connected-apps')
+        ->name('connected-apps.destroy');
+
+    // OAuth2-Consent (Passport, bewusst kopiert statt Standardrouten: verified ist Pflicht, Routennamen
+    // bleiben erhalten, weil laravel/mcp sie fuer Metadaten und Framing-Header referenziert).
+    // Der Token-Endpunkt liegt in routes/ai.php (ohne Session/CSRF).
+    Route::get('/oauth/authorize', [AuthorizationController::class, 'authorize'])->middleware(EnforceOAuthAuthorizationRequest::class)->name('passport.authorizations.authorize');
+    Route::post('/oauth/authorize', [ApproveAuthorizationController::class, 'approve'])->middleware('throttle:oauth-consent')->name('passport.authorizations.approve');
+    Route::delete('/oauth/authorize', [DenyAuthorizationController::class, 'deny'])->middleware('throttle:oauth-consent')->name('passport.authorizations.deny');
 });

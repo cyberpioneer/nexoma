@@ -71,6 +71,10 @@ function routesRequiringAuthAndVerified(): Collection
         'logout', 'verification.notice', 'verification.send', 'verification.verify',
         'password.confirm', 'password.confirm.store', 'password.confirmation',
         'storage.local', 'storage.local.upload', 'boost.browser-logs',
+        // OAuth2/MCP-Discovery, Registrierung und Token-Endpunkt: bewusst oeffentlich (exakte Liste siehe unten).
+        'mcp.oauth.authorization-server', 'mcp.oauth.authorization-server.nested',
+        'mcp.oauth.protected-resource', 'mcp.oauth.protected-resource.nested',
+        'mcp.oauth.register', 'passport.token',
     ];
     $publicUris = ['up', '_inertia/devtools/entries', '_inertia/devtools/entries/{id}'];
 
@@ -111,9 +115,52 @@ test('the inventory check detects a newly registered unprotected route', functio
         ->toBe(['GET|HEAD _test/unprotected']);
 });
 
+test('the oauth and mcp route families match the exact allowlist', function () {
+    $actual = collect(Route::getRoutes()->getRoutes())
+        ->filter(fn (LaravelRoute $route): bool => str_starts_with($route->uri(), 'oauth/')
+            || str_starts_with($route->uri(), '.well-known/')
+            || $route->uri() === 'mcp' || str_starts_with($route->uri(), 'mcp/'))
+        ->map(fn (LaravelRoute $route): string => implode('|', $route->methods()).' '.$route->uri())
+        ->sort()->values()->all();
+
+    $expected = [
+        'DELETE oauth/authorize',
+        'GET|HEAD .well-known/oauth-authorization-server',
+        'GET|HEAD .well-known/oauth-authorization-server/{path}',
+        'GET|HEAD .well-known/oauth-protected-resource',
+        'GET|HEAD .well-known/oauth-protected-resource/{path}',
+        'GET|HEAD oauth/authorize',
+        'POST oauth/authorize',
+        'POST oauth/register',
+        'POST oauth/token',
+    ];
+    sort($expected);
+
+    expect($actual)->toBe($expected);
+});
+
+test('the consent routes require auth and verified while discovery, registration and token routes are public by design', function () {
+    foreach (['passport.authorizations.authorize', 'passport.authorizations.approve', 'passport.authorizations.deny'] as $name) {
+        expect(Route::getRoutes()->getByName($name)->gatherMiddleware())->toContain('auth', 'verified');
+    }
+
+    foreach (['passport.token', 'mcp.oauth.register'] as $name) {
+        expect(Route::getRoutes()->getByName($name)->gatherMiddleware())->not->toContain('web')
+            ->and(collect(Route::getRoutes()->getByName($name)->gatherMiddleware())->first(fn ($m) => str_starts_with((string) $m, 'throttle:')))->not->toBeNull();
+    }
+});
+
+test('the connected apps routes sit in the auth and verified group and are throttled', function () {
+    foreach (['connected-apps.index', 'connected-apps.destroy'] as $name) {
+        expect(Route::getRoutes()->getByName($name)->gatherMiddleware())->toContain('auth', 'verified', 'throttle:connected-apps');
+    }
+});
+
 test('the access matrix holds for every protected get route without parameters', function () {
     $uris = routesRequiringAuthAndVerified()
         ->filter(fn (LaravelRoute $route) => in_array('GET', $route->methods(), true) && ! str_contains($route->uri(), '{'))
+        // Die OAuth-Consent-Seite braucht gueltige OAuth-Parameter und wird in OAuth/AuthorizationCodeFlowTest geprueft.
+        ->reject(fn (LaravelRoute $route) => $route->uri() === 'oauth/authorize')
         ->map(fn (LaravelRoute $route) => '/'.$route->uri());
 
     expect($uris)->not->toBeEmpty();
