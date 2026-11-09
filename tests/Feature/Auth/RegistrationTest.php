@@ -92,7 +92,6 @@ test('the failed registration response does not leak the password', function () 
         ->post(route('register.store'), registrationPayload(['name' => '']));
 
     $response->assertOk();
-    expect($response->getContent())
-        ->not->toContain('secret-password-1')
-        ->not->toContain('"password"');
+    $response->assertInertia(fn (Assert $page) => $page->component('auth/Register')->missing('password'));
+    expect($response->getContent())->not->toContain('secret-password-1');
 });

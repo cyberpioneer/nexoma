@@ -22,7 +22,7 @@ test('verified users can open the dashboard', function () {
     $this->actingAs(User::factory()->create())
         ->get(route('dashboard'))
         ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page->component('Dashboard', false));
+        ->assertInertia(fn (Assert $page) => $page->component('Dashboard'));
 });
 
 test('guest and auth middleware are assigned as intended to the fortify routes', function (string $name, string $expected) {

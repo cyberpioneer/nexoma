@@ -43,3 +43,22 @@ test('translations are shared per locale and differ between de and en', function
 
     expect($titles['de'])->not->toBe($titles['en']);
 });
+
+test('every translation key used in the vue files exists in de and en', function () {
+    $files = array_merge(
+        glob(resource_path('js/{pages,layouts,components}/{,auth/}*.vue'), GLOB_BRACE) ?: [],
+    );
+    $used = [];
+
+    foreach ($files as $file) {
+        preg_match_all("/\bt\('([A-Za-z0-9_.-]+)'/", (string) file_get_contents($file), $matches);
+        $used = [...$used, ...$matches[1]];
+    }
+
+    $de = array_keys(require lang_path('de/ui.php'));
+    $en = array_keys(require lang_path('en/ui.php'));
+
+    expect(array_unique($used))->not->toBeEmpty()
+        ->and(array_diff($used, $de))->toBeEmpty()
+        ->and(array_diff($used, $en))->toBeEmpty();
+});
