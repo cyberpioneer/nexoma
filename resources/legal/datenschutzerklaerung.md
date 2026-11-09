@@ -10,7 +10,7 @@ NOMNIX // Slawa Mironow
 Dr.-Schier-Straße 21
 97980 Bad Mergentheim
 Deutschland
-E-Mail: kontakt@nomnix.net
+E-Mail: service@nomnix.net
 
 ## 2. Rechtsgrundlagen
 

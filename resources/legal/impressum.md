@@ -5,14 +5,13 @@ Angaben gemäß § 5 des Digitale-Dienste-Gesetzes (DDG)
 ## Anbieter
 
 NOMNIX // Slawa Mironow
-Freiberufler
 Dr.-Schier-Straße 21
 97980 Bad Mergentheim
 Deutschland
 
 ## Kontakt
 
-E-Mail: kontakt@nomnix.net
+E-Mail: service@nomnix.net
 
 <!--
 Hinweise zum Entwurf (vor Veröffentlichung entfernen; dieser Kommentar wird nie ausgeliefert):
