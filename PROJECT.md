@@ -1,4 +1,4 @@
-# Nexora – PROJECT.md
+# Nexoma – PROJECT.md
 
 ## 1. Projektziel
 
@@ -42,7 +42,7 @@ Die Sprache der Benutzeroberfläche ist unabhängig von der Sprache der Stellena
 
 | Bereich | Technologie |
 |---|---|
-| Projektname | Nexora |
+| Projektname | Nexoma |
 | Backend | Laravel 13 |
 | Frontend | Vue.js 3 |
 | Laravel–Frontend-Integration | Inertia.js |
@@ -241,7 +241,7 @@ Wiederholte Aufrufe desselben Stellenangebots sollen dadurch unnötige API-Anfra
 
 ### 10.1 Designrichtung
 
-Das visuelle Erscheinungsbild von Nexora basiert auf einer Kombination aus:
+Das visuelle Erscheinungsbild von Nexoma basiert auf einer Kombination aus:
 
 - Swiss Modernism
 - Editorial Design
@@ -263,6 +263,6 @@ Die Benutzeroberfläche soll modern, hochwertig, klar strukturiert und professio
 
 ### 10.3 Zielsetzung
 
-Das Design soll Nexora von klassischen Jobportalen unterscheiden und sowohl für menschliche Benutzer als auch für KI-gestützte Arbeitsabläufe eine klare, verständliche und effiziente Nutzung ermöglichen.
+Das Design soll Nexoma von klassischen Jobportalen unterscheiden und sowohl für menschliche Benutzer als auch für KI-gestützte Arbeitsabläufe eine klare, verständliche und effiziente Nutzung ermöglichen.
 
 Diese Punkte dürfen nicht ohne Prüfung als bereits entschieden behandelt werden.
