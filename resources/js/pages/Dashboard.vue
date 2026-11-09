@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { Form, Head, usePage } from '@inertiajs/vue3';
-import Button from '@/components/Button.vue';
-import Card from '@/components/Card.vue';
+import { Head, usePage } from '@inertiajs/vue3';
+import JobSearchForm from '@/components/JobSearchForm.vue';
 import PageHeader from '@/components/PageHeader.vue';
-import TextField from '@/components/TextField.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTranslate } from '@/lib/translate';
-import { index } from '@/routes/jobs';
 
 defineOptions({ layout: AppLayout });
 
@@ -25,20 +22,11 @@ const page = usePage();
                 })
             "
         />
-        <Card tone="sky" class="max-w-xl">
-            <h2 class="mb-4 text-2xl">{{ t('dashboard.search.title') }}</h2>
-            <Form
-                v-bind="index.form()"
-                class="flex flex-col gap-5"
-                #default="{ processing }"
-            >
-                <TextField name="was" :label="t('jobs.field.was')" />
-                <div>
-                    <Button type="submit" :processing="processing">
-                        {{ t('jobs.search') }}
-                    </Button>
-                </div>
-            </Form>
-        </Card>
+        <section aria-labelledby="dashboard-search">
+            <h2 id="dashboard-search" class="mb-4 text-2xl">
+                {{ t('dashboard.search.title') }}
+            </h2>
+            <JobSearchForm />
+        </section>
     </div>
 </template>
