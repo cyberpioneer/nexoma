@@ -1,6 +1,6 @@
 <?php
 
-use App\Mcp\Servers\NexoraServer;
+use App\Mcp\Servers\NexomaServer;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Support\Facades\Route;
 use Laravel\Mcp\Facades\Mcp;
@@ -21,7 +21,7 @@ test('the only http mcp server is the production server at /mcp', function () {
 test('the route file registers only the production server and never boost', function () {
     $routes = (string) file_get_contents(base_path('routes/ai.php'));
 
-    expect($routes)->toContain('NexoraServer::class')
+    expect($routes)->toContain('NexomaServer::class')
         ->and(strtolower($routes))->not->toContain('boost');
 });
 
@@ -40,6 +40,6 @@ test('the production server exposes no boost tools and no application code refer
 });
 
 test('the production server class is not the boost server', function () {
-    expect(NexoraServer::class)->toStartWith('App\\Mcp\\')
-        ->and(is_subclass_of(NexoraServer::class, Server::class))->toBeTrue();
+    expect(NexomaServer::class)->toStartWith('App\\Mcp\\')
+        ->and(is_subclass_of(NexomaServer::class, Server::class))->toBeTrue();
 });

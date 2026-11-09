@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\URL;
  */
 function useForcedProductionUrl(): void
 {
-    config(['app.url' => 'https://nexora.example', 'mcp.authorization_server' => 'https://nexora.example']);
-    URL::forceRootUrl('https://nexora.example');
+    config(['app.url' => 'https://nexoma.example', 'mcp.authorization_server' => 'https://nexoma.example']);
+    URL::forceRootUrl('https://nexoma.example');
     URL::forceScheme('https');
 }
 
@@ -19,10 +19,10 @@ test('the authorization server metadata is complete and independent of the host 
     $this->getJson('http://evil.test/.well-known/oauth-authorization-server')
         ->assertOk()
         ->assertExactJson([
-            'issuer' => 'https://nexora.example',
-            'authorization_endpoint' => 'https://nexora.example/oauth/authorize',
-            'token_endpoint' => 'https://nexora.example/oauth/token',
-            'registration_endpoint' => 'https://nexora.example/oauth/register',
+            'issuer' => 'https://nexoma.example',
+            'authorization_endpoint' => 'https://nexoma.example/oauth/authorize',
+            'token_endpoint' => 'https://nexoma.example/oauth/token',
+            'registration_endpoint' => 'https://nexoma.example/oauth/register',
             'response_types_supported' => ['code'],
             'code_challenge_methods_supported' => ['S256'],
             'scopes_supported' => ['mcp:use'],
@@ -45,20 +45,20 @@ test('the protected resource metadata points at the mcp resource and the issuer'
     $this->getJson('http://evil.test/.well-known/oauth-protected-resource/mcp')
         ->assertOk()
         ->assertExactJson([
-            'resource' => 'https://nexora.example/mcp',
-            'authorization_servers' => ['https://nexora.example'],
+            'resource' => 'https://nexoma.example/mcp',
+            'authorization_servers' => ['https://nexoma.example'],
             'scopes_supported' => ['mcp:use'],
         ]);
 
-    $this->getJson('/.well-known/oauth-protected-resource')->assertOk()->assertJsonPath('authorization_servers', ['https://nexora.example']);
+    $this->getJson('/.well-known/oauth-protected-resource')->assertOk()->assertJsonPath('authorization_servers', ['https://nexoma.example']);
 });
 
 test('the issuer comes from the configured app url and not from the request host', function () {
-    config(['mcp.authorization_server' => 'https://nexora.example']);
+    config(['mcp.authorization_server' => 'https://nexoma.example']);
 
     $this->getJson('http://evil.test/.well-known/oauth-authorization-server')
         ->assertOk()
-        ->assertJsonPath('issuer', 'https://nexora.example');
+        ->assertJsonPath('issuer', 'https://nexoma.example');
 });
 
 test('the registration endpoint is advertised', function () {

@@ -1,7 +1,7 @@
 <?php
 
-use App\Mcp\Servers\NexoraServer;
-use App\Mcp\Tools\NexoraTool;
+use App\Mcp\Servers\NexomaServer;
+use App\Mcp\Tools\NexomaTool;
 
 test('tools/list shows exactly the three read-only tools with title and description', function () {
     actingAsMcpUser();
@@ -34,14 +34,14 @@ test('the job_search schema has the specified bounds', function () {
 });
 
 test('every tool of the server extends the audited base class and the server has no resources or prompts', function () {
-    $reflection = new ReflectionClass(NexoraServer::class);
+    $reflection = new ReflectionClass(NexomaServer::class);
     $defaults = $reflection->getDefaultProperties();
     $tools = $defaults['tools'];
 
     expect($tools)->toHaveCount(3);
 
     foreach ($tools as $tool) {
-        expect(is_subclass_of($tool, NexoraTool::class))->toBeTrue()
+        expect(is_subclass_of($tool, NexomaTool::class))->toBeTrue()
             ->and((new ReflectionMethod($tool, 'handle'))->isFinal())->toBeTrue();
     }
 

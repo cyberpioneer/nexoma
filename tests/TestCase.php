@@ -37,7 +37,7 @@ abstract class TestCase extends BaseTestCase
             return self::$passportKeyDirectory;
         }
 
-        $directory = sys_get_temp_dir().'/nexora-passport-test-'.bin2hex(random_bytes(8));
+        $directory = sys_get_temp_dir().'/nexoma-passport-test-'.bin2hex(random_bytes(8));
         mkdir($directory, 0700);
 
         $key = openssl_pkey_new(['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA]);

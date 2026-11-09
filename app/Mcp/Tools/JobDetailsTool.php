@@ -26,7 +26,7 @@ use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 #[IsIdempotent(true)]
 #[IsDestructive(false)]
 #[IsOpenWorld(true)]
-class JobDetailsTool extends NexoraTool
+class JobDetailsTool extends NexomaTool
 {
     public const MAX_DESCRIPTION_LENGTH = 8000;
 

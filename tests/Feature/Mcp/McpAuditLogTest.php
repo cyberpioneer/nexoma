@@ -1,7 +1,7 @@
 <?php
 
 use App\Mcp\McpAuditLogger;
-use App\Mcp\Servers\NexoraServer;
+use App\Mcp\Servers\NexomaServer;
 use App\Mcp\Tools\JobDetailsTool;
 use App\Mcp\Tools\JobSearchOptionsTool;
 use App\Mcp\Tools\JobSearchTool;
@@ -82,7 +82,7 @@ test('every tool and status combination is audited with only the allowed keys', 
         Http::fake(['*' => Http::response(['maxErgebnisse' => 0, 'referenznummer' => 'A-1', 'stellenangebotsTitel' => 't'])]);
     }
 
-    NexoraServer::actingAs($user)->tool($tool, $arguments);
+    NexomaServer::actingAs($user)->tool($tool, $arguments);
 
     $entries = mcpAuditEntries($this->auditFile);
 
