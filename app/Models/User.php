@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * @property int $id
@@ -25,10 +27,10 @@ use Illuminate\Support\Carbon;
  */
 #[Fillable(['name', 'email', 'password', 'locale'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
+class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail, OAuthenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * Sprache fuer Mails und Benachrichtigungen an diesen Benutzer; null, wenn keine gueltige Sprache gespeichert ist.

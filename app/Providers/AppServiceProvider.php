@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Carbon\CarbonInterval;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Mcp\Server\Registrar;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,12 +36,38 @@ class AppServiceProvider extends ServiceProvider
     /** Anfragen pro Minute und Benutzer (sonst IP) fuer MCP. */
     public const MCP_ATTEMPTS_PER_MINUTE = 60;
 
+    /** Anfragen pro Minute und IP (vor der Authentifizierung) fuer MCP; bremst Token-Raten und 401-Fluten. */
+    public const MCP_IP_ATTEMPTS_PER_MINUTE = 120;
+
+    /** Anfragen pro Minute und IP fuer den OAuth-Token-Endpunkt. */
+    public const OAUTH_TOKEN_ATTEMPTS_PER_MINUTE = 30;
+
+    /** Dynamische Client-Registrierungen pro Stunde und IP. */
+    public const OAUTH_REGISTER_ATTEMPTS_PER_HOUR = 10;
+
+    /** Dynamische Client-Registrierungen pro Stunde insgesamt (alle IPs). */
+    public const OAUTH_REGISTER_GLOBAL_ATTEMPTS_PER_HOUR = 200;
+
+    /** Anfragen pro Minute und IP fuer die OAuth-Metadaten (.well-known). */
+    public const OAUTH_METADATA_ATTEMPTS_PER_MINUTE = 60;
+
+    /** Gueltigkeit eines OAuth-Access-Tokens in Stunden. */
+    public const OAUTH_ACCESS_TOKEN_LIFETIME_HOURS = 1;
+
+    /** Gueltigkeit eines OAuth-Refresh-Tokens in Tagen. */
+    public const OAUTH_REFRESH_TOKEN_LIFETIME_DAYS = 30;
+
     /**
      * Register any application services.
      */
     public function register(): void
     {
-        //
+        // Passport-Routen werden bewusst nicht automatisch registriert, sondern gezielt in
+        // routes/web.php (Consent, auth + verified) und routes/ai.php (Token-Endpunkt) angelegt.
+        Passport::ignoreRoutes();
+
+        // Kein Device-Code-Grant: weder Route noch Grant werden genutzt.
+        Passport::$deviceCodeGrantEnabled = false;
     }
 
     /**
@@ -49,6 +78,19 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureUrlGeneration();
         $this->configureRateLimiting();
+        $this->configurePassport();
+    }
+
+    /**
+     * Konfiguriert OAuth2: genau ein Scope (`mcp:use`) und kurze Token-Lebensdauern.
+     */
+    protected function configurePassport(): void
+    {
+        Passport::tokensCan([Registrar::OAUTH_SCOPE => 'Use MCP server']);
+        Passport::defaultScopes([Registrar::OAUTH_SCOPE]);
+
+        Passport::tokensExpireIn(CarbonInterval::hours(self::OAUTH_ACCESS_TOKEN_LIFETIME_HOURS));
+        Passport::refreshTokensExpireIn(CarbonInterval::days(self::OAUTH_REFRESH_TOKEN_LIFETIME_DAYS));
     }
 
     /**
@@ -114,6 +156,20 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('mcp', fn (Request $request): Limit => Limit::perMinute(self::MCP_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('mcp-ip', fn (Request $request): Limit => Limit::perMinute(self::MCP_IP_ATTEMPTS_PER_MINUTE)
+            ->by('ip:'.$request->ip()));
+
+        RateLimiter::for('oauth-token', fn (Request $request): Limit => Limit::perMinute(self::OAUTH_TOKEN_ATTEMPTS_PER_MINUTE)
+            ->by('ip:'.$request->ip()));
+
+        RateLimiter::for('oauth-register', fn (Request $request): array => [
+            Limit::perHour(self::OAUTH_REGISTER_ATTEMPTS_PER_HOUR)->by('ip:'.$request->ip()),
+            Limit::perHour(self::OAUTH_REGISTER_GLOBAL_ATTEMPTS_PER_HOUR)->by('global'),
+        ]);
+
+        RateLimiter::for('oauth-metadata', fn (Request $request): Limit => Limit::perMinute(self::OAUTH_METADATA_ATTEMPTS_PER_MINUTE)
+            ->by('ip:'.$request->ip()));
     }
 
     /**
