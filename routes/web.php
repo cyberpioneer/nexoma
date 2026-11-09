@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConnectedAppController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Middleware\EnforceOAuthAuthorizationRequest;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,11 @@ use Laravel\Passport\Http\Controllers\AuthorizationController;
 use Laravel\Passport\Http\Controllers\DenyAuthorizationController;
 
 Route::inertia('/', 'Welcome')->name('home');
+
+// Rechtstexte: bewusst oeffentlich (Gaeste und Benutzer), reine Leseseiten ohne Eingabe.
+Route::get('/impressum', [LegalPageController::class, 'imprint'])->name('legal.imprint');
+Route::get('/datenschutz', [LegalPageController::class, 'privacy'])->name('legal.privacy');
+Route::get('/haftungsausschluss', [LegalPageController::class, 'disclaimer'])->name('legal.disclaimer');
 
 // Bewusst oeffentlich (Gaeste und Benutzer); gedrosselt, Eingabe ist auf die unterstuetzten Sprachen beschraenkt.
 Route::post('/locale', [LocaleController::class, 'update'])->middleware('throttle:locale')->name('locale.update');

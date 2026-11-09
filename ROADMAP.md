@@ -29,5 +29,7 @@ Stand: 2026-11-09. Gitflow: `main` nur Releases, `develop` Integration, `feature
 - [ ] **Queue-Worker:** `php artisan queue:work` unter Supervisor/systemd, Neustart nach Deployments (`queue:restart`); Mails (Verifizierung, Passwort-Reset) laufen sonst verzögert, Reset-Timing beachten (M3 F-06).
 - [ ] **Logs:** `MCP_AUDIT_LOG_DAYS` (Standard 90) und Rotation des Log-Kanals festlegen; Logs enthalten keine Suchparameter oder Tokens.
 - [ ] **Build:** `composer install --no-dev --optimize-autoloader`, `npm ci && npm run build`, `php artisan route:cache`/`view:cache`/`event:cache`.
+- [ ] **Rechtstexte:** `php artisan legal:check` muss vor dem Go-Live grün sein (keine offenen `[…]`-Platzhalter in `resources/legal/*.md`); Texte sind Entwürfe ohne Rechtsberatung und vorher rechtlich zu prüfen (Hinweise in den Kommentaren der Dateien).
 - [ ] **Abnahme vor Freigabe:** gesamte Suite, Pint, PHPStan, `npm run types:check`; manuelle Abnahme T-13 (OAuth-Flow mit realem MCP-Client, Consent, Widerruf unter „Verbundene Apps").
 - Offen (nicht in Release 1): Content-Security-Policy, Erkennung der Wiederverwendung von Refresh-Tokens, Kontolöschung.
+- [ ] **Datenschutzerklärung abgleichen:** `MCP_AUDIT_LOG_DAYS` (Text: 90 Tage) und `LOG_DAILY_DAYS` (Text: 14 Tage) müssen mit der Produktions-`.env` übereinstimmen; Hoster, Mail-Anbieter und Logfile-Frist ersetzen (`php artisan legal:check`).
