@@ -61,6 +61,7 @@ test('a search returns the notice and only whitelisted fields', function () {
             'publishedAt' => '2026-11-02',
             'startDate' => '2026-12-01',
             'offerType' => 'AUSBILDUNG',
+            'nexomaUrl' => route('jobs.show', ['refnr' => '10001-1234567890-S']),
         ]],
     ]);
     $response->assertDontSee(['darf-nicht-im-client-landen', 'Geheimweg', 'facetten', 'secret-test-key-123']);
