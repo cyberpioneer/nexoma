@@ -150,6 +150,12 @@ test('the consent routes require auth and verified while discovery, registration
     }
 });
 
+test('the connected apps routes sit in the auth and verified group and are throttled', function () {
+    foreach (['connected-apps.index', 'connected-apps.destroy'] as $name) {
+        expect(Route::getRoutes()->getByName($name)->gatherMiddleware())->toContain('auth', 'verified', 'throttle:connected-apps');
+    }
+});
+
 test('the access matrix holds for every protected get route without parameters', function () {
     $uris = routesRequiringAuthAndVerified()
         ->filter(fn (LaravelRoute $route) => in_array('GET', $route->methods(), true) && ! str_contains($route->uri(), '{'))

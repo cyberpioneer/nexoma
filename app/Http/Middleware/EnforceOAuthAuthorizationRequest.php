@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\OAuth\OAuthErrorPage;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,10 @@ class EnforceOAuthAuthorizationRequest
         $challenge = $request->query('code_challenge');
 
         if ($method !== 'S256' || ! is_string($challenge) || $challenge === '') {
+            if (OAuthErrorPage::wanted($request)) {
+                return OAuthErrorPage::response($request, 400);
+            }
+
             return response()->json([
                 'error' => 'invalid_request',
                 'error_description' => 'PKCE with code_challenge_method S256 is required.',
@@ -29,6 +34,15 @@ class EnforceOAuthAuthorizationRequest
         // Passport liest `prompt` aus der Anfrage; ohne Erzwingung wuerde eine fruehere Zustimmung die Consent-Seite ueberspringen.
         $request->query->set('prompt', 'consent');
 
-        return $next($request);
+        $response = $next($request);
+
+        // Laravel liefert die Antwort einer HttpResponseException (Passport-Fehler) am Exception-Handler vorbei.
+        // Fehler ohne Weiterleitung (unbekannter Client, nicht registrierte Redirect-URI) erhalten im Browser eine
+        // Fehlerseite; Weiterleitungen an eine bereits validierte Redirect-URI bleiben unveraendert.
+        if (OAuthErrorPage::wanted($request) && ! $response->isRedirection() && $response->getStatusCode() >= 400) {
+            return OAuthErrorPage::response($request, $response->getStatusCode());
+        }
+
+        return $response;
     }
 }

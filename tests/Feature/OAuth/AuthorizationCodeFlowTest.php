@@ -122,7 +122,7 @@ test('a public client must send a code challenge', function () {
     useJsonAuthorizationView();
 
     $response = $this->actingAs(User::factory()->create())
-        ->get('/oauth/authorize?'.http_build_query(authorizationQuery($client, 'x', ['code_challenge' => null, 'code_challenge_method' => null])));
+        ->getJson('/oauth/authorize?'.http_build_query(authorizationQuery($client, 'x', ['code_challenge' => null, 'code_challenge_method' => null])));
 
     expect($response->getStatusCode())->toBeGreaterThanOrEqual(400)
         ->and($response->headers->has('Location'))->toBeFalse();
@@ -134,7 +134,7 @@ test('an invalid code challenge method is rejected', function () {
     useJsonAuthorizationView();
 
     $response = $this->actingAs(User::factory()->create())
-        ->get('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['code_challenge_method' => 'S512'])));
+        ->getJson('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['code_challenge_method' => 'S512'])));
 
     expect($response->getStatusCode())->toBeGreaterThanOrEqual(400)
         ->and($response->json('error'))->toBe('invalid_request');
@@ -145,7 +145,7 @@ test('only the S256 code challenge method is accepted', function (array $overrid
     useJsonAuthorizationView();
 
     $response = $this->actingAs(User::factory()->create())
-        ->get('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], $overrides)));
+        ->getJson('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], $overrides)));
 
     $response->assertStatus(400)->assertJsonPath('error', 'invalid_request');
     expect($response->headers->has('Location'))->toBeFalse();
@@ -162,17 +162,17 @@ test('a code challenge method sent as an array is rejected', function () {
     $client = createPublicOAuthClient();
     $query = http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['code_challenge_method' => null])).'&code_challenge_method[]=S256';
 
-    $this->actingAs(User::factory()->create())->get('/oauth/authorize?'.$query)
+    $this->actingAs(User::factory()->create())->getJson('/oauth/authorize?'.$query)
         ->assertStatus(400)->assertJsonPath('error', 'invalid_request');
 });
 
 test('guests with a weak code challenge are rejected before the login redirect', function () {
     $client = createPublicOAuthClient();
 
-    $this->get('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['code_challenge_method' => 'plain'])))
+    $this->getJson('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['code_challenge_method' => 'plain'])))
         ->assertStatus(400)->assertJsonPath('error', 'invalid_request');
 
-    $this->get('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['code_challenge_method' => null])))
+    $this->getJson('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['code_challenge_method' => null])))
         ->assertStatus(400);
 });
 
@@ -227,7 +227,7 @@ test('an unregistered redirect uri never produces a redirect', function () {
     useJsonAuthorizationView();
 
     $response = $this->actingAs(User::factory()->create())
-        ->get('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['redirect_uri' => 'https://evil.example/cb'])));
+        ->getJson('/oauth/authorize?'.http_build_query(authorizationQuery($client, pkcePair()['challenge'], ['redirect_uri' => 'https://evil.example/cb'])));
 
     expect($response->getStatusCode())->toBeGreaterThanOrEqual(400)
         ->and($response->headers->has('Location'))->toBeFalse();
