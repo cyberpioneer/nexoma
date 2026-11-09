@@ -142,4 +142,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Vertrauenswuerdige Proxys und Hosts
+    |--------------------------------------------------------------------------
+    |
+    | TRUSTED_PROXIES: kommagetrennte IPs/CIDR-Bereiche; leer = kein Proxy-Vertrauen, `*` = alle (nur ausdruecklich).
+    | TRUSTED_HOSTS: kommagetrennte Hostnamen; leer = in Produktion der Host aus APP_URL.
+    |
+    */
+
+    'trusted_proxies' => env('TRUSTED_PROXIES', ''),
+
+    'trusted_hosts' => array_values(array_filter(
+        array_map(trim(...), explode(',', (string) env('TRUSTED_HOSTS', ''))),
+    )),
+
 ];
