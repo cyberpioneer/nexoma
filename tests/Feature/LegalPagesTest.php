@@ -50,7 +50,7 @@ test('the served blocks contain no comments, drafting notes or raw markdown', fu
 test('the texts name the provider and the imprint has no register or legal form data', function () {
     $imprint = json_encode(app(LegalDocuments::class)->blocks('impressum'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-    expect($imprint)->toContain('NOMNIX // Slawa Mironow', 'Dr.-Schier-Straße 21', '97980 Bad Mergentheim', 'kontakt@nomnix.net')
+    expect($imprint)->toContain('NOMNIX // Slawa Mironow', 'Dr.-Schier-Straße 21', '97980 Bad Mergentheim', 'service@nomnix.net')
         ->and($imprint)->not->toContain('Registergericht', 'Registernummer', 'HRB', 'Vertretungsberechtigt', 'Rechtsform', 'Umsatzsteuer');
 
     foreach (['datenschutzerklaerung', 'haftungsausschluss'] as $file) {
