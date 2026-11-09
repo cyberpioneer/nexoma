@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Providers\AppServiceProvider;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Passport\Client;
+use Laravel\Passport\Passport;
 
 function consentUrl(array $overrides = [], ?array &$pkce = null, ?Client &$client = null, string $name = 'Test App'): string
 {
@@ -181,3 +182,16 @@ test('the consent texts exist in every language', function (string $locale) {
 
     expect($ui)->toHaveKeys(['oauth.authorize.title', 'oauth.authorize.unverified', 'oauth.authorize.approve', 'oauth.authorize.deny', 'oauth.scope.mcp:use', 'oauth.punycode.warning', 'oauth.punycode.badge', 'oauth.error.title', 'oauth.error.text', 'oauth.error.back']);
 })->with(['de', 'en', 'ru', 'uk', 'es', 'it']);
+
+test('a server error during authorization shows the server error page, not the invalid request text', function () {
+    $user = User::factory()->create();
+    $url = consentUrl();
+
+    Passport::loadKeysFrom(sys_get_temp_dir().'/nexoma-missing-keys-'.bin2hex(random_bytes(4)));
+
+    $this->actingAs($user)->get($url)
+        ->assertStatus(500)
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('oauth/Error')
+            ->where('status', 500));
+});

@@ -58,6 +58,7 @@ class JobDetailsTool extends NexomaTool
         return Response::structured([
             'notice' => self::NOTICE,
             ...$job,
+            'nexomaUrl' => route('jobs.show', ['refnr' => $validated['refnr']]),
             'descriptionTruncated' => $truncated,
         ]);
     }

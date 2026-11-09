@@ -156,3 +156,8 @@ test('the connected apps routes are throttled per user', function () {
 
     $this->actingAs($user)->get(route('connected-apps.index'))->assertTooManyRequests();
 });
+
+test('the connected apps page offers the address of the mcp endpoint for the connection guide', function () {
+    $this->actingAs(User::factory()->create())->get(route('connected-apps.index'))
+        ->assertInertia(fn (Assert $page) => $page->where('mcpUrl', url('/mcp')));
+});

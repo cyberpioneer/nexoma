@@ -44,7 +44,7 @@ class ConnectedAppController extends Controller
             ];
         })->values()->all();
 
-        return Inertia::render('ConnectedApps/Index', ['apps' => $apps]);
+        return Inertia::render('ConnectedApps/Index', ['apps' => $apps, 'mcpUrl' => url('/mcp')]);
     }
 
     /**

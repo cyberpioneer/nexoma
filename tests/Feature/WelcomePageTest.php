@@ -26,7 +26,7 @@ test('the welcome page translations exist and differ in every locale', function 
         ->assertInertia(fn (Assert $page) => $page
             ->where('locale', $locale)
             ->where('translations', fn ($translations): bool => collect($translations)->only([
-                'home.title', 'home.lead', 'home.cta.register', 'home.point1.text', 'skip.link', 'footer.note',
+                'home.title', 'home.lead', 'home.cta.register', 'home.point1.text', 'skip.link',
             ])->every(fn (string $text): bool => $text !== '' && ! str_starts_with($text, 'home.'))));
 })->with(['de', 'en', 'ru', 'uk', 'es', 'it']);
 

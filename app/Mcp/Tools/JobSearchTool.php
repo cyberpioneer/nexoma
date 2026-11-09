@@ -68,7 +68,10 @@ class JobSearchTool extends NexomaTool
             'page' => $page,
             'pageSize' => $size,
             'hasMore' => $page * $size < $result['total'],
-            'jobs' => $result['jobs'],
+            'jobs' => array_map(
+                static fn (array $job): array => [...$job, 'nexomaUrl' => route('jobs.show', ['refnr' => $job['refnr']])],
+                $result['jobs'],
+            ),
         ]);
     }
 
