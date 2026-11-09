@@ -66,7 +66,7 @@ test('a verified user with the scope can initialize and list the tools', functio
         'protocolVersion' => '2025-06-18',
         'capabilities' => (object) [],
         'clientInfo' => ['name' => 'test', 'version' => '1'],
-    ])->assertOk()->assertJsonPath('result.serverInfo.name', 'Nexora Job Search');
+    ])->assertOk()->assertJsonPath('result.serverInfo.name', 'Nexoma Job Search');
 
     mcpRequest('tools/list')->assertOk()->assertJsonCount(3, 'result.tools');
 });

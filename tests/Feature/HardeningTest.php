@@ -23,7 +23,7 @@ function assertSecurityHeaders(TestResponse $response): void
 
 function useProduction(): void
 {
-    config(['app.url' => 'https://nexora.example']);
+    config(['app.url' => 'https://nexoma.example']);
     app()->detectEnvironment(fn (): string => 'production');
 }
 
@@ -64,12 +64,12 @@ test('existing framing headers from other packages are not overwritten', functio
 
 test('hsts is sent only in production over https', function () {
     $this->get('/_test/info')->assertHeaderMissing('Strict-Transport-Security');
-    $this->get('https://nexora.example/_test/info')->assertHeaderMissing('Strict-Transport-Security');
+    $this->get('https://nexoma.example/_test/info')->assertHeaderMissing('Strict-Transport-Security');
 
     useProduction();
 
-    $this->get('http://nexora.example/_test/info')->assertHeaderMissing('Strict-Transport-Security');
-    $this->get('https://nexora.example/_test/info')
+    $this->get('http://nexoma.example/_test/info')->assertHeaderMissing('Strict-Transport-Security');
+    $this->get('https://nexoma.example/_test/info')
         ->assertHeader('Strict-Transport-Security', 'max-age=31536000')
         ->assertHeader('Referrer-Policy', 'no-referrer');
 });
@@ -128,20 +128,20 @@ test('in production a foreign host header is rejected and the app url host is ac
     useProduction();
 
     assertSecurityHeaders($this->get('https://evil.test/_test/info')->assertStatus(400));
-    $this->get('https://nexora.example/_test/info')->assertOk();
+    $this->get('https://nexoma.example/_test/info')->assertOk();
 });
 
 test('trusted hosts can be listed explicitly and then replace the app url host', function () {
     useProduction();
-    config(['app.trusted_hosts' => ['app.nexora.example']]);
+    config(['app.trusted_hosts' => ['app.nexoma.example']]);
 
-    $this->get('https://app.nexora.example/_test/info')->assertOk();
+    $this->get('https://app.nexoma.example/_test/info')->assertOk();
     Request::setTrustedHosts([]);
-    $this->get('https://nexora.example/_test/info')->assertStatus(400);
+    $this->get('https://nexoma.example/_test/info')->assertStatus(400);
 });
 
 test('host checks are inactive outside production', function () {
-    config(['app.url' => 'https://nexora.example']);
+    config(['app.url' => 'https://nexoma.example']);
 
     $this->get('http://other.test/_test/info')->assertOk()->assertJson(['host' => 'other.test']);
 });
@@ -180,5 +180,5 @@ test('in production an app url without host and empty trusted hosts rejects ever
     useProduction();
     config(['app.url' => 'not a url', 'app.trusted_hosts' => []]);
 
-    assertSecurityHeaders($this->get('https://nexora.example/_test/info')->assertStatus(400));
+    assertSecurityHeaders($this->get('https://nexoma.example/_test/info')->assertStatus(400));
 });

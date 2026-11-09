@@ -23,7 +23,7 @@ use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 #[IsIdempotent(true)]
 #[IsDestructive(false)]
 #[IsOpenWorld(false)]
-class JobSearchOptionsTool extends NexoraTool
+class JobSearchOptionsTool extends NexomaTool
 {
     /** @var array<int, array{key: string, description: string}> */
     private const OFFER_TYPES = [

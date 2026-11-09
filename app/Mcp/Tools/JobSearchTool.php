@@ -27,7 +27,7 @@ use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 #[IsIdempotent(true)]
 #[IsDestructive(false)]
 #[IsOpenWorld(true)]
-class JobSearchTool extends NexoraTool
+class JobSearchTool extends NexomaTool
 {
     public const DEFAULT_PAGE_SIZE = 10;
 

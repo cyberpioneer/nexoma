@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Requests\SearchJobsRequest;
-use App\Mcp\Servers\NexoraServer;
+use App\Mcp\Servers\NexomaServer;
 use App\Mcp\Tools\JobSearchOptionsTool;
 use App\Mcp\Tools\JobSearchTool;
 use App\Models\User;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 test('the options need no arguments, make no http call and list the offer types', function () {
     Http::preventStrayRequests();
 
-    $response = NexoraServer::actingAs(User::factory()->create())->tool(JobSearchOptionsTool::class, []);
+    $response = NexomaServer::actingAs(User::factory()->create())->tool(JobSearchOptionsTool::class, []);
 
     $response->assertOk()->assertStructuredContent(fn ($json) => $json
         ->has('offerTypes', 4)
@@ -26,7 +26,7 @@ test('the options need no arguments, make no http call and list the offer types'
 });
 
 test('the offer type ids equal the api client constant', function () {
-    $content = NexoraServer::actingAs(User::factory()->create())->tool(JobSearchOptionsTool::class, []);
+    $content = NexomaServer::actingAs(User::factory()->create())->tool(JobSearchOptionsTool::class, []);
     $ids = [];
     $content->assertStructuredContent(function ($json) use (&$ids) {
         $json->etc();
