@@ -14,6 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // TODO (Produktions-Topologie offen): trustHosts() (Schutz vor Host-Header-Poisoning in Mail-Links)
+        // und ggf. trustProxies() erst setzen, wenn Produktionshost, APP_URL und Proxy-Kette feststehen.
+        // Sessions werden nach Passwortaenderung/-reset ungueltig (Abgleich des Passwort-Hashs je Anfrage).
+        $middleware->authenticateSessions();
+
+        $middleware->redirectGuestsTo(fn () => route('login'));
+        $middleware->redirectUsersTo(fn () => route('dashboard'));
+
         $middleware->web(append: [
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,

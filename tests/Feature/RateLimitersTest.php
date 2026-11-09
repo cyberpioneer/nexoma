@@ -2,6 +2,8 @@
 
 use App\Models\User;
 use App\Providers\AppServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +34,7 @@ test('limit values match the specification', function () {
     expect(AppServiceProvider::JOBSUCHE_ATTEMPTS_PER_MINUTE)->toBe(30)
         ->and(AppServiceProvider::JOBDETAILS_ATTEMPTS_PER_MINUTE)->toBe(60)
         ->and(AppServiceProvider::AUTH_ATTEMPTS_PER_MINUTE)->toBe(5)
+        ->and(AppServiceProvider::AUTH_IP_ATTEMPTS_PER_MINUTE)->toBe(20)
         ->and(AppServiceProvider::MCP_ATTEMPTS_PER_MINUTE)->toBe(60);
 });
 
@@ -66,4 +69,22 @@ test('auth limiter is keyed by email and ip, case-insensitive', function () {
     $this->postJson('/_test/auth', ['email' => 'a@example.test'])->assertTooManyRequests();
     $this->postJson('/_test/auth', ['email' => 'other@example.test'])->assertOk();
     $this->postJson('/_test/auth', ['email' => ['x']])->assertOk();
+});
+
+test('auth limiter also limits per ip regardless of the email', function () {
+    for ($i = 0; $i < AppServiceProvider::AUTH_IP_ATTEMPTS_PER_MINUTE; $i++) {
+        $this->postJson('/_test/auth', ['email' => "user{$i}@example.test"])->assertOk();
+    }
+
+    $this->postJson('/_test/auth', ['email' => 'other@example.test'])->assertTooManyRequests();
+});
+
+test('auth limiter returns an email and an ip limit with distinct key prefixes', function () {
+    $request = Request::create('/x', 'POST', ['email' => 'A@Example.test'], server: ['REMOTE_ADDR' => '203.0.113.5']);
+
+    $limits = Arr::wrap(RateLimiter::limiter('auth')($request));
+
+    expect($limits)->toHaveCount(2)
+        ->and($limits[0]->key)->toStartWith('email:')
+        ->and($limits[1]->key)->toBe('ip:203.0.113.5');
 });
