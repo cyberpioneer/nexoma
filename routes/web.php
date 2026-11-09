@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware\EncryptHistory;
@@ -13,4 +14,10 @@ Route::post('/locale', [LocaleController::class, 'update'])->middleware('throttl
 // Jobsuche-, Detail- und Profilrouten. Der Route-Inventar-Test erzwingt das.
 Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
+
+    Route::get('/jobs', [JobController::class, 'index'])->middleware('throttle:jobsuche')->name('jobs.index');
+    Route::get('/jobs/{refnr}', [JobController::class, 'show'])
+        ->where('refnr', '[A-Za-z0-9._-]{1,100}')
+        ->middleware('throttle:jobdetails')
+        ->name('jobs.show');
 });

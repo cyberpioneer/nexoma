@@ -9,11 +9,13 @@ import SkipLink from '@/components/SkipLink.vue';
 import Wordmark from '@/components/Wordmark.vue';
 import { useTranslate } from '@/lib/translate';
 import { dashboard } from '@/routes';
+import { index as jobsIndex } from '@/routes/jobs';
 
 const { t } = useTranslate();
 const page = usePage();
 
 const isDashboardCurrent = computed(() => page.url.startsWith(dashboard().url));
+const isJobsCurrent = computed(() => page.url.startsWith(jobsIndex().url));
 </script>
 
 <template>
@@ -38,6 +40,17 @@ const isDashboardCurrent = computed(() => page.url.startsWith(dashboard().url));
                                 class="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium hover:bg-surface aria-[current=page]:underline aria-[current=page]:underline-offset-8"
                             >
                                 {{ t('dashboard.title') }}
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="jobsIndex()"
+                                :aria-current="
+                                    isJobsCurrent ? 'page' : undefined
+                                "
+                                class="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium hover:bg-surface aria-[current=page]:underline aria-[current=page]:underline-offset-8"
+                            >
+                                {{ t('jobs.nav') }}
                             </Link>
                         </li>
                     </ul>
