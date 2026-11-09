@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
+import SiteFooter from '@/components/SiteFooter.vue';
+import SkipLink from '@/components/SkipLink.vue';
+import Wordmark from '@/components/Wordmark.vue';
 </script>
 
 <template>
-    <main class="flex min-h-screen items-center justify-center p-4">
-        <div class="flex w-full max-w-sm flex-col gap-6">
+    <div class="flex min-h-screen flex-col">
+        <SkipLink />
+        <header class="border-b border-line">
+            <div
+                class="layout-container flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3"
+            >
+                <Wordmark />
+                <LocaleSwitcher />
+            </div>
+        </header>
+        <main
+            id="main"
+            tabindex="-1"
+            class="layout-container flex-1 py-10 focus-visible:outline-none sm:py-16"
+        >
             <slot />
-            <LocaleSwitcher />
-        </div>
-    </main>
+        </main>
+        <SiteFooter />
+    </div>
 </template>

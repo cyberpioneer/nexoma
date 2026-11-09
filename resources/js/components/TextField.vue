@@ -13,7 +13,7 @@ withDefaults(
 </script>
 
 <template>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1.5">
         <label :for="name" class="text-sm font-medium">{{ label }}</label>
         <input
             :id="name"
@@ -24,13 +24,13 @@ withDefaults(
             :aria-invalid="error ? 'true' : undefined"
             :aria-describedby="error ? `${name}-error` : undefined"
             required
-            class="rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-800"
+            class="field-control w-full"
         />
         <p
             v-if="error"
             :id="`${name}-error`"
             role="alert"
-            class="text-sm text-red-600 dark:text-red-400"
+            class="text-sm text-danger"
         >
             {{ error }}
         </p>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, usePage } from '@inertiajs/vue3';
+import PageHeader from '@/components/PageHeader.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTranslate } from '@/lib/translate';
 
@@ -10,9 +11,15 @@ const page = usePage();
 </script>
 
 <template>
-    <Head :title="t('dashboard.title')" />
-    <h1 class="text-xl font-semibold">{{ t('dashboard.title') }}</h1>
-    <p class="mt-2">
-        {{ t('dashboard.welcome', { name: page.props.auth.user?.name ?? '' }) }}
-    </p>
+    <div>
+        <Head :title="t('dashboard.title')" />
+        <PageHeader
+            :title="t('dashboard.title')"
+            :lead="
+                t('dashboard.welcome', {
+                    name: page.props.auth.user?.name ?? '',
+                })
+            "
+        />
+    </div>
 </template>

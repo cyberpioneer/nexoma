@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { Form, Head, usePage } from '@inertiajs/vue3';
 import { destroy } from '@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController';
-import SubmitButton from '@/components/SubmitButton.vue';
+import Button from '@/components/Button.vue';
+import Card from '@/components/Card.vue';
+import PageHeader from '@/components/PageHeader.vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import { useTranslate } from '@/lib/translate';
 import { send } from '@/routes/verification';
@@ -13,23 +15,29 @@ const page = usePage();
 </script>
 
 <template>
-    <Head :title="t('auth.verify.title')" />
-    <h1 class="text-xl font-semibold">{{ t('auth.verify.title') }}</h1>
-    <p class="text-sm">{{ t('auth.verify.intro') }}</p>
-    <p
-        v-if="page.props.status === 'verification-link-sent'"
-        class="text-sm text-green-700 dark:text-green-400"
-    >
-        {{ t('auth.verify.link_sent') }}
-    </p>
-    <Form v-bind="send.form()" #default="{ processing }">
-        <SubmitButton :processing="processing">{{
-            t('auth.verify.resend')
-        }}</SubmitButton>
-    </Form>
-    <Form v-bind="destroy.form()">
-        <button type="submit" class="text-sm underline">
-            {{ t('nav.logout') }}
-        </button>
-    </Form>
+    <div class="mx-auto flex w-full max-w-md flex-col gap-8">
+        <Head :title="t('auth.verify.title')" />
+        <PageHeader
+            :title="t('auth.verify.title')"
+            :lead="t('auth.verify.intro')"
+        />
+        <p
+            v-if="page.props.status === 'verification-link-sent'"
+            class="text-sm text-success"
+        >
+            {{ t('auth.verify.link_sent') }}
+        </p>
+        <Card class="flex flex-col gap-3">
+            <Form v-bind="send.form()" #default="{ processing }">
+                <Button type="submit" :processing="processing">
+                    {{ t('auth.verify.resend') }}
+                </Button>
+            </Form>
+            <Form v-bind="destroy.form()">
+                <Button type="submit" variant="ghost">
+                    {{ t('nav.logout') }}
+                </Button>
+            </Form>
+        </Card>
+    </div>
 </template>
