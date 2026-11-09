@@ -391,6 +391,7 @@ test('a global limit of zero disables the global quota', function () {
 });
 
 test('a failing cache store makes the client return null instead of throwing', function () {
+    config()->set('services.jobsuche.global_limit_per_minute', 10);
     Http::fake([SEARCH_URL => Http::response(searchPayload())]);
     RateLimiter::shouldReceive('attempt')->andThrow(new RuntimeException('cache down'));
     Log::spy();
