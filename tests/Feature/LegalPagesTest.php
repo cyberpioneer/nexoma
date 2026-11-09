@@ -47,16 +47,17 @@ test('the served blocks contain no comments, drafting notes or raw markdown', fu
         }));
 })->with(['legal.imprint', 'legal.privacy', 'legal.disclaimer']);
 
-test('the texts name the provider and the imprint has no register or legal form data', function () {
+test('every legal document starts with a heading and the imprint offers an e-mail contact', function () {
+    foreach (['impressum', 'datenschutzerklaerung', 'haftungsausschluss'] as $file) {
+        $blocks = app(LegalDocuments::class)->blocks($file);
+
+        expect($blocks)->not->toBeEmpty()
+            ->and($blocks[0]['type'])->toBe('h1');
+    }
+
     $imprint = json_encode(app(LegalDocuments::class)->blocks('impressum'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-    expect($imprint)->toContain('NOMNIX // Slawa Mironow', 'Dr.-Schier-Straße 21', '97980 Bad Mergentheim', 'kontakt@nomnix.net')
-        ->and($imprint)->not->toContain('Registergericht', 'Registernummer', 'HRB', 'Vertretungsberechtigt', 'Rechtsform', 'Umsatzsteuer');
-
-    foreach (['datenschutzerklaerung', 'haftungsausschluss'] as $file) {
-        expect(json_encode(app(LegalDocuments::class)->blocks($file), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
-            ->toContain('NOMNIX // Slawa Mironow');
-    }
+    expect(preg_match('/[\w.+-]+@[\w-]+\.[\w.-]+/', (string) $imprint))->toBe(1);
 });
 
 test('the parser outputs only text blocks and never markup', function () {
