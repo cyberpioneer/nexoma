@@ -218,7 +218,9 @@ test('the access matrix holds for the job details route with a fixed reference n
     Http::assertSentCount(1);
 });
 
-test('trusted hosts and proxies are intentionally not configured yet', function () {
-    // TODO: Nach Klaerung von Produktionshost und Proxy-Topologie trustHosts()/trustProxies() setzen
-    // und diesen Test durch eine echte Pruefung ersetzen. Mail-Links sichert bis dahin URL::forceRootUrl (siehe UrlGenerationTest).
-})->todo();
+test('trusted hosts and proxies default to closed (formerly todo; real checks live in HardeningTest)', function () {
+    // Echte Pruefungen: tests/Feature/HardeningTest.php (Proxy-Vertrauen, Host-Header, Security-Header).
+    // Mail-Links sichert zusaetzlich URL::forceRootUrl (siehe UrlGenerationTest).
+    expect(config('app.trusted_proxies'))->toBe('')
+        ->and(config('app.trusted_hosts'))->toBe([]);
+});

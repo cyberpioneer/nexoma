@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Http\Request;
 use Laravel\Passport\Passport;
 use RuntimeException;
 
@@ -16,6 +17,15 @@ abstract class TestCase extends BaseTestCase
 
         // Tests verwenden nie die Schluessel aus storage/, sondern ein temporaeres Schluesselpaar.
         Passport::loadKeysFrom(self::passportKeyDirectory());
+    }
+
+    protected function tearDown(): void
+    {
+        // Symfony haelt vertraute Hosts/Proxys statisch; sie duerfen nicht in den naechsten Test durchschlagen.
+        Request::setTrustedHosts([]);
+        Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_FOR);
+
+        parent::tearDown();
     }
 
     /**

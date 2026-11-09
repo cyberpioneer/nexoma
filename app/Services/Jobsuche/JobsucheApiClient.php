@@ -9,6 +9,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use InvalidArgumentException;
 use Throwable;
 
@@ -57,6 +58,11 @@ class JobsucheApiClient
     private const DETAILS_CACHE_SECONDS = 6 * 60 * 60;
 
     private const RATE_LIMIT_DELAY_MILLISECONDS = 500;
+
+    /** Schluessel des globalen Limiters fuer ausgehende BA-Aufrufe (alle Benutzer und Clients zusammen). */
+    public const GLOBAL_LIMITER_KEY = 'jobsuche-global';
+
+    private const DEFAULT_GLOBAL_LIMIT_PER_MINUTE = 600;
 
     /**
      * Sucht Stellenangebote. Gibt bei Fehlern null zurueck, bei null Treffern ein Array mit leerer `ergebnisliste`.
@@ -177,6 +183,14 @@ class JobsucheApiClient
         }
 
         try {
+            if (! $this->reserveGlobalQuota()) {
+                Log::warning('Jobsuche-API: Globales Kontingent ausgeschoepft; Anfrage nicht gesendet.', [
+                    'operation' => $operation,
+                ]);
+
+                return null;
+            }
+
             $response = $this->request()->get($path, $query);
         } catch (ConnectionException $exception) {
             Log::error('Jobsuche-API: Verbindungsfehler.', [
@@ -195,6 +209,21 @@ class JobsucheApiClient
         }
 
         return $this->decode($response, $operation);
+    }
+
+    /**
+     * Zaehlt einen ausgehenden Aufruf gegen das globale Minutenkontingent; false, wenn es ausgeschoepft ist.
+     * Fehler des Cache-Speichers werden vom Aufrufer wie ein Anfragefehler behandelt (null).
+     */
+    private function reserveGlobalQuota(): bool
+    {
+        $limit = (int) config('services.jobsuche.global_limit_per_minute', self::DEFAULT_GLOBAL_LIMIT_PER_MINUTE);
+
+        if ($limit < 1) {
+            $limit = self::DEFAULT_GLOBAL_LIMIT_PER_MINUTE;
+        }
+
+        return RateLimiter::attempt(self::GLOBAL_LIMITER_KEY, $limit, fn (): bool => true, 60);
     }
 
     /**

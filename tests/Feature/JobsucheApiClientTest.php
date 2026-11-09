@@ -6,6 +6,7 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Sleep;
 
 const TEST_API_KEY = 'secret-test-key-123';
@@ -324,4 +325,67 @@ it('uses the official base url and public key as defaults', function () {
 
     expect($config['jobsuche']['base_url'])->toBe('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service')
         ->and($config['jobsuche']['api_key'])->toBe('jobboerse-jobsuche');
+});
+
+test('global quota stops outgoing calls after the limit and returns null without logging parameters', function () {
+    config()->set('services.jobsuche.global_limit_per_minute', 2);
+    Http::fake([SEARCH_URL => Http::response(searchPayload())]);
+    Log::spy();
+
+    $client = new JobsucheApiClient;
+
+    expect($client->search('Pflege'))->not->toBeNull()
+        ->and($client->search('Pflege'))->not->toBeNull()
+        ->and($client->search('Geheim-Suchbegriff'))->toBeNull();
+
+    Http::assertSentCount(2);
+    Log::shouldHaveReceived('warning')->withArgs(
+        fn (string $message, array $context = []): bool => str_contains($message, 'Kontingent')
+            && $context === ['operation' => 'search'],
+    )->once();
+});
+
+test('global quota does not affect cache hits for details', function () {
+    config()->set('services.jobsuche.global_limit_per_minute', 1);
+    Http::fake(['https://jobsuche.test/pc/v4/jobdetails/*' => Http::response(['referenznummer' => '10001-1-S', 'stellenangebotsTitel' => 'Pflege'])]);
+
+    $client = new JobsucheApiClient;
+
+    expect($client->details('10001-1-S'))->not->toBeNull();
+    expect($client->details('10001-1-S'))->not->toBeNull()
+        ->and($client->details('10001-1-S'))->not->toBeNull();
+    expect($client->details('10002-2-S'))->toBeNull();
+
+    Http::assertSentCount(1);
+});
+
+test('global quota is shared across calls and recovers after the window', function () {
+    config()->set('services.jobsuche.global_limit_per_minute', 1);
+    Http::fake([SEARCH_URL => Http::response(searchPayload())]);
+
+    $client = new JobsucheApiClient;
+
+    expect($client->search('a'))->not->toBeNull()
+        ->and($client->search('b'))->toBeNull();
+
+    $this->travel(61)->seconds();
+
+    expect($client->search('c'))->not->toBeNull();
+    Http::assertSentCount(2);
+});
+
+test('an invalid global limit falls back to the default instead of disabling or blocking', function () {
+    config()->set('services.jobsuche.global_limit_per_minute', 0);
+    Http::fake([SEARCH_URL => Http::response(searchPayload())]);
+
+    expect((new JobsucheApiClient)->search('a'))->not->toBeNull();
+});
+
+test('a failing cache store makes the client return null instead of throwing', function () {
+    Http::fake([SEARCH_URL => Http::response(searchPayload())]);
+    RateLimiter::shouldReceive('attempt')->andThrow(new RuntimeException('cache down'));
+    Log::spy();
+
+    expect((new JobsucheApiClient)->search('a'))->toBeNull();
+    Http::assertNothingSent();
 });
