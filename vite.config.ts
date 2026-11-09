@@ -81,6 +81,8 @@ export default defineConfig({
             '.github/**',
             'composer.json',
             'PROJECT.md',
+            'ROADMAP.md',
+            'TASK.md',
             'resources/js/components/ui/*',
             'resources/views/mail/*',
         ],
