@@ -73,6 +73,15 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // Audit-Trail der MCP-Zugriffe (nur IDs/Status, siehe App\Mcp\McpAuditLogger).
+        'mcp_audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/mcp-audit.log'),
+            'level' => 'info',
+            'days' => (int) env('MCP_AUDIT_LOG_DAYS', 90),
+            'replace_placeholders' => true,
+        ],
+
         'monthly' => [
             'driver' => 'monthly',
             'path' => storage_path('logs/laravel.log'),

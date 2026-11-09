@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Middleware\EnsureMcpAccess;
 use App\Http\Middleware\LimitOAuthClientRegistrations;
+use App\Http\Middleware\ThrottleMcpByIp;
+use App\Mcp\Servers\NexoraServer;
 use Illuminate\Support\Facades\Route;
 use Laravel\Mcp\Facades\Mcp;
 use Laravel\Mcp\Server\Http\Controllers\OAuthRegisterController;
@@ -25,3 +28,8 @@ Route::middleware('throttle:oauth-metadata')->group(function () {
 Route::post('/oauth/register', OAuthRegisterController::class)
     ->middleware(['throttle:oauth-register', LimitOAuthClientRegistrations::class])
     ->name('mcp.oauth.register');
+
+// Produktiver MCP-Server (nur POST; GET/DELETE antworten 405). Reihenfolge: IP-Drossel (Limiter `mcp-ip`) vor der Authentifizierung,
+// danach Token, Scope/Verifizierung und die Drossel je Benutzer.
+Mcp::web('/mcp', NexoraServer::class)
+    ->middleware([ThrottleMcpByIp::class, 'auth:api', EnsureMcpAccess::class, 'throttle:mcp']);

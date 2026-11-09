@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureMcpAccess;
+use App\Http\Middleware\ThrottleMcpByIp;
 use App\Models\User;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Support\Collection;
@@ -76,7 +78,8 @@ function routesRequiringAuthAndVerified(): Collection
         'mcp.oauth.protected-resource', 'mcp.oauth.protected-resource.nested',
         'mcp.oauth.register', 'passport.token',
     ];
-    $publicUris = ['up', '_inertia/devtools/entries', '_inertia/devtools/entries/{id}'];
+    // `mcp`: POST ist per auth:api + EnsureMcpAccess geschuetzt, GET/DELETE antworten 405 (siehe eigener Test unten).
+    $publicUris = ['up', '_inertia/devtools/entries', '_inertia/devtools/entries/{id}', 'mcp'];
 
     return collect(Route::getRoutes()->getRoutes())->reject(
         fn (LaravelRoute $route): bool => in_array((string) $route->getName(), $publicNames, true)
@@ -124,12 +127,15 @@ test('the oauth and mcp route families match the exact allowlist', function () {
         ->sort()->values()->all();
 
     $expected = [
+        'DELETE mcp',
         'DELETE oauth/authorize',
         'GET|HEAD .well-known/oauth-authorization-server',
         'GET|HEAD .well-known/oauth-authorization-server/{path}',
         'GET|HEAD .well-known/oauth-protected-resource',
         'GET|HEAD .well-known/oauth-protected-resource/{path}',
+        'GET|HEAD mcp',
         'GET|HEAD oauth/authorize',
+        'POST mcp',
         'POST oauth/authorize',
         'POST oauth/register',
         'POST oauth/token',
@@ -147,6 +153,24 @@ test('the consent routes require auth and verified while discovery, registration
     foreach (['passport.token', 'mcp.oauth.register'] as $name) {
         expect(Route::getRoutes()->getByName($name)->gatherMiddleware())->not->toContain('web')
             ->and(collect(Route::getRoutes()->getByName($name)->gatherMiddleware())->first(fn ($m) => str_starts_with((string) $m, 'throttle:')))->not->toBeNull();
+    }
+});
+
+test('the mcp route is protected by token, scope and verification, throttled and free of web middleware', function () {
+    $routes = collect(Route::getRoutes()->getRoutes())->filter(fn (LaravelRoute $route): bool => $route->uri() === 'mcp');
+
+    expect($routes->map(fn (LaravelRoute $route): string => implode('|', $route->methods()))->sort()->values()->all())
+        ->toBe(['DELETE', 'GET|HEAD', 'POST']);
+
+    $post = $routes->first(fn (LaravelRoute $route): bool => in_array('POST', $route->methods(), true));
+    $middleware = $post->gatherMiddleware();
+
+    expect($middleware)->not->toContain('web')
+        ->and(array_values(array_intersect($middleware, [ThrottleMcpByIp::class, 'auth:api', EnsureMcpAccess::class, 'throttle:mcp'])))
+        ->toBe([ThrottleMcpByIp::class, 'auth:api', EnsureMcpAccess::class, 'throttle:mcp']);
+
+    foreach (['GET', 'DELETE'] as $method) {
+        $this->call($method, '/mcp')->assertStatus(405);
     }
 });
 

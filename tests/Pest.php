@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
@@ -156,4 +157,28 @@ function issueOAuthTokens(User $user, ?Client $client = null): array
         'code' => $code,
         'code_verifier' => $pkce['verifier'],
     ])->assertOk()->json();
+}
+
+/**
+ * Sendet eine JSON-RPC-Anfrage an POST /mcp (Bearer-Token optional, sonst wirkt ein zuvor gesetzter Passport-Benutzer).
+ *
+ * @param  array<string, mixed>  $params
+ * @param  array<string, string>  $headers
+ */
+function mcpRequest(string $method, array $params = [], array $headers = [], string $uri = '/mcp'): TestResponse
+{
+    return test()->postJson($uri, [
+        'jsonrpc' => '2.0',
+        'id' => 1,
+        'method' => $method,
+        'params' => (object) $params,
+    ], ['Accept' => 'application/json, text/event-stream', ...$headers]);
+}
+
+/**
+ * Meldet einen verifizierten Benutzer mit dem MCP-Scope an (Passport-Guard `api`).
+ */
+function actingAsMcpUser(?User $user = null, array $scopes = ['mcp:use']): User
+{
+    return Passport::actingAs($user ?? User::factory()->create(), $scopes);
 }
