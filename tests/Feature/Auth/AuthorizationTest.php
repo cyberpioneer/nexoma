@@ -65,7 +65,7 @@ test('the unused password confirmation page does not cause a server error', func
 function routesRequiringAuthAndVerified(): Collection
 {
     $publicNames = [
-        'home', 'login', 'login.store', 'register', 'register.store',
+        'home', 'locale.update', 'login', 'login.store', 'register', 'register.store',
         'password.request', 'password.email', 'password.reset', 'password.update',
         'logout', 'verification.notice', 'verification.send', 'verification.verify',
         'password.confirm', 'password.confirm.store', 'password.confirmation',

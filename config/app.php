@@ -78,9 +78,28 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'de'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported UI Locales
+    |--------------------------------------------------------------------------
+    |
+    | Single source of truth for the languages of the user interface (code =>
+    | native name). It is independent of the language of the job postings.
+    |
+    */
+
+    'supported_locales' => [
+        'de' => 'Deutsch',
+        'en' => 'English',
+        'ru' => 'Русский',
+        'uk' => 'Українська',
+        'es' => 'Español',
+        'it' => 'Italiano',
+    ],
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 

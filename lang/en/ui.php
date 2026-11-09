@@ -36,4 +36,6 @@ return [
     'auth.verify.intro' => 'Please confirm your email address using the link we sent you.',
     'auth.verify.resend' => 'Resend email',
     'auth.verify.link_sent' => 'A new verification link has been sent to your email address.',
+    'locale.label' => 'Language',
+    'locale.submit' => 'Change language',
 ];

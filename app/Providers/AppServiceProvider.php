@@ -27,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
     /** Versuche pro Minute und IP (unabhaengig von der E-Mail) fuer Login/Registrierung/Reset. */
     public const AUTH_IP_ATTEMPTS_PER_MINUTE = 20;
 
+    /** Sprachwechsel pro Minute und Benutzer (sonst IP); genug fuer Bedienung, zu wenig fuer Missbrauch. */
+    public const LOCALE_ATTEMPTS_PER_MINUTE = 20;
+
     /** Anfragen pro Minute und Benutzer (sonst IP) fuer MCP. */
     public const MCP_ATTEMPTS_PER_MINUTE = 60;
 
@@ -105,6 +108,9 @@ class AppServiceProvider extends ServiceProvider
                     ->by('ip:'.$request->ip()),
             ];
         });
+
+        RateLimiter::for('locale', fn (Request $request): Limit => Limit::perMinute(self::LOCALE_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
 
         RateLimiter::for('mcp', fn (Request $request): Limit => Limit::perMinute(self::MCP_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));
