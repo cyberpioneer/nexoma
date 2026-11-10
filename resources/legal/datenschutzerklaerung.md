@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Stand: 9. November 2026
+Stand: 10. November 2026
 
 Diese Datenschutzerklärung informiert gemäß Art. 13 der Datenschutz-Grundverordnung (DSGVO) darüber, welche personenbezogenen Daten bei der Nutzung von Nexoma verarbeitet werden, zu welchen Zwecken und auf welcher Rechtsgrundlage.
 
@@ -59,15 +59,23 @@ Die Stellenangebote stammen aus der Jobsuche-API der Bundesagentur für Arbeit. 
 
 Abgerufene Stellendetails werden bis zu 6 Stunden zwischengespeichert, um wiederholte Abfragen zu vermeiden. Der Zwischenspeicher enthält keinen Bezug zu einem Benutzer. Ein Suchverlauf wird pro Benutzer nicht gespeichert.
 
+### Gespeicherte Stellenangebote
+
+Sie können Stellenangebote in Ihrem Konto speichern, wahlweise mit einem eigenen Vermerk (Notiz). Gespeichert werden die Referenznummer des Angebots, ein Auszug daraus (Titel, Arbeitgeber und Ort, wie er beim Speichern bei der Bundesagentur für Arbeit angezeigt wurde), Ihr Vermerk, falls Sie einen eingeben, die Zuordnung zu Ihrem Konto sowie die Zeitpunkte des Speicherns und der letzten Änderung. Den Vermerk geben Sie frei ein; bitte tragen Sie dort keine sensiblen Angaben (z. B. Gesundheitsdaten) und keine Daten Dritter ein. Beim Speichern ruft unser Server den Auszug bei der Bundesagentur für Arbeit ab; dabei werden, wie bei der Stellensuche (oben in diesem Abschnitt), keine Angaben zu Ihrem Konto übermittelt.
+
+Die gespeicherten Stellenangebote und Vermerke sind nur für Sie in Ihrem angemeldeten Konto sichtbar. Sie werden nicht an Dritte weitergegeben. Ein verbundener KI-Dienst (Abschnitt 7) kann auf Ihre Anweisung Stellenangebote, optional mit Vermerk, in Ihrem Konto speichern, gespeicherte Stellenangebote aber weder abrufen noch ändern oder löschen. Der Vermerk wird nicht in Protokolle geschrieben. Pro Konto können höchstens 100 Stellenangebote gespeichert werden.
+
+Zweck ist, dass Sie interessante Stellenangebote wiederfinden und sich Notizen zu Ihrer Bewerbung machen können. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Funktion). Die Daten werden gespeichert, bis Sie das einzelne Stellenangebot oder den Vermerk selbst in Ihrem Konto löschen oder Ihr Konto gelöscht wird; mit dem Konto werden auch alle gespeicherten Stellenangebote gelöscht.
+
 ## 7. Anbindung von KI-Diensten
 
-Sie können einen externen KI-Dienst (MCP-Client) mit Ihrem Konto verbinden, damit dieser in Ihrem Namen die Stellensuche nutzen kann. Das geschieht nur nach Ihrer ausdrücklichen Zustimmung auf einer Bestätigungsseite. Unter „Verbundene Apps“ sehen Sie die verbundenen Dienste und können die Verbindung jederzeit widerrufen.
+Sie können einen externen KI-Dienst (MCP-Client) mit Ihrem Konto verbinden, damit dieser in Ihrem Namen die Stellensuche nutzen und auf Ihre Anweisung Stellenangebote (optional mit Vermerk) in Ihrem Konto speichern kann. Gespeicherte Stellenangebote kann der Dienst nicht abrufen, ändern oder löschen. Das geschieht nur nach Ihrer ausdrücklichen Zustimmung auf einer Bestätigungsseite. Unter „Verbundene Apps“ sehen Sie die verbundenen Dienste und können die Verbindung jederzeit widerrufen.
 
 Dafür werden gespeichert: Name und Weiterleitungsadressen des Dienstes, Ihre Benutzerkennung, Zugriffs- und Aktualisierungs-Token (Gültigkeit 1 Stunde bzw. 30 Tage), der gewährte Zugriffsbereich sowie Zeitpunkte der Erstellung, des Ablaufs und des Widerrufs. Abgelaufene und widerrufene Einträge werden regelmäßig entfernt.
 
-Zur Sicherheit und Nachvollziehbarkeit wird jeder Zugriff über diese Schnittstelle protokolliert (Audit-Log): Benutzerkennung, Kennung des Dienstes, aufgerufene Funktion, Status und Dauer. Suchtexte, Token, IP-Adressen, E-Mail-Adressen und Browserkennungen werden dort nicht aufgezeichnet. Das Audit-Log wird 90 Tage aufbewahrt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO für die Anbindung und Art. 6 Abs. 1 lit. f DSGVO für das Audit-Log (Sicherheit und Missbrauchserkennung).
+Zur Sicherheit und Nachvollziehbarkeit wird jeder Zugriff über diese Schnittstelle protokolliert (Audit-Log): Benutzerkennung, Kennung des Dienstes, aufgerufene Funktion, Status und Dauer. Suchtexte, Referenznummern, Vermerke, Token, IP-Adressen, E-Mail-Adressen und Browserkennungen werden dort nicht aufgezeichnet. Das Audit-Log wird 90 Tage aufbewahrt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO für die Anbindung und Art. 6 Abs. 1 lit. f DSGVO für das Audit-Log (Sicherheit und Missbrauchserkennung).
 
-Was ein verbundener KI-Dienst mit den abgerufenen Ergebnissen macht, liegt in der Verantwortung des jeweiligen Dienstes. Bitte beachten Sie dessen Datenschutzhinweise.
+Was ein verbundener KI-Dienst mit den abgerufenen Ergebnissen macht, liegt in der Verantwortung des jeweiligen Dienstes. Das gilt auch für die Vermerke, die der KI-Dienst im Rahmen des Speicherns an uns übermittelt: Deren Verarbeitung beim KI-Dienst liegt in dessen Verantwortung. Bitte beachten Sie dessen Datenschutzhinweise.
 
 ## 8. Cookies und Zugriff auf das Endgerät
 
@@ -139,6 +147,8 @@ Hinweise zum Entwurf (vor Veröffentlichung entfernen; dieser Kommentar wird nie
 - UNGEPRÜFT: Artikelnummern 15, 16, 17, 18, 20, 21, 77, Art. 28 und Kapitel V DSGVO (in lawdb nicht einzeln abrufbar). Vor Veröffentlichung gegen den Verordnungstext abgleichen.
 - UNGEPRÜFT: Name und Anschrift des BayLDA (Zuständigkeit und Adresse mit der Behörde bzw. deren Website abgleichen).
 - Am Code geprüft: Registrierung (Name, E-Mail, Passwort-Hash, Sprache), Sessions in der Datenbank mit IP und User-Agent, Cookie-Name aus config/session.php (Standard: Slug des APP_NAME + "-session"; bei gesetztem SESSION_COOKIE anpassen), Gültigkeit 120 Minuten (SESSION_LIFETIME), Remember-Cookie über die Anmelden-Checkbox, Limiter-Zähler je IP/E-Mail, Zwischenspeicher für Stellendetails 6 Stunden (JobsucheApiClient::DETAILS_CACHE_SECONDS, Schlüssel nur mit Referenznummer), kein Suchverlauf je Benutzer, OAuth-Tokens 1 Stunde / Refresh 30 Tage (AppServiceProvider), Bereinigung stündlich/täglich (routes/console.php), Audit-Felder (McpAuditLogger::FIELDS), Aufbewahrung MCP_AUDIT_LOG_DAYS (Standard 90; bei geänderter Einstellung Text anpassen), Schriften selbst gehostet (public/build/assets/*.woff2, FrontendHygieneTest), Kontolöschung nicht implementiert (ROADMAP.md).
+- Gespeicherte Stellenangebote am Code geprüft: Tabelle saved_jobs (user_id mit Kaskade beim Löschen des Kontos, refnr, title, employer, location, note, Zeitstempel; eindeutig je Benutzer und Referenznummer), Auszug wird serverseitig über die BA-Details geholt, höchstens 100 je Benutzer (SavedJobController), Vermerk wird nirgends protokolliert (Review SJ-1), MCP-Tool save_job (MCP-SAVE-1) speichert auf Anweisung des KI-Dienstes für den Token-Benutzer (Auszug serverseitig, Limit 100 und 30 Schreibaufrufe je Minute und Benutzer), kein MCP-Tool zum Abrufen, Ändern oder Löschen; Audit-Log ohne Referenznummer und Vermerk. Abschnitte 6 und 7 entsprechend angepasst, rechtlich prüfen. UNGEPRÜFT: Datensicherungen (Backups) des Hosters und deren Aufbewahrung; Hinweis auf Art. 9 DSGVO (besondere Kategorien) im Vermerk rechtlich prüfen.
+- Nicht aufgenommen (zu prüfen): Der Service Worker der PWA speichert nur öffentliche Build-Dateien und Symbole im Browser (kein Personenbezug); ob ein Hinweis in Abschnitt 8 gewünscht ist, ist offen.
 - Nicht geprüft: tatsächlicher Mail-Anbieter, Hoster, Logfile-Frist, Verarbeitung in Drittländern durch Hoster/Mail-Anbieter, Datenschutzhinweise der Bundesagentur für Arbeit (ggf. verlinken).
 - Allgemeine Anwendungslogs (laravel.log) können bei Fehlern technische Angaben enthalten; Aufbewahrung (LOG_DAILY_DAYS bzw. Standard) und Inhalt vor Veröffentlichung gegen die Produktionskonfiguration prüfen.
 - Ein Verzeichnis der Verarbeitungstätigkeiten (Art. 30 DSGVO) und ggf. ein Datenschutzbeauftragter sind nicht Teil dieses Textes (nicht geprüft).
