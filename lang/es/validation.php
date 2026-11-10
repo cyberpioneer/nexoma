@@ -61,5 +61,6 @@ return [
         'befristung' => 'duración del contrato',
         'arbeitszeit' => 'jornada laboral',
         'locale' => 'idioma',
+        'note' => 'Nota',
     ],
 ];
