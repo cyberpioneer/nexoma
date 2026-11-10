@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Deferred, Head, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import Button from '@/components/Button.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import JobListItem from '@/components/JobListItem.vue';
@@ -8,7 +9,7 @@ import PageHeader from '@/components/PageHeader.vue';
 import Skeleton from '@/components/Skeleton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTranslate } from '@/lib/translate';
-import type { JobFilters, SearchResults } from '@/types';
+import type { JobFilters, SavedJobRef, SearchResults } from '@/types';
 
 defineOptions({ layout: AppLayout });
 
@@ -16,9 +17,14 @@ const props = defineProps<{
     filters: JobFilters;
     fieldErrors: Record<string, string>;
     results?: SearchResults | null;
+    saved: SavedJobRef[];
 }>();
 
 const { t } = useTranslate();
+
+const savedByRefnr = computed(
+    () => new Map(props.saved.map((entry) => [entry.refnr, entry])),
+);
 const page = usePage();
 
 const formattedTotal = (total: number) =>
@@ -75,6 +81,7 @@ const formattedTotal = (total: number) =>
                                 v-for="job in props.results.jobs"
                                 :key="job.refnr"
                                 :job="job"
+                                :saved="savedByRefnr.get(job.refnr) ?? null"
                             />
                         </ul>
                         <nav
