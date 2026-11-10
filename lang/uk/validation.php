@@ -51,6 +51,8 @@ return [
     ],
     'attributes' => [
         'consent' => 'ознайомлення',
+        'first_name' => 'ім’я',
+        'last_name' => 'прізвище',
         'name' => 'ім’я',
         'email' => 'адреса електронної пошти',
         'password' => 'пароль',

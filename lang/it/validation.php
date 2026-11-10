@@ -51,6 +51,8 @@ return [
     ],
     'attributes' => [
         'consent' => 'presa visione',
+        'first_name' => 'nome',
+        'last_name' => 'cognome',
         'name' => 'nome',
         'email' => 'indirizzo e-mail',
         'password' => 'password',

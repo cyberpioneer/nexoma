@@ -51,6 +51,8 @@ return [
     ],
     'attributes' => [
         'consent' => 'toma de conocimiento',
+        'first_name' => 'nombre',
+        'last_name' => 'apellidos',
         'name' => 'nombre',
         'email' => 'correo electrónico',
         'password' => 'contraseña',

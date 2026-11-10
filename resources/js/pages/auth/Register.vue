@@ -66,12 +66,20 @@ function notifyFailure(errors: Record<string, string>): void {
                 class="flex flex-col gap-5"
                 #default="{ errors, processing }"
             >
-                <TextField
-                    name="name"
-                    autocomplete="name"
-                    :label="t('auth.register.name')"
-                    :error="errors.name"
-                />
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <TextField
+                        name="first_name"
+                        autocomplete="given-name"
+                        :label="t('auth.register.first_name')"
+                        :error="errors.first_name"
+                    />
+                    <TextField
+                        name="last_name"
+                        autocomplete="family-name"
+                        :label="t('auth.register.last_name')"
+                        :error="errors.last_name"
+                    />
+                </div>
                 <TextField
                     name="email"
                     type="email"
