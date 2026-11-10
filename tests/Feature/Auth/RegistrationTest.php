@@ -95,3 +95,12 @@ test('the failed registration response does not leak the password', function () 
     $response->assertInertia(fn (Assert $page) => $page->component('auth/Register')->missing('password'));
     expect($response->getContent())->not->toContain('secret-password-1');
 });
+
+test('failed registration stays on the register page even when the previous url is the home page', function () {
+    $this->withSession(['_previous' => ['url' => url('/')]])
+        ->post(route('register.store'), registrationPayload(['password_confirmation' => 'does-not-match']))
+        ->assertRedirect(route('register'))
+        ->assertSessionHasErrors('password');
+
+    $this->assertGuest();
+});

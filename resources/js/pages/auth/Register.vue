@@ -6,12 +6,21 @@ import Card from '@/components/Card.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import TextField from '@/components/TextField.vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
+import { showToast } from '@/lib/toast';
 import { useTranslate } from '@/lib/translate';
 import { login } from '@/routes';
 
 defineOptions({ layout: GuestLayout });
 
 const { t } = useTranslate();
+
+function notifyFailure(errors: Record<string, string>): void {
+    const message = Object.values(errors)[0];
+
+    if (message) {
+        showToast(message);
+    }
+}
 </script>
 
 <template>
@@ -22,6 +31,7 @@ const { t } = useTranslate();
             <Form
                 v-bind="store.form()"
                 :reset-on-error="['password', 'password_confirmation']"
+                @error="notifyFailure"
                 class="flex flex-col gap-5"
                 #default="{ errors, processing }"
             >
