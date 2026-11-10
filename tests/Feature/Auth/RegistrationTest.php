@@ -15,6 +15,7 @@ function registrationPayload(array $overrides = []): array
         'email' => 'max@example.com',
         'password' => 'secret-password-1',
         'password_confirmation' => 'secret-password-1',
+        'consent' => '1',
         ...$overrides,
     ];
 }
@@ -103,4 +104,67 @@ test('failed registration stays on the register page even when the previous url 
         ->assertSessionHasErrors('password');
 
     $this->assertGuest();
+});
+
+test('registration stores the time and the current privacy version as proof', function () {
+    $this->freezeTime();
+
+    $this->post(route('register.store'), registrationPayload());
+
+    $user = User::firstOrFail();
+
+    expect($user->consent_version)->toBe(config('legal.privacy_version'))
+        ->and($user->consented_at->diffInSeconds(now(), true))->toBeLessThan(2);
+});
+
+test('registration requires the consent checkbox on the server', function (array $overrides) {
+    Notification::fake();
+
+    $this->from(route('register'))
+        ->post(route('register.store'), registrationPayload($overrides))
+        ->assertRedirect(route('register'))
+        ->assertSessionHasErrors('consent');
+
+    expect(User::count())->toBe(0);
+    $this->assertGuest();
+    Notification::assertNothingSent();
+})->with([
+    'missing' => [['consent' => null]],
+    'zero' => [['consent' => '0']],
+    'false' => [['consent' => 'false']],
+    'empty' => [['consent' => '']],
+    'array' => [['consent' => ['1']]],
+]);
+
+test('a failed consent check redirects to the register page even when the previous url is the home page', function () {
+    $this->withSession(['_previous' => ['url' => url('/')]])
+        ->post(route('register.store'), registrationPayload(['consent' => '']))
+        ->assertRedirect(route('register'))
+        ->assertSessionHasErrors('consent');
+});
+
+test('consent_version and consented_at from the request are ignored', function () {
+    $this->post(route('register.store'), registrationPayload([
+        'consent_version' => '1999-01-01',
+        'consented_at' => '1999-01-01 00:00:00',
+    ]));
+
+    $user = User::firstOrFail();
+
+    expect($user->consent_version)->toBe(config('legal.privacy_version'))
+        ->and($user->consented_at->isToday())->toBeTrue();
+});
+
+test('the privacy version matches the Stand date of the privacy policy', function () {
+    $markdown = (string) file_get_contents(resource_path('legal/datenschutzerklaerung.md'));
+
+    expect(preg_match('/^Stand:\s*(\d{1,2})\.\s*(\p{L}+)\s+(\d{4})\s*$/mu', $markdown, $m))->toBe(1);
+
+    $months = ['Januar' => 1, 'Februar' => 2, 'März' => 3, 'April' => 4, 'Mai' => 5, 'Juni' => 6, 'Juli' => 7,
+        'August' => 8, 'September' => 9, 'Oktober' => 10, 'November' => 11, 'Dezember' => 12];
+
+    expect($months)->toHaveKey($m[2]);
+
+    // Bei inhaltlicher Aenderung der Erklaerung "Stand" und config/legal.php gemeinsam erhoehen.
+    expect(sprintf('%04d-%02d-%02d', $m[3], $months[$m[2]], $m[1]))->toBe(config('legal.privacy_version'));
 });

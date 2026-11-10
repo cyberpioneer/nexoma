@@ -43,11 +43,11 @@ Bei Kontaktaufnahme per E-Mail werden die mitgeteilten Daten (Name, E-Mail-Adres
 
 ## 5. Benutzerkonto
 
-Für die Nutzung der Stellensuche ist ein Benutzerkonto erforderlich. Bei der Registrierung werden Name, E-Mail-Adresse und Passwort sowie die eingestellte Sprache gespeichert. Das Passwort wird nur als Hash gespeichert, nicht im Klartext. Zur Bestätigung der E-Mail-Adresse und für das Zurücksetzen des Passworts versenden wir E-Mails mit einem Link. Für das Zurücksetzen werden die E-Mail-Adresse, ein Token (als Hash) und der Erstellungszeitpunkt vorübergehend gespeichert.
+Für die Nutzung der Stellensuche ist ein Benutzerkonto erforderlich. Bei der Registrierung werden Name, E-Mail-Adresse und Passwort sowie die eingestellte Sprache gespeichert. Bei der Registrierung müssen Sie bestätigen, dass Sie diese Datenschutzerklärung und den Haftungsausschluss zur Kenntnis genommen haben; dazu speichern wir in Ihrem Benutzerkonto den Zeitpunkt der Bestätigung und die Version (Stand) der Datenschutzerklärung. Zweck ist der Nachweis dieser Kenntnisnahme; dies ist keine Einwilligung im Sinne des Art. 6 Abs. 1 lit. a DSGVO. Das Passwort wird nur als Hash gespeichert, nicht im Klartext. Zur Bestätigung der E-Mail-Adresse und für das Zurücksetzen des Passworts versenden wir E-Mails mit einem Link. Für das Zurücksetzen werden die E-Mail-Adresse, ein Token (als Hash) und der Erstellungszeitpunkt vorübergehend gespeichert.
 
 Wenn Sie die Sprache ändern, wird die Auswahl in Ihrem Benutzerkonto gespeichert, damit Oberfläche und E-Mails in dieser Sprache erscheinen.
 
-Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung des Kontos und der Funktionen). Die Daten werden bis zur Löschung des Kontos gespeichert. Eine Löschung des Kontos ist derzeit nur auf Anfrage per E-Mail an die oben genannte Adresse möglich.
+Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung des Kontos und der Funktionen), für den Nachweis der Kenntnisnahme Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Nachweisbarkeit). Die Daten werden bis zur Löschung des Kontos gespeichert. Eine Löschung des Kontos ist derzeit nur auf Anfrage per E-Mail an die oben genannte Adresse möglich.
 
 ### E-Mail-Versand
 
@@ -152,5 +152,6 @@ Hinweise zum Entwurf (vor Veröffentlichung entfernen; dieser Kommentar wird nie
 - Nicht geprüft: tatsächlicher Mail-Anbieter, Hoster, Logfile-Frist, Verarbeitung in Drittländern durch Hoster/Mail-Anbieter, Datenschutzhinweise der Bundesagentur für Arbeit (ggf. verlinken).
 - Allgemeine Anwendungslogs (laravel.log) können bei Fehlern technische Angaben enthalten; Aufbewahrung (LOG_DAILY_DAYS bzw. Standard) und Inhalt vor Veröffentlichung gegen die Produktionskonfiguration prüfen.
 - Ein Verzeichnis der Verarbeitungstätigkeiten (Art. 30 DSGVO) und ggf. ein Datenschutzbeauftragter sind nicht Teil dieses Textes (nicht geprüft).
+- Registrierung (REG-CONSENT-1): Pflicht-Checkbox "Kenntnisnahme" mit Speicherung von consented_at und consent_version (config/legal.php, bei jeder inhaltlichen Änderung zusammen mit "Stand" erhöhen). Rechtlich ungeprüft: Kenntnisnahme ist keine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO; Rechtsgrundlage lit. f für den Nachweis und Speicherdauer (wie das Konto) prüfen.
 - Platzhalter in [eckigen Klammern] ersetzen; `php artisan legal:check` listet sie auf.
 -->
