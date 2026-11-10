@@ -68,7 +68,7 @@ test('a verified user with the scope can initialize and list the tools', functio
         'clientInfo' => ['name' => 'test', 'version' => '1'],
     ])->assertOk()->assertJsonPath('result.serverInfo.name', 'Nexoma Job Search');
 
-    mcpRequest('tools/list')->assertOk()->assertJsonCount(3, 'result.tools');
+    mcpRequest('tools/list')->assertOk()->assertJsonCount(4, 'result.tools');
 });
 
 test('a revoked token gets 401', function () {
