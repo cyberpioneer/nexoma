@@ -13,12 +13,12 @@ const { t } = useTranslate();
             v-for="toast in toasts"
             :key="toast.id"
             :role="toast.tone === 'error' ? 'alert' : 'status'"
-            class="bg-black pointer-events-auto flex min-h-14 w-full max-w-md motion-arrive items-center gap-3 rounded-md border border-white/20 py-1 pr-1 pl-4 text-sm text-white shadow-header sm:w-96 dark:bg-[#eee] dark:text-[#888]"
+            class="pointer-events-auto flex min-h-14 w-full max-w-md motion-arrive items-center gap-3 rounded-md border border-white/20 bg-toast py-1 pr-1 pl-4 text-sm text-[#eee] shadow-header sm:w-96"
         >
             <p class="flex-1">{{ toast.message }}</p>
             <button
                 type="button"
-                class="inline-flex size-11 shrink-0 items-center justify-center rounded-sm text-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                class="inline-flex size-11 shrink-0 items-center justify-center rounded-sm text-[#eee] hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#eee]"
                 :aria-label="t('toast.close')"
                 @click="dismissToast(toast.id)"
             >

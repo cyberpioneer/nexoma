@@ -29,6 +29,7 @@
     --color-*: initial;
     --color-transparent: transparent;
     --color-white: #ffffff;
+    --color-toast: #000000;
     --color-paper: #fbfaf7;
     --color-surface: #f1f0ec;
     --color-line: #e3e1db;
@@ -65,6 +66,7 @@
 :root[data-theme='dark'] {
     color-scheme: dark;
     --color-white: #1a1e22;
+    --color-toast: #1b2a38;
     --color-paper: #14171a;
     --color-surface: #22272c;
     --color-line: #2e353b;
