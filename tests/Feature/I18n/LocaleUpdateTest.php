@@ -96,6 +96,7 @@ test('a new user receives the resolved locale', function (array $headers, array 
         'email' => 'max@example.com',
         'password' => 'secret-password-1',
         'password_confirmation' => 'secret-password-1',
+        'consent' => '1',
     ], $headers)->assertRedirect('/dashboard');
 
     expect(User::where('email', 'max@example.com')->firstOrFail()->locale)->toBe($expected);
@@ -113,6 +114,7 @@ test('a locale in the registration request is never assigned', function () {
         'email' => 'max@example.com',
         'password' => 'secret-password-1',
         'password_confirmation' => 'secret-password-1',
+        'consent' => '1',
         'locale' => 'ru',
     ]);
 

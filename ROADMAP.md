@@ -15,6 +15,7 @@ Stand: 2026-11-09. Gitflow: `main` nur Releases, `develop` Integration, `feature
 | M7/M8 Teil C | MCP-Server, Tools, Audit | fertig, `develop` |
 | M9 | Favoriten (gespeicherte Vakanzen mit Vermerk) | umgesetzt und geprüft auf `feature/saved-jobs`; Migration `saved_jobs` noch auszuführen; Datenschutzerklärung anpassen |
 | M9a | MCP-Tool `save_job` (MCP-SAVE-1): erstes schreibendes Tool, Scope `mcp:use` erweitert (kein neuer Scope, kein Re-Consent) | umgesetzt auf `feature/mcp-save-job`, Review ausstehend |
+| REG-CONSENT-1 | Pflicht-Checkbox bei der Registrierung (Kenntnisnahme Datenschutz/Haftungsausschluss) mit Nachweis (`users.consented_at`, `users.consent_version`); Migration noch auszuführen | umgesetzt auf `feature/register-consent`, Review ausstehend |
 | M10 | Härtung, Deployment-Checkliste | fertig, `develop` |
 
 ## Deployment-Checkliste (Release 1)
