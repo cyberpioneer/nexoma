@@ -12,6 +12,6 @@ const { t } = useTranslate();
         :aria-label="t('nav.home')"
         class="inline-flex min-h-11 items-center font-serif text-2xl font-semibold tracking-tight"
     >
-        Nexoma
+        <img src="/nexoma.png" alt="Nexoma" class="mr-1 w-8" /> exoma
     </Link>
 </template>

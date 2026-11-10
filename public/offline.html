@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex" />
+        <title>Nexoma</title>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <style>
+            :root {
+                color-scheme: light dark;
+                --paper: #fbfaf7;
+                --ink: #1d2227;
+                --muted: #4b545c;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --paper: #14171a;
+                    --ink: #ecebe7;
+                    --muted: #cfd2d4;
+                }
+            }
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+                padding: 1.5rem;
+                background: var(--paper);
+                color: var(--ink);
+                font:
+                    1rem/1.6 system-ui,
+                    sans-serif;
+            }
+            main {
+                max-width: 32rem;
+            }
+            img {
+                width: 4rem;
+                height: auto;
+            }
+            h1 {
+                margin: 1rem 0 0.5rem;
+                font-size: 1.5rem;
+            }
+            p {
+                margin: 0 0 0.75rem;
+                color: var(--muted);
+            }
+            p[lang]:first-of-type {
+                color: var(--ink);
+            }
+            button {
+                margin-top: 0.5rem;
+                padding: 0.75rem 1.25rem;
+                font: inherit;
+                font-weight: 600;
+                color: var(--paper);
+                background: var(--ink);
+                border: 0;
+                border-radius: 0.5rem;
+                cursor: pointer;
+            }
+            button:focus-visible {
+                outline: 3px solid currentColor;
+                outline-offset: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <img src="/icons/icon-192.png" alt="" width="64" height="64" />
+            <h1>Nexoma</h1>
+            <p lang="de">
+                Keine Internetverbindung. Prüfe deine Verbindung und versuche es
+                noch einmal.
+            </p>
+            <p lang="en">
+                No internet connection. Check your connection and try again.
+            </p>
+            <p lang="ru">
+                Нет подключения к интернету. Проверьте соединение и повторите
+                попытку.
+            </p>
+            <p lang="uk">
+                Немає підключення до інтернету. Перевірте з’єднання та спробуйте
+                ще раз.
+            </p>
+            <p lang="es">
+                Sin conexión a internet. Comprueba tu conexión e inténtalo de
+                nuevo.
+            </p>
+            <p lang="it">
+                Nessuna connessione a internet. Controlla la connessione e
+                riprova.
+            </p>
+            <button type="button" onclick="location.reload()">↻</button>
+        </main>
+    </body>
+</html>
