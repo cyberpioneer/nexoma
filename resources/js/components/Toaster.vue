@@ -13,7 +13,7 @@ const { t } = useTranslate();
             v-for="toast in toasts"
             :key="toast.id"
             :role="toast.tone === 'error' ? 'alert' : 'status'"
-            class="bg-black dark:bg-[#eee] pointer-events-auto flex min-h-14 w-full max-w-md motion-arrive items-center gap-3 rounded-md border border-white/20 py-1 pr-1 pl-4 text-sm text-white dark:text-[#888] shadow-header sm:w-96"
+            class="bg-black pointer-events-auto flex min-h-14 w-full max-w-md motion-arrive items-center gap-3 rounded-md border border-white/20 py-1 pr-1 pl-4 text-sm text-white shadow-header sm:w-96 dark:bg-[#eee] dark:text-[#888]"
         >
             <p class="flex-1">{{ toast.message }}</p>
             <button
