@@ -302,3 +302,23 @@ test('deleting a user removes the saved jobs', function () {
 
     expect(SavedJob::query()->count())->toBe(0);
 });
+
+test('saving, changing and deleting return to the page the user came from', function () {
+    fakeSavedJobDetails();
+    $user = User::factory()->create();
+    $origin = url('/jobs?was=pflege&page=2');
+
+    $this->actingAs($user)->withHeader('Referer', $origin)
+        ->post(route('saved-jobs.store'), ['refnr' => SAVED_TEST_REFNR, 'note' => 'x'])
+        ->assertRedirect($origin);
+
+    $savedJob = $user->savedJobs()->firstOrFail();
+
+    $this->actingAs($user)->withHeader('Referer', $origin)
+        ->patch(route('saved-jobs.update', $savedJob), ['note' => 'y'])
+        ->assertRedirect($origin);
+
+    $this->actingAs($user)->withHeader('Referer', $origin)
+        ->delete(route('saved-jobs.destroy', $savedJob))
+        ->assertRedirect($origin);
+});

@@ -16,7 +16,7 @@ beforeEach(function () {
 
 function assertSecurityHeaders(TestResponse $response): void
 {
-    $response->assertHeader('Referrer-Policy', 'no-referrer')
+    $response->assertHeader('Referrer-Policy', 'same-origin')
         ->assertHeader('X-Content-Type-Options', 'nosniff')
         ->assertHeader('Permissions-Policy', SecurityHeaders::PERMISSIONS_POLICY);
 }
@@ -51,13 +51,13 @@ test('security headers also cover a 403 response', function () {
 
 test('existing framing headers from other packages are not overwritten', function () {
     Route::middleware('web')->get('/_test/framing', fn () => response('x')->withHeaders([
-        'Referrer-Policy' => 'same-origin',
+        'Referrer-Policy' => 'no-referrer',
         'X-Frame-Options' => 'DENY',
         'Content-Security-Policy' => "frame-ancestors 'none'",
     ]));
 
     $this->get('/_test/framing')
-        ->assertHeader('Referrer-Policy', 'same-origin')
+        ->assertHeader('Referrer-Policy', 'no-referrer')
         ->assertHeader('X-Frame-Options', 'DENY')
         ->assertHeader('Content-Security-Policy', "frame-ancestors 'none'");
 });
@@ -71,7 +71,7 @@ test('hsts is sent only in production over https', function () {
     $this->get('http://nexoma.example/_test/info')->assertHeaderMissing('Strict-Transport-Security');
     $this->get('https://nexoma.example/_test/info')
         ->assertHeader('Strict-Transport-Security', 'max-age=31536000')
-        ->assertHeader('Referrer-Policy', 'no-referrer');
+        ->assertHeader('Referrer-Policy', 'same-origin');
 });
 
 test('without TRUSTED_PROXIES forwarded headers are ignored', function () {
