@@ -6,9 +6,8 @@ use App\Http\Requests\StoreSavedJobRequest;
 use App\Http\Requests\UpdateSavedJobNoteRequest;
 use App\Models\SavedJob;
 use App\Models\User;
-use App\Services\Jobsuche\JobDataMapper;
-use App\Services\Jobsuche\JobsucheApiClient;
-use Illuminate\Database\UniqueConstraintViolationException;
+use App\Services\SavedJobs\SavedJobSaver;
+use App\Services\SavedJobs\SavedJobSaveStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -43,45 +42,25 @@ class SavedJobController extends Controller
     }
 
     /**
-     * Speichert eine Vakanz. Titel, Arbeitgeber und Ort holt der Server selbst ueber die BA-API (Whitelist des
-     * Mappers). Ist die Stelle schon gespeichert, bleibt es bei einem Eintrag und nur der Vermerk wird aktualisiert;
-     * die BA-API wird dann nicht erneut abgefragt.
+     * Speichert eine Vakanz ueber {@see SavedJobSaver}: Titel, Arbeitgeber und Ort holt der Server selbst ueber die
+     * BA-API. Ist die Stelle schon gespeichert, bleibt es bei einem Eintrag und nur der Vermerk wird aktualisiert.
      */
-    public function store(StoreSavedJobRequest $request, JobsucheApiClient $client, JobDataMapper $mapper): RedirectResponse
+    public function store(StoreSavedJobRequest $request, SavedJobSaver $saver): RedirectResponse
     {
-        $user = $this->user($request);
-        $refnr = (string) $request->validated('refnr');
+        $result = $saver->save(
+            $this->user($request),
+            (string) $request->validated('refnr'),
+            $request->has('note'),
+            $request->note(),
+        );
 
-        if ($this->updateExistingNote($request, $user, $refnr)) {
-            return back();
-        }
-
-        if ($user->savedJobs()->count() >= SavedJob::MAX_PER_USER) {
-            throw ValidationException::withMessages([
+        match ($result->status) {
+            SavedJobSaveStatus::LimitReached => throw ValidationException::withMessages([
                 'refnr' => __('ui.saved.error.limit', ['max' => SavedJob::MAX_PER_USER]),
-            ]);
-        }
-
-        $details = $client->details($refnr);
-
-        if ($details === null) {
-            throw ValidationException::withMessages(['refnr' => __('ui.saved.error.unavailable')]);
-        }
-
-        $job = $mapper->jobDetails($details, $refnr);
-
-        try {
-            $user->savedJobs()->create([
-                'refnr' => $refnr,
-                'title' => $job['title'],
-                'employer' => $job['employer'],
-                'location' => $job['locations'][0] ?? null,
-                'note' => $request->note(),
-            ]);
-        } catch (UniqueConstraintViolationException) {
-            // Paralleler Doppelklick: der Eintrag existiert bereits, es bleibt bei einem.
-            $this->updateExistingNote($request, $user, $refnr);
-        }
+            ]),
+            SavedJobSaveStatus::Unavailable => throw ValidationException::withMessages(['refnr' => __('ui.saved.error.unavailable')]),
+            default => null,
+        };
 
         return back();
     }
@@ -104,24 +83,6 @@ class SavedJobController extends Controller
         $this->ownSavedJob($request, $savedJob)->delete();
 
         return back();
-    }
-
-    /**
-     * Aktualisiert bei einem vorhandenen Eintrag den Vermerk (nur wenn mitgesendet); liefert, ob er existiert.
-     */
-    private function updateExistingNote(StoreSavedJobRequest $request, User $user, string $refnr): bool
-    {
-        $existing = $user->savedJobs()->where('refnr', $refnr)->first();
-
-        if ($existing === null) {
-            return false;
-        }
-
-        if ($request->has('note')) {
-            $existing->update(['note' => $request->note()]);
-        }
-
-        return true;
     }
 
     private function ownSavedJob(Request $request, int $id): SavedJob

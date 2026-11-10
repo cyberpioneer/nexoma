@@ -21,7 +21,7 @@ Nexoma macht die Stellensuche der Bundesagentur für Arbeit mehrsprachig zugäng
 Drei Dinge zusammen, die ein Nachbarprodukt nicht wahrheitsgemäß behaupten könnte:
 
 - Die Oberfläche und alle Hinweise gibt es in sechs Sprachen (Stellentexte bleiben in der Originalsprache der BA).
-- Verifizierte Konten verbinden KI-Assistenten per OAuth mit der Stellensuche, mit ausdrücklicher Zustimmung und Widerruf (MCP, nur Lesezugriff).
+- Verifizierte Konten verbinden KI-Assistenten per OAuth mit der Stellensuche, mit ausdrücklicher Zustimmung und Widerruf (MCP: suchen, ansehen und auf Wunsch in der eigenen Liste speichern, kein Löschen, keine Bewerbung).
 - Sicherer, schlanker Zugang: keine Werbung, kein Tracking, selbst gehostete Schriften, API-Schlüssel der BA bleiben serverseitig.
 
 ## Operating Context
@@ -30,7 +30,7 @@ Datenquelle ist die Jobsuche-API der Bundesagentur für Arbeit (serverseitig, ö
 
 ## Capabilities and Constraints
 
-- Release 1: Registrierung mit E-Mail-Verifizierung, Anmeldung, Stellensuche und Details, „Verbundene Apps“, MCP-Server mit drei schreibfreien Tools (`job_search`, `job_details`, `job_search_options`), Rechtsseiten.
+- Release 1: Registrierung mit E-Mail-Verifizierung, Anmeldung, Stellensuche und Details, „Verbundene Apps“, MCP-Server mit drei lesenden Tools (`job_search`, `job_details`, `job_search_options`) und dem Tool `save_job` zum Speichern einer Stelle, optional mit Vermerk, Rechtsseiten.
 - Nicht in Release 1: Favoriten, Suchprofile, Suchverlauf (Favoriten sind der erste Ausbau danach). Kontolöschung nur auf Anfrage.
 - Konten sind getrennt (Single-Tenant mit Daten je Benutzer). Browser-Auth: Fortify mit Session, OAuth für KI-Clients: Passport; kein Sanctum.
 - Texte der Oberfläche liegen zentral in `lang/*/ui.php` und werden über `t()` ausgegeben; neue Texte brauchen alle sechs Sprachen. Übersetzungen sind maschinell erzeugt und nicht von Muttersprachlern geprüft. Die Anrede (du/Sie) ist uneinheitlich und offen.

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'accepted' => 'El campo :attribute debe ser aceptado.',
     'array' => 'El campo :attribute debe ser una lista.',
     'between' => [
         'array' => 'El campo :attribute debe tener entre :min y :max elementos.',
@@ -43,7 +44,15 @@ return [
     ],
     'string' => 'El campo :attribute debe ser una cadena de texto.',
     'unique' => 'El valor de :attribute ya está en uso.',
+    'custom' => [
+        'consent' => [
+            'accepted' => 'Confirma que has tomado nota de la política de privacidad y del aviso de exención de responsabilidad.',
+        ],
+    ],
     'attributes' => [
+        'consent' => 'toma de conocimiento',
+        'first_name' => 'nombre',
+        'last_name' => 'apellidos',
         'name' => 'nombre',
         'email' => 'correo electrónico',
         'password' => 'contraseña',
