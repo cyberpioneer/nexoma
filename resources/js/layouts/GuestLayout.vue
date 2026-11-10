@@ -2,6 +2,7 @@
 import SiteFooter from '@/components/SiteFooter.vue';
 import SiteHeader from '@/components/SiteHeader.vue';
 import SkipLink from '@/components/SkipLink.vue';
+import Toaster from '@/components/Toaster.vue';
 </script>
 
 <template>
@@ -16,5 +17,6 @@ import SkipLink from '@/components/SkipLink.vue';
             <slot />
         </main>
         <SiteFooter />
+        <Toaster />
     </div>
 </template>

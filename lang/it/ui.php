@@ -7,6 +7,7 @@ return [
     'common.password_confirmation' => 'Conferma password',
     'nav.menu' => 'Menu',
     'nav.menu_close' => 'Chiudi menu',
+    'toast.close' => 'Chiudi messaggio',
     'theme.dark' => 'Modalità scura',
     'nav.logout' => 'Esci',
     'dashboard.title' => 'Panoramica',

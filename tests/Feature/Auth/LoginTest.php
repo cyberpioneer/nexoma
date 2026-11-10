@@ -70,3 +70,14 @@ test('authenticated users are redirected away from guest pages', function (strin
         ->get(route($routeName))
         ->assertRedirect(route('dashboard'));
 })->with(['login', 'register', 'password.request']);
+
+test('failed login stays on the login page even when the previous url is the home page', function () {
+    $user = User::factory()->create();
+
+    $this->withSession(['_previous' => ['url' => url('/')]])
+        ->post(route('login.store'), ['email' => $user->email, 'password' => 'wrong-password'])
+        ->assertRedirect(route('login'))
+        ->assertSessionHasErrors('email');
+
+    $this->assertGuest();
+});
