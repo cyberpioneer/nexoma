@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JobDetailsRequest;
 use App\Http\Requests\SearchJobsRequest;
+use App\Models\SavedJob;
+use App\Models\User;
 use App\Services\Jobsuche\JobDataMapper;
 use App\Services\Jobsuche\JobsucheApiClient;
 use Illuminate\Http\Request;
@@ -38,6 +40,7 @@ class JobController extends Controller
                 'filters' => $filters,
                 'fieldErrors' => (object) [],
                 'results' => null,
+                'saved' => $this->savedJobs($request),
             ]);
         }
 
@@ -48,6 +51,7 @@ class JobController extends Controller
                 'filters' => $filters,
                 'fieldErrors' => collect($validator->errors()->toArray())->map(fn (array $messages): string => (string) $messages[0])->all() ?: (object) [],
                 'results' => null,
+                'saved' => $this->savedJobs($request),
             ]);
         }
 
@@ -59,6 +63,7 @@ class JobController extends Controller
             'filters' => $filters,
             'fieldErrors' => (object) [],
             'results' => Inertia::defer(fn (): array => $this->searchResults($client, $mapper, $validated)),
+            'saved' => $this->savedJobs($request),
         ]);
     }
 
@@ -73,7 +78,32 @@ class JobController extends Controller
 
         return Inertia::render('Jobs/Show', [
             'job' => $details === null ? null : $mapper->jobDetails($details, $refnr),
+            'saved' => $this->user($request)->savedJobs()->where('refnr', $refnr)->first(['id', 'note'])?->only(['id', 'note']),
         ]);
+    }
+
+    /**
+     * Eigene gespeicherte Vakanzen (hoechstens {@see SavedJob::MAX_PER_USER}, eine Abfrage), damit die Trefferliste
+     * ohne Einzelabfragen zeigt, was gespeichert ist. Als Liste, weil rein numerische Referenznummern als
+     * Array-Schluessel zu Ganzzahlen wuerden.
+     *
+     * @return list<array{id: int, refnr: string, note: string|null}>
+     */
+    private function savedJobs(Request $request): array
+    {
+        $saved = [];
+
+        foreach ($this->user($request)->savedJobs()->limit(SavedJob::MAX_PER_USER)->get(['id', 'refnr', 'note']) as $savedJob) {
+            $saved[] = ['id' => $savedJob->id, 'refnr' => $savedJob->refnr, 'note' => $savedJob->note];
+        }
+
+        return $saved;
+    }
+
+    private function user(Request $request): User
+    {
+        /** @var User */
+        return $request->user();
     }
 
     /**
