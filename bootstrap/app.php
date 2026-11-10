@@ -12,6 +12,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Middleware\TrustProxies as IlluminateTrustProxies;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -64,6 +65,16 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Fehlgeschlagene Anmeldung: immer zurueck zur Anmeldeseite. Ohne Vorgabe leitet Laravel auf die zuletzt
+        // gemerkte Seite (bei Inertia-Navigation oft "/") um, weil Referrer-Policy "no-referrer" den Referer entfernt.
+        $exceptions->render(function (ValidationException $exception, Request $request): null {
+            if ($request->routeIs('login.store') && ! $request->expectsJson()) {
+                $exception->redirectTo(route('login'));
+            }
+
+            return null;
+        });
+
         // Maschinenclients (MCP/OAuth) erhalten JSON statt Weiterleitungen/HTML. `oauth/authorize` ist
         // bewusst ausgenommen: das ist die Browserseite mit Login-Weiterleitung.
         $exceptions->shouldRenderJsonWhen(

@@ -7,6 +7,7 @@ return [
     'common.password_confirmation' => 'Подтвердите пароль',
     'nav.menu' => 'Меню',
     'nav.menu_close' => 'Закрыть меню',
+    'toast.close' => 'Закрыть сообщение',
     'theme.dark' => 'Тёмная тема',
     'nav.logout' => 'Выйти',
     'dashboard.title' => 'Обзор',
