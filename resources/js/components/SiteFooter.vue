@@ -12,11 +12,15 @@ const { t } = useTranslate();
             class="layout-container flex flex-col gap-3 py-8 text-sm text-muted"
         >
             <div class="flex items-center justify-between">
-                <p class="font-semibold uppercase text-xs">Nexoma</p>
-                <span class="font-semibold text-[#555d66] text-xs">{{ new Date().getFullYear() }}</span>
+                <p class="text-xs font-semibold uppercase">Nexoma</p>
+                <span class="text-xs font-semibold text-[#555d66]">{{
+                    new Date().getFullYear()
+                }}</span>
             </div>
 
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div
+                class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+            >
                 <nav :aria-label="t('footer.legal')">
                     <ul class="flex flex-wrap gap-x-6">
                         <li>
@@ -46,7 +50,10 @@ const { t } = useTranslate();
                     </ul>
                 </nav>
 
-                <span class="main-in">Made with <span class="text-[#fde2e4]">&#x2764;</span> in Germany</span>
+                <span class="main-in"
+                    >Made with <span class="text-[#fde2e4]">&#x2764;</span> in
+                    Germany</span
+                >
             </div>
         </div>
     </footer>
