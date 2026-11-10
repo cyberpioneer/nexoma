@@ -11,7 +11,8 @@ use Inertia\Testing\AssertableInertia as Assert;
 function registrationPayload(array $overrides = []): array
 {
     return [
-        'name' => 'Max Mustermann',
+        'first_name' => 'Max',
+        'last_name' => 'Mustermann',
         'email' => 'max@example.com',
         'password' => 'secret-password-1',
         'password_confirmation' => 'secret-password-1',
@@ -69,7 +70,10 @@ test('registration is rejected for invalid input', function (array $overrides, s
     expect(User::count())->toBe(0);
     $this->assertGuest();
 })->with([
-    'missing name' => [['name' => ''], 'name'],
+    'missing first name' => [['first_name' => ''], 'first_name'],
+    'missing last name' => [['last_name' => ''], 'last_name'],
+    'too long first name' => [['first_name' => str_repeat('a', 101)], 'first_name'],
+    'array as last name' => [['last_name' => ['x']], 'last_name'],
     'invalid email' => [['email' => 'not-an-email'], 'email'],
     'array email' => [['email' => ['a@example.com']], 'email'],
     'short password' => [['password' => 'short', 'password_confirmation' => 'short'], 'password'],
@@ -90,7 +94,7 @@ test('duplicate emails are rejected regardless of case', function (string $email
 test('the failed registration response does not leak the password', function () {
     $response = $this->from(route('register'))
         ->followingRedirects()
-        ->post(route('register.store'), registrationPayload(['name' => '']));
+        ->post(route('register.store'), registrationPayload(['first_name' => '']));
 
     $response->assertOk();
     $response->assertInertia(fn (Assert $page) => $page->component('auth/Register')->missing('password'));
@@ -167,4 +171,17 @@ test('the privacy version matches the Stand date of the privacy policy', functio
 
     // Bei inhaltlicher Aenderung der Erklaerung "Stand" und config/legal.php gemeinsam erhoehen.
     expect(sprintf('%04d-%02d-%02d', $m[3], $months[$m[2]], $m[1]))->toBe(config('legal.privacy_version'));
+});
+
+test('first and last name are stored together in the name column', function () {
+    $this->post(route('register.store'), registrationPayload(['first_name' => '  Anna  Maria ', 'last_name' => ' von  Beispiel ']))
+        ->assertRedirect();
+
+    expect(User::where('email', 'max@example.com')->sole()->name)->toBe('Anna Maria von Beispiel');
+});
+
+test('the old single name field is ignored', function () {
+    $this->post(route('register.store'), registrationPayload(['name' => 'Fremder Name']));
+
+    expect(User::where('email', 'max@example.com')->sole()->name)->toBe('Max Mustermann');
 });

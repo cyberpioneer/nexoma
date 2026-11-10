@@ -55,7 +55,7 @@ test('the attribute names cover all fields used in this project', function (stri
     $attributes = (require lang_path("{$locale}/validation.php"))['attributes'];
 
     expect($attributes)->toHaveKeys([
-        'name', 'email', 'password', 'password_confirmation', 'was', 'wo', 'umkreis', 'angebotsart', 'page', 'size',
+        'name', 'first_name', 'last_name', 'email', 'password', 'password_confirmation', 'was', 'wo', 'umkreis', 'angebotsart', 'page', 'size',
         'veroeffentlichtseit', 'berufsfeld', 'arbeitgeber', 'zeitarbeit', 'befristung', 'arbeitszeit', 'locale', 'note', 'consent',
     ]);
 })->with('locales');

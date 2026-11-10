@@ -51,6 +51,8 @@ return [
     ],
     'attributes' => [
         'consent' => 'acknowledgement',
+        'first_name' => 'first name',
+        'last_name' => 'last name',
         'name' => 'name',
         'email' => 'email address',
         'password' => 'password',

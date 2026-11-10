@@ -51,6 +51,8 @@ return [
     ],
     'attributes' => [
         'consent' => 'Kenntnisnahme',
+        'first_name' => 'Vorname',
+        'last_name' => 'Nachname',
         'name' => 'Name',
         'email' => 'E-Mail-Adresse',
         'password' => 'Passwort',

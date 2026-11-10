@@ -22,7 +22,8 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
             'email' => [
                 'required',
                 'string',
@@ -35,7 +36,8 @@ class CreateNewUser implements CreatesNewUsers
         ])->validate();
 
         $user = new User([
-            'name' => $input['name'],
+            // Vorname und Nachname werden im einen Feld "name" gespeichert.
+            'name' => trim(preg_replace('/\s+/u', ' ', $input['first_name'].' '.$input['last_name']) ?? ''),
             'email' => $input['email'],
             'password' => $input['password'],
             // Nur die von der Middleware aufgeloeste Sprache, nie die Eingabe.
