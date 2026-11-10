@@ -1,0 +1,55 @@
+{
+    "id": "/",
+    "name": "Nexoma",
+    "short_name": "Nexoma",
+    "description": "Stellensuche der Bundesagentur für Arbeit in sechs Sprachen – im Browser und über KI-Assistenten.",
+    "lang": "de",
+    "dir": "ltr",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#fbfaf7",
+    "theme_color": "#fbfaf7",
+    "categories": ["business", "productivity"],
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icons/maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Stellensuche",
+            "short_name": "Suche",
+            "url": "/jobs",
+            "icons": [
+                {
+                    "src": "/icons/icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ]
+}
