@@ -65,7 +65,7 @@ Für OAuth und MCP zusätzlich Passport-Schlüssel erzeugen (`php artisan passpo
 
 **Alle Rechte vorbehalten.** Die Software darf nur privat und nicht kommerziell für eigene Zwecke genutzt werden. Weitergabe, Bereitstellung für Dritte (auch Hosting oder SaaS, kostenfrei oder gegen Entgelt), Verkauf und Änderungen sind ohne schriftliche Kommerzlizenz nicht erlaubt.
 
-Maßgeblich ist der Text in der Datei [LICENSE](LICENSE) (PolyForm Strict License 1.0.0 mit Zusatzbedingungen). Für eine Kommerzlizenz melden Sie sich bitte unter [kontakt@nomnix.net](mailto:kontakt@nomnix.net).
+Maßgeblich ist der Text in der Datei [LICENSE](LICENSE) (PolyForm Strict License 1.0.0 mit Zusatzbedingungen). Für eine Kommerzlizenz melden Sie sich bitte unter [service@nomnix.net](mailto:service@nomnix.net).
 
 Drittkomponenten (Laravel, Pakete, Schriften) behalten ihre eigenen Lizenzen.
 
