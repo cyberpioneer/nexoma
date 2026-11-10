@@ -61,5 +61,6 @@ return [
         'befristung' => 'срок договора',
         'arbeitszeit' => 'рабочее время',
         'locale' => 'язык',
+        'note' => 'Заметка',
     ],
 ];

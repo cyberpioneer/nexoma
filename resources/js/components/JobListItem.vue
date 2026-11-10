@@ -2,12 +2,13 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import Badge from '@/components/Badge.vue';
 import Card from '@/components/Card.vue';
+import SaveJobControl from '@/components/SaveJobControl.vue';
 import { formatDate } from '@/lib/dates';
 import { useTranslate } from '@/lib/translate';
 import { show } from '@/routes/jobs';
-import type { JobSummary } from '@/types';
+import type { JobSummary, SavedState } from '@/types';
 
-defineProps<{ job: JobSummary }>();
+defineProps<{ job: JobSummary; saved: SavedState | null }>();
 
 const { t } = useTranslate();
 const page = usePage();
@@ -58,5 +59,11 @@ const page = usePage();
                 </dd>
             </div>
         </dl>
+        <SaveJobControl
+            :refnr="job.refnr"
+            :title="job.title"
+            :saved="saved"
+            :field-id="job.refnr"
+        />
     </Card>
 </template>

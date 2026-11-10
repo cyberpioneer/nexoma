@@ -8,6 +8,7 @@ use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -40,6 +41,14 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return is_string($this->locale) && array_key_exists($this->locale, config('app.supported_locales'))
             ? $this->locale
             : null;
+    }
+
+    /**
+     * @return HasMany<SavedJob, $this>
+     */
+    public function savedJobs(): HasMany
+    {
+        return $this->hasMany(SavedJob::class);
     }
 
     /**

@@ -58,6 +58,9 @@ class AppServiceProvider extends ServiceProvider
     /** Anfragen pro Minute und Benutzer fuer die Verwaltung verbundener Apps. */
     public const CONNECTED_APPS_ATTEMPTS_PER_MINUTE = 20;
 
+    /** Anfragen pro Minute und Benutzer fuer gespeicherte Vakanzen (Speichern ruft ggf. die BA-API ab). */
+    public const SAVED_JOBS_ATTEMPTS_PER_MINUTE = 30;
+
     /** Zustimmungen/Ablehnungen pro Minute und Benutzer auf der OAuth-Consent-Seite. */
     public const OAUTH_CONSENT_ATTEMPTS_PER_MINUTE = 30;
 
@@ -204,6 +207,9 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         RateLimiter::for('connected-apps', fn (Request $request): Limit => Limit::perMinute(self::CONNECTED_APPS_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('saved-jobs', fn (Request $request): Limit => Limit::perMinute(self::SAVED_JOBS_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));
 
         RateLimiter::for('oauth-consent', fn (Request $request): Limit => Limit::perMinute(self::OAUTH_CONSENT_ATTEMPTS_PER_MINUTE)

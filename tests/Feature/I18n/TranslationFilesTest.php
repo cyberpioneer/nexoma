@@ -56,7 +56,7 @@ test('the attribute names cover all fields used in this project', function (stri
 
     expect($attributes)->toHaveKeys([
         'name', 'email', 'password', 'password_confirmation', 'was', 'wo', 'umkreis', 'angebotsart', 'page', 'size',
-        'veroeffentlichtseit', 'berufsfeld', 'arbeitgeber', 'zeitarbeit', 'befristung', 'arbeitszeit', 'locale',
+        'veroeffentlichtseit', 'berufsfeld', 'arbeitgeber', 'zeitarbeit', 'befristung', 'arbeitszeit', 'locale', 'note',
     ]);
 })->with('locales');
 

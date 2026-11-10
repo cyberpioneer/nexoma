@@ -4,6 +4,7 @@ use App\Http\Controllers\ConnectedAppController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\SavedJobController;
 use App\Http\Middleware\EnforceOAuthAuthorizationRequest;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware\EncryptHistory;
@@ -31,6 +32,17 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
         ->where('refnr', '[A-Za-z0-9._-]{1,100}')
         ->middleware('throttle:jobdetails')
         ->name('jobs.show');
+
+    Route::get('/saved-jobs', [SavedJobController::class, 'index'])->middleware('throttle:saved-jobs')->name('saved-jobs.index');
+    Route::post('/saved-jobs', [SavedJobController::class, 'store'])->middleware('throttle:saved-jobs')->name('saved-jobs.store');
+    Route::patch('/saved-jobs/{savedJob}', [SavedJobController::class, 'update'])
+        ->whereNumber('savedJob')
+        ->middleware('throttle:saved-jobs')
+        ->name('saved-jobs.update');
+    Route::delete('/saved-jobs/{savedJob}', [SavedJobController::class, 'destroy'])
+        ->whereNumber('savedJob')
+        ->middleware('throttle:saved-jobs')
+        ->name('saved-jobs.destroy');
 
     Route::get('/connected-apps', [ConnectedAppController::class, 'index'])->middleware('throttle:connected-apps')->name('connected-apps.index');
     Route::delete('/connected-apps/{clientId}', [ConnectedAppController::class, 'destroy'])

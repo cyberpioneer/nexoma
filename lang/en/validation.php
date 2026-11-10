@@ -61,5 +61,6 @@ return [
         'befristung' => 'fixed term',
         'arbeitszeit' => 'working hours',
         'locale' => 'language',
+        'note' => 'Note',
     ],
 ];

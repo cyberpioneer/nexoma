@@ -9,6 +9,7 @@ import { useTranslate } from '@/lib/translate';
 import { dashboard } from '@/routes';
 import { index as connectedAppsIndex } from '@/routes/connected-apps';
 import { index as jobsIndex } from '@/routes/jobs';
+import { index as savedJobsIndex } from '@/routes/saved-jobs';
 
 const { t } = useTranslate();
 const page = usePage();
@@ -21,6 +22,11 @@ const isSignedIn = computed(() => Boolean(page.props.auth.user));
 const links = computed(() => [
     { label: t('dashboard.title'), href: dashboard(), prefix: dashboard().url },
     { label: t('jobs.nav'), href: jobsIndex(), prefix: jobsIndex().url },
+    {
+        label: t('saved.nav'),
+        href: savedJobsIndex(),
+        prefix: savedJobsIndex().url,
+    },
     {
         label: t('connected_apps.nav'),
         href: connectedAppsIndex(),
