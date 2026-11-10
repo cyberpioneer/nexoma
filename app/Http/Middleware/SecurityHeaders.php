@@ -27,7 +27,7 @@ class SecurityHeaders
         $response = $next($request);
 
         $headers = [
-            'Referrer-Policy' => 'no-referrer',
+            'Referrer-Policy' => 'same-origin',
             'X-Content-Type-Options' => 'nosniff',
             'Permissions-Policy' => self::PERMISSIONS_POLICY,
         ];
