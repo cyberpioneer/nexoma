@@ -163,3 +163,15 @@ test('the session of a user stays valid without a password change', function () 
     app('auth')->forgetGuards();
     $this->flushSession()->withSession($oldSession)->get(route('dashboard'))->assertOk();
 });
+
+test('failed password forms stay on their own page even when the previous url is the home page', function () {
+    $this->withSession(['_previous' => ['url' => url('/')]])
+        ->post(route('password.email'), ['email' => 'not-an-email'])
+        ->assertRedirect(route('password.request'))
+        ->assertSessionHasErrors('email');
+
+    $this->withSession(['_previous' => ['url' => url('/')]])
+        ->post(route('password.update'), ['token' => 'abc123', 'email' => 'max@example.com', 'password' => 'x', 'password_confirmation' => 'y'])
+        ->assertRedirect(route('password.reset', ['token' => 'abc123', 'email' => 'max@example.com']))
+        ->assertSessionHasErrors('email');
+});

@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse;
+use Laravel\Fortify\Contracts\FailedPasswordResetResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\SuccessfulPasswordResetLinkRequestResponse;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Http\Responses\FailedPasswordResetResponse as FortifyFailedPasswordResetResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -29,6 +31,28 @@ class FortifyServiceProvider extends ServiceProvider
                 'status' => Password::RESET_LINK_SENT,
             ]),
         );
+
+        // Ungueltiger oder abgelaufener Reset-Link: zurueck zur Reset-Seite statt auf die zuletzt gemerkte Seite ("/").
+        $this->app->bind(FailedPasswordResetResponse::class, fn ($app, array $parameters) => new class($parameters['status']) extends FortifyFailedPasswordResetResponse
+        {
+            public function toResponse($request): Response
+            {
+                if ($request->wantsJson()) {
+                    return parent::toResponse($request);
+                }
+
+                $token = $request->input('token');
+                $email = $request->input('email');
+
+                return redirect()
+                    ->route('password.reset', [
+                        'token' => is_string($token) ? $token : '',
+                        'email' => is_string($email) ? $email : '',
+                    ])
+                    ->withInput($request->only('email'))
+                    ->withErrors(['email' => trans($this->status)]);
+            }
+        });
 
         // Nach dem Logout die verschluesselte Inertia-History verwerfen.
         $this->app->singleton(LogoutResponse::class, fn () => new class implements LogoutResponse
