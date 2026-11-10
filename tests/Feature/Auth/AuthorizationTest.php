@@ -180,6 +180,12 @@ test('the connected apps routes sit in the auth and verified group and are throt
     }
 });
 
+test('the saved jobs routes sit in the auth and verified group and are throttled', function () {
+    foreach (['saved-jobs.index', 'saved-jobs.store', 'saved-jobs.update', 'saved-jobs.destroy'] as $name) {
+        expect(Route::getRoutes()->getByName($name)->gatherMiddleware())->toContain('auth', 'verified', 'throttle:saved-jobs');
+    }
+});
+
 test('the access matrix holds for every protected get route without parameters', function () {
     $uris = routesRequiringAuthAndVerified()
         ->filter(fn (LaravelRoute $route) => in_array('GET', $route->methods(), true) && ! str_contains($route->uri(), '{'))

@@ -5,15 +5,19 @@ import Button from '@/components/Button.vue';
 import Card from '@/components/Card.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import PageHeader from '@/components/PageHeader.vue';
+import SaveJobControl from '@/components/SaveJobControl.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatDate } from '@/lib/dates';
 import { useTranslate } from '@/lib/translate';
 import { index } from '@/routes/jobs';
-import type { JobDetails } from '@/types';
+import type { JobDetails, SavedState } from '@/types';
 
 defineOptions({ layout: AppLayout });
 
-const props = defineProps<{ job: JobDetails | null }>();
+const props = defineProps<{
+    job: JobDetails | null;
+    saved: SavedState | null;
+}>();
 
 const { t } = useTranslate();
 const page = usePage();
@@ -105,6 +109,13 @@ const page = usePage();
                 </p>
                 <p v-else class="text-muted">{{ t('jobs.no_description') }}</p>
             </section>
+
+            <SaveJobControl
+                :refnr="props.job.refnr"
+                :title="props.job.title"
+                :saved="props.saved"
+                field-id="detail"
+            />
 
             <div class="flex flex-wrap gap-3">
                 <a
