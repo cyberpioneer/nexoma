@@ -65,11 +65,27 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Fehlgeschlagene Anmeldung: immer zurueck zur Anmeldeseite. Ohne Vorgabe leitet Laravel auf die zuletzt
-        // gemerkte Seite (bei Inertia-Navigation oft "/") um, weil Referrer-Policy "no-referrer" den Referer entfernt.
+        // Fehlgeschlagene Formulare der Gastseiten (Anmeldung, Registrierung, Passwort): immer zurueck zur eigenen Seite.
+        // Ohne Vorgabe leitet Laravel auf die zuletzt gemerkte Seite (bei Inertia-Navigation oft "/") um, weil
+        // Referrer-Policy "no-referrer" den Referer entfernt; die Fehler gingen dann ungesehen verloren.
         $exceptions->render(function (ValidationException $exception, Request $request): null {
-            if ($request->routeIs('login.store') && ! $request->expectsJson()) {
-                $exception->redirectTo(route('login'));
+            if ($request->expectsJson()) {
+                return null;
+            }
+
+            $target = match ($request->route()?->getName()) {
+                'login.store' => route('login'),
+                'register.store' => route('register'),
+                'password.email' => route('password.request'),
+                'password.update' => route('password.reset', [
+                    'token' => is_string($request->input('token')) ? $request->input('token') : '',
+                    'email' => is_string($request->input('email')) ? $request->input('email') : '',
+                ]),
+                default => null,
+            };
+
+            if ($target !== null) {
+                $exception->redirectTo($target);
             }
 
             return null;
