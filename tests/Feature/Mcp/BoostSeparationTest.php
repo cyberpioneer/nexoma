@@ -30,7 +30,7 @@ test('the production server exposes no boost tools and no application code refer
 
     $names = collect(mcpRequest('tools/list')->json('result.tools'))->pluck('name')->all();
 
-    expect($names)->toBe(['job_search', 'job_details', 'job_search_options']);
+    expect($names)->toBe(['job_search', 'job_details', 'job_search_options', 'save_job']);
 
     $found = collect(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(app_path(), FilesystemIterator::SKIP_DOTS)))
         ->filter(fn (SplFileInfo $file): bool => $file->getExtension() === 'php' && str_contains(strtolower((string) file_get_contents($file->getPathname())), 'boost'))

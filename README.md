@@ -32,7 +32,7 @@ Stellentexte bleiben in der Originalsprache der BA. Nexoma speichert keine Sucht
 - Stellensuche mit Filtern (Ort, Umkreis, Angebotsart, Berufsfeld, Zeitraum) und Detailseite mit geprüftem Link zur Bewerbung
 - **Gespeicherte Vakanzen:** mit oder ohne persönlichen Vermerk speichern, Vermerk ändern, wieder löschen
 - Oberfläche in 6 Sprachen (de, en, ru, uk, es, it), Hell- und Dunkelmodus
-- **KI-Anbindung per MCP** (nur lesend): `job_search`, `job_details`, `job_search_options`; Anmeldung der Assistenten per OAuth (PKCE), Zustimmung und Widerruf unter „Verbundene Apps“
+- **KI-Anbindung per MCP:** suchen und ansehen (`job_search`, `job_details`, `job_search_options`) sowie auf ausdrücklichen Wunsch Stellen in der eigenen Liste speichern, optional mit Vermerk (`save_job`; einziges schreibendes Tool, kein Auflisten, Ändern oder Löschen); Anmeldung der Assistenten per OAuth (PKCE), Zustimmung und Widerruf unter „Verbundene Apps“
 - Installierbar als **PWA** (Android, iOS, Windows, macOS, Linux)
 - Impressum, Datenschutzerklärung und Haftungsausschluss als eigene Seiten
 
@@ -65,7 +65,7 @@ Für OAuth und MCP zusätzlich Passport-Schlüssel erzeugen (`php artisan passpo
 
 **Alle Rechte vorbehalten.** Die Software darf nur privat und nicht kommerziell für eigene Zwecke genutzt werden. Weitergabe, Bereitstellung für Dritte (auch Hosting oder SaaS, kostenfrei oder gegen Entgelt), Verkauf und Änderungen sind ohne schriftliche Kommerzlizenz nicht erlaubt.
 
-Maßgeblich ist der Text in der Datei [LICENSE](LICENSE) (PolyForm Strict License 1.0.0 mit Zusatzbedingungen). Für eine Kommerzlizenz melden Sie sich bitte unter [kontakt@nomnix.net](mailto:kontakt@nomnix.net).
+Maßgeblich ist der Text in der Datei [LICENSE](LICENSE) (PolyForm Strict License 1.0.0 mit Zusatzbedingungen). Für eine Kommerzlizenz melden Sie sich bitte unter [service@nomnix.net](mailto:service@nomnix.net).
 
 Drittkomponenten (Laravel, Pakete, Schriften) behalten ihre eigenen Lizenzen.
 
