@@ -1,0 +1,110 @@
+Nexoma
+Copyright (c) 2026 NOMNIX // Slawa Mironow (Bad Mergentheim, Deutschland). Alle Rechte vorbehalten.
+All rights reserved.
+
+Licensor / Lizenzgeber: NOMNIX // Slawa Mironow
+
+================================================================================
+ADDITIONAL TERMS / ZUSATZBEDINGUNGEN
+================================================================================
+
+These additional terms apply together with the PolyForm Strict License 1.0.0
+below. If they conflict with the PolyForm Strict License, these additional
+terms prevail.
+
+1. Private use only. Use of the software is permitted only for the licensee's
+   own noncommercial, private purposes, as set out in the PolyForm Strict
+   License below.
+
+2. No making available to others. Without a prior written commercial license
+   from the licensor, you may not provide, host, operate, sell, rent, sublicense
+   or otherwise make the software, or a service based on it, available to third
+   parties, whether free of charge or for a fee. This includes copies,
+   hosted or software-as-a-service offerings, and offerings of modified
+   versions.
+
+3. Commercial license. A commercial license, including its fee, must be agreed
+   with the licensor in writing before any use described in section 2. Without
+   such a written agreement, no right to such use exists. Use or provision
+   without a license is not covered by these terms; the licensor reserves all
+   claims, including injunctive relief and damages, under applicable law.
+
+4. Contact for a commercial license: kontakt@nomnix.net
+
+5. Third-party components. The software uses third-party components (for
+   example the Laravel framework and other packages, and fonts) that remain
+   under their own licenses. These terms apply only to the code and content
+   created by the licensor.
+
+--------------------------------------------------------------------------------
+
+Deutsche Zusammenfassung (unverbindlich; maßgeblich ist der englische Text):
+Die Software darf nur privat und nicht kommerziell für eigene Zwecke genutzt
+werden. Weitergabe, Bereitstellung für Dritte (auch Hosting oder SaaS,
+kostenfrei oder gegen Entgelt), Verkauf und Änderungen sind ohne
+vorherige schriftliche Kommerzlizenz des Lizenzgebers nicht erlaubt.
+Drittkomponenten behalten ihre eigenen Lizenzen.
+
+================================================================================
+POLYFORM STRICT LICENSE 1.0.0
+================================================================================
+
+# PolyForm Strict License 1.0.0
+
+<https://polyformproject.org/licenses/strict/1.0.0>
+
+## Acceptance
+
+In order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.
+
+## Copyright License
+
+The licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose, other than distributing the software or making changes or new works based on the software.
+
+## Patent License
+
+The licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software.
+
+## Noncommercial Purposes
+
+Any noncommercial purpose is a permitted purpose.
+
+## Personal Uses
+
+Personal use for research, experiment, and testing for the benefit of public knowledge, personal study, private entertainment, hobby projects, amateur pursuits, or religious observance, without any anticipated commercial application, is use for a permitted purpose.
+
+## Noncommercial Organizations
+
+Use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization, or government institution is use for a permitted purpose regardless of the source of funding or obligations resulting from the funding.
+
+## Fair Use
+
+You may have "fair use" rights for the software under the law. These terms do not limit them.
+
+## No Other Rights
+
+These terms do not allow you to sublicense or transfer any of your licenses to anyone else, or prevent the licensor from granting licenses to anyone else.  These terms do not imply any other licenses.
+
+## Patent Defense
+
+If you make any written claim that the software infringes or contributes to infringement of any patent, your patent license for the software granted under these terms ends immediately. If your company makes such a claim, your patent license ends immediately for work on behalf of your company.
+
+## Violations
+
+The first time you are notified in writing that you have violated any of these terms, or done anything with the software not covered by your licenses, your licenses can nonetheless continue if you come into full compliance with these terms, and take practical steps to correct past violations, within 32 days of receiving notice.  Otherwise, all your licenses end immediately.
+
+## No Liability
+
+***As far as the law allows, the software comes as is, without any warranty or condition, and the licensor will not be liable to you for any damages arising out of these terms or the use or nature of the software, under any kind of legal claim.***
+
+## Definitions
+
+The **licensor** is the individual or entity offering these terms, and the **software** is the software the licensor makes available under these terms.
+
+**You** refers to the individual or entity agreeing to these terms.
+
+**Your company** is any legal entity, sole proprietorship, or other kind of organization that you work for, plus all organizations that have control over, are under the control of, or are under common control with that organization.  **Control** means ownership of substantially all the assets of an entity, or the power to direct its management and policies by vote, contract, or otherwise.  Control can be direct or indirect.
+
+**Your licenses** are all the licenses granted to you for the software under these terms.
+
+**Use** means anything you do with the software requiring one of your licenses.
