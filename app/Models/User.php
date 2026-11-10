@@ -22,6 +22,8 @@ use Laravel\Passport\HasApiTokens;
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $locale
+ * @property Carbon|null $consented_at
+ * @property string|null $consent_version
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -60,6 +62,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     {
         return [
             'email_verified_at' => 'datetime',
+            'consented_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
