@@ -256,4 +256,9 @@ return [
     'profile.toast.entry_saved' => 'Entrada guardada.',
     'profile.toast.entry_deleted' => 'Entrada eliminada.',
     'billing.upgrade.profile_link' => 'Abrir perfil y trayectoria',
+    'profile.ai.optimize' => 'Optimizar con IA',
+    'profile.ai.notice' => 'Para la optimización, el texto se envía a un servicio de IA (MiniMax). El resultado solo se aplica al hacer clic en «Guardar perfil».',
+    'profile.ai.done' => 'El texto se ha optimizado. Revísalo antes de guardar.',
+    'profile.ai.too_short' => 'Escribe primero un texto de perfil de al menos 10 caracteres.',
+    'profile.ai.error' => 'La optimización con IA no está disponible por el momento. Inténtalo de nuevo más tarde.',
 ];
