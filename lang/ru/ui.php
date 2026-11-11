@@ -219,4 +219,5 @@ return [
     'billing.upgrade.active_title' => 'Ваша подписка активна',
     'billing.upgrade.active_lead' => 'Все премиум-функции вам доступны. Способ оплаты и отмену подписки вы настраиваете в клиентском портале Stripe.',
     'billing.upgrade.payment_note' => 'Платёж обрабатывается через Stripe.',
+    'billing.nav' => 'Премиум',
 ];

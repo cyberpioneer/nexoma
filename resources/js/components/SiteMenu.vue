@@ -7,6 +7,7 @@ import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 import ThemeSwitch from '@/components/ThemeSwitch.vue';
 import { useTranslate } from '@/lib/translate';
 import { dashboard } from '@/routes';
+import { upgrade } from '@/routes/billing';
 import { index as connectedAppsIndex } from '@/routes/connected-apps';
 import { index as jobsIndex } from '@/routes/jobs';
 import { index as savedJobsIndex } from '@/routes/saved-jobs';
@@ -32,6 +33,7 @@ const links = computed(() => [
         href: connectedAppsIndex(),
         prefix: connectedAppsIndex().url,
     },
+    { label: t('billing.nav'), href: upgrade(), prefix: upgrade().url },
 ]);
 
 function open(): void {
