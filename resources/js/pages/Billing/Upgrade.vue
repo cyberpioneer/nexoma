@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { Form, Head, usePage } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 import { checkout, portal } from '@/routes/billing';
 import { show as profileShow } from '@/routes/profile';
 import Button from '@/components/Button.vue';
 import Card from '@/components/Card.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { showToast } from '@/lib/toast';
 import { useTranslate } from '@/lib/translate';
 
 defineOptions({ layout: AppLayout });
@@ -14,6 +16,22 @@ defineProps<{ isSubscribed: boolean; canManage: boolean }>();
 
 const { t } = useTranslate();
 const page = usePage();
+
+/** Rückkehr von Stripe (Erfolg/Abbruch): die Meldung des Servers einmalig als Toast zeigen. */
+onMounted(() => {
+    if (page.props.status) {
+        showToast(page.props.status, 'success');
+    }
+});
+
+/** Fehler des Servers (z. B. Zahlungsabwicklung nicht verfügbar) als Toast zeigen. */
+function notifyFailure(errors: Record<string, string>): void {
+    const message = errors.billing ?? Object.values(errors)[0];
+
+    if (message) {
+        showToast(message);
+    }
+}
 
 const features = [
     'feature_profile',
@@ -39,21 +57,6 @@ const features = [
             "
         />
 
-        <p
-            v-if="page.props.status"
-            role="status"
-            class="rounded-md bg-sage p-4 text-sm"
-        >
-            {{ page.props.status }}
-        </p>
-        <p
-            v-if="page.props.errors.billing"
-            role="alert"
-            class="rounded-md bg-peach p-4 text-sm text-danger"
-        >
-            {{ page.props.errors.billing }}
-        </p>
-
         <Card as="section" aria-labelledby="billing-features">
             <h2 id="billing-features" class="mb-4 text-2xl">
                 {{ t('billing.upgrade.features_title') }}
@@ -73,6 +76,7 @@ const features = [
                 <Form
                     v-if="!isSubscribed"
                     v-bind="checkout.form()"
+                    @error="notifyFailure"
                     #default="{ processing }"
                 >
                     <Button type="submit" size="lg" :processing="processing">
@@ -87,6 +91,7 @@ const features = [
                 <Form
                     v-if="canManage"
                     v-bind="portal.form()"
+                    @error="notifyFailure"
                     #default="{ processing }"
                 >
                     <Button
