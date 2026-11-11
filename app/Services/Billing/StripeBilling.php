@@ -72,7 +72,7 @@ class StripeBilling
 
         $session = $this->stripe()->billingPortal->sessions->create([
             'customer' => $user->stripe_customer_id,
-            'return_url' => route('dashboard'),
+            'return_url' => route('billing.upgrade'),
         ]);
 
         return $this->urlOf($session->url);

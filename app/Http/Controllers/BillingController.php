@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use RuntimeException;
 use Stripe\Exception\ApiErrorException;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,19 @@ class BillingController extends Controller
     private const STATUSES_FOR_PORTAL = ['past_due', 'unpaid', 'paused'];
 
     /**
+     * Upgrade-Seite: Vorteile, Kauf bzw. Verwaltung. Nur Whitelist-Props, keine Stripe-Kennungen.
+     */
+    public function show(Request $request): InertiaResponse
+    {
+        $user = $this->user($request);
+
+        return Inertia::render('Billing/Upgrade', [
+            'isSubscribed' => $user->hasActiveSubscription(),
+            'canManage' => $user->stripe_customer_id !== null,
+        ]);
+    }
+
+    /**
      * Startet den Stripe-Checkout. Ohne Anfrageparameter: Plan, Preis und Rueckkehr-URLs bestimmt der Server.
      */
     public function checkout(Request $request, StripeBilling $billing): Response|RedirectResponse
@@ -29,7 +43,7 @@ class BillingController extends Controller
         $user = $this->user($request);
 
         if ($user->hasActiveSubscription()) {
-            return redirect()->route('dashboard')->with('status', __('ui.billing.already_subscribed'));
+            return redirect()->route('billing.upgrade')->with('status', __('ui.billing.already_subscribed'));
         }
 
         $hasOpenSubscription = in_array($user->stripe_subscription_status, self::STATUSES_FOR_PORTAL, true);
@@ -48,7 +62,7 @@ class BillingController extends Controller
         $user = $this->user($request);
 
         if ($user->stripe_customer_id === null) {
-            return redirect()->route('dashboard')->withErrors(['billing' => __('ui.billing.no_subscription')]);
+            return redirect()->route('billing.upgrade')->withErrors(['billing' => __('ui.billing.no_subscription')]);
         }
 
         return $this->redirectToStripe(fn (): string => $billing->createPortalUrl($user), $billing);
@@ -63,7 +77,7 @@ class BillingController extends Controller
             ? __('ui.billing.success_active')
             : __('ui.billing.success_pending');
 
-        return redirect()->route('dashboard')->with('status', $message);
+        return redirect()->route('billing.upgrade')->with('status', $message);
     }
 
     /**
@@ -71,7 +85,7 @@ class BillingController extends Controller
      */
     public function cancel(): RedirectResponse
     {
-        return redirect()->route('dashboard')->with('status', __('ui.billing.canceled'));
+        return redirect()->route('billing.upgrade')->with('status', __('ui.billing.canceled'));
     }
 
     /**
@@ -97,7 +111,7 @@ class BillingController extends Controller
 
     private function unavailable(): RedirectResponse
     {
-        return redirect()->route('dashboard')->withErrors(['billing' => __('ui.billing.unavailable')]);
+        return redirect()->route('billing.upgrade')->withErrors(['billing' => __('ui.billing.unavailable')]);
     }
 
     private function user(Request $request): User

@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
         ->name('saved-jobs.destroy');
 
     // Premium-Abo (Stripe). Der Status wird ausschliesslich ueber den signierten Webhook (routes/webhooks.php) gesetzt.
+    Route::get('/upgrade', [BillingController::class, 'show'])->middleware('throttle:billing')->name('billing.upgrade');
     Route::post('/billing/checkout', [BillingController::class, 'checkout'])->middleware('throttle:billing')->name('billing.checkout');
     Route::post('/billing/portal', [BillingController::class, 'portal'])->middleware('throttle:billing')->name('billing.portal');
     Route::get('/billing/success', [BillingController::class, 'success'])->middleware('throttle:billing')->name('billing.success');
