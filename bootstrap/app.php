@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnforceOAuthAuthorizationRequest;
+use App\Http\Middleware\EnsureUserIsSubscribed;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
@@ -58,6 +59,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Die OAuth-Pruefung (PKCE S256) muss vor `auth` laufen, damit auch Gaeste vor dem Login abgewiesen werden.
         $middleware->prependToPriorityList(AuthenticatesRequests::class, EnforceOAuthAuthorizationRequest::class);
+
+        // Paywall fuer Premium-Routen (ab Release 1.2.0); nur innerhalb von `auth` + `verified` verwenden.
+        $middleware->alias(['subscribed' => EnsureUserIsSubscribed::class]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('dashboard'));
