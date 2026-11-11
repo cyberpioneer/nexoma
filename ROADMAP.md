@@ -60,7 +60,7 @@
     - AK-4: Vollständige Übersetzung in allen 6 Sprachen (`lang/*/ui.php`) und Einhaltung von WCAG 2.2 AA.
   - **Review-Schwerpunkte (`security-reviewer`):** Schutz vor XSS, keine Offenlegung fremder oder interner Attribute über Inertia-Props.
 
-- [ ] **TASK-006 (#16): MiniMax-Anbindung (Laravel AI SDK) & Button "Mit KI optimieren"**
+- [x] **TASK-006 (#16): MiniMax-Anbindung (Laravel AI SDK) & Button "Mit KI optimieren"**
   - **Ziel:** Integration von MiniMax über das Laravel AI SDK (`OPENAI_COMPATIBLE_API_KEY`, `OPENAI_COMPATIBLE_URL`) und Implementierung des Buttons „Mit KI optimieren“ im Profilformular.
   - **Akzeptanzkriterien:**
     - AK-1: Konfiguration von `OPENAI_COMPATIBLE_API_KEY` und `OPENAI_COMPATIBLE_URL` in `config/services.php` bzw. `config/ai.php` gemäß MiniMax-Dokumentation (`https://platform.minimax.io/docs/api-reference/text-openai-api`).
