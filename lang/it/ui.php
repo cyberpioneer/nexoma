@@ -201,4 +201,10 @@ return [
     'saved.error.unavailable' => 'Al momento non è stato possibile recuperare l’offerta dall’Agenzia federale per il lavoro. Riprova più tardi.',
     'saved.error.limit' => 'Hai raggiunto il massimo di :max offerte salvate. Rimuovine prima una.',
     'saved.list_label' => 'Offerte salvate',
+    'billing.already_subscribed' => 'Esiste già un abbonamento attivo.',
+    'billing.success_active' => 'Grazie! L’abbonamento è attivo.',
+    'billing.success_pending' => 'Grazie! Il pagamento è in elaborazione e l’abbonamento sarà attivato a breve.',
+    'billing.canceled' => 'Il pagamento è stato annullato. Non è stato addebitato nulla.',
+    'billing.no_subscription' => 'Non c’è ancora nessun abbonamento da gestire.',
+    'billing.unavailable' => 'L’elaborazione dei pagamenti non è al momento disponibile. Riprova più tardi.',
 ];

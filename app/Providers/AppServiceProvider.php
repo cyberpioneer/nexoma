@@ -19,6 +19,7 @@ use Inertia\Inertia;
 use Laravel\Mcp\Server\Registrar;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Scope;
+use Stripe\StripeClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -61,6 +62,12 @@ class AppServiceProvider extends ServiceProvider
     /** Anfragen pro Minute und Benutzer fuer gespeicherte Vakanzen (Speichern ruft ggf. die BA-API ab). */
     public const SAVED_JOBS_ATTEMPTS_PER_MINUTE = 30;
 
+    /** Anfragen pro Minute und Benutzer fuer Checkout/Kundenportal (jeder Aufruf erzeugt eine Stripe-Sitzung). */
+    public const BILLING_ATTEMPTS_PER_MINUTE = 10;
+
+    /** Webhook-Aufrufe pro Minute und IP, bevor die Signatur geprueft wird (Stripe sendet Ereignisse gebuendelt). */
+    public const STRIPE_WEBHOOK_ATTEMPTS_PER_MINUTE = 300;
+
     /** Zustimmungen/Ablehnungen pro Minute und Benutzer auf der OAuth-Consent-Seite. */
     public const OAUTH_CONSENT_ATTEMPTS_PER_MINUTE = 30;
 
@@ -78,6 +85,10 @@ class AppServiceProvider extends ServiceProvider
         // Passport-Routen werden bewusst nicht automatisch registriert, sondern gezielt in
         // routes/web.php (Consent, auth + verified) und routes/ai.php (Token-Endpunkt) angelegt.
         Passport::ignoreRoutes();
+
+        $this->app->singleton(StripeClient::class, fn (): StripeClient => new StripeClient([
+            'api_key' => (string) config('services.stripe.secret'),
+        ]));
 
         // Kein Device-Code-Grant: weder Route noch Grant werden genutzt.
         Passport::$deviceCodeGrantEnabled = false;
@@ -188,6 +199,12 @@ class AppServiceProvider extends ServiceProvider
                     ->by('ip:'.$request->ip()),
             ];
         });
+
+        RateLimiter::for('billing', fn (Request $request): Limit => Limit::perMinute(self::BILLING_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('stripe-webhook', fn (Request $request): Limit => Limit::perMinute(self::STRIPE_WEBHOOK_ATTEMPTS_PER_MINUTE)
+            ->by('ip:'.$request->ip()));
 
         RateLimiter::for('locale', fn (Request $request): Limit => Limit::perMinute(self::LOCALE_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));

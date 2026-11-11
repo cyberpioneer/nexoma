@@ -201,4 +201,10 @@ return [
     'saved.error.unavailable' => 'The job could not be retrieved from the Federal Employment Agency right now. Please try again later.',
     'saved.error.limit' => 'You have reached the maximum of :max saved jobs. Remove one first.',
     'saved.list_label' => 'Saved jobs',
+    'billing.already_subscribed' => 'An active subscription already exists.',
+    'billing.success_active' => 'Thank you! The subscription is active.',
+    'billing.success_pending' => 'Thank you! The payment is being processed and the subscription will be activated shortly.',
+    'billing.canceled' => 'The checkout was canceled. You have not been charged.',
+    'billing.no_subscription' => 'There is no subscription to manage yet.',
+    'billing.unavailable' => 'Payment processing is currently unavailable. Please try again later.',
 ];

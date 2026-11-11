@@ -201,4 +201,10 @@ return [
     'saved.error.unavailable' => 'Die Stelle konnte gerade nicht bei der Bundesagentur für Arbeit abgerufen werden. Bitte versuche es später erneut.',
     'saved.error.limit' => 'Du hast die Höchstzahl von :max gespeicherten Stellen erreicht. Entferne zuerst eine Stelle.',
     'saved.list_label' => 'Gespeicherte Stellen',
+    'billing.already_subscribed' => 'Ein aktives Abonnement besteht bereits.',
+    'billing.success_active' => 'Vielen Dank! Das Abonnement ist aktiv.',
+    'billing.success_pending' => 'Vielen Dank! Die Zahlung wird verarbeitet, das Abonnement wird in Kürze freigeschaltet.',
+    'billing.canceled' => 'Der Bezahlvorgang wurde abgebrochen. Es wurde nichts berechnet.',
+    'billing.no_subscription' => 'Es besteht noch kein Abonnement, das verwaltet werden könnte.',
+    'billing.unavailable' => 'Die Zahlungsabwicklung ist derzeit nicht verfügbar. Bitte später erneut versuchen.',
 ];

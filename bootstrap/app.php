@@ -12,6 +12,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Middleware\TrustProxies as IlluminateTrustProxies;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -19,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        then: function (): void {
+            Route::group([], base_path('routes/webhooks.php'));
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Host-Header-Schutz (Mail-Links): nur Hosts aus TRUSTED_HOSTS bzw. der Host aus APP_URL; die Middleware ist
@@ -94,7 +98,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Maschinenclients (MCP/OAuth) erhalten JSON statt Weiterleitungen/HTML. `oauth/authorize` ist
         // bewusst ausgenommen: das ist die Browserseite mit Login-Weiterleitung.
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*', 'mcp', 'mcp/*', '.well-known/*', 'oauth/token', 'oauth/register')
+            fn (Request $request) => $request->is('api/*', 'mcp', 'mcp/*', '.well-known/*', 'oauth/token', 'oauth/register', 'stripe/webhook')
                 || $request->expectsJson(),
         );
     })->create();

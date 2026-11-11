@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ConnectedAppController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LegalPageController;
@@ -43,6 +44,12 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
         ->whereNumber('savedJob')
         ->middleware('throttle:saved-jobs')
         ->name('saved-jobs.destroy');
+
+    // Premium-Abo (Stripe). Der Status wird ausschliesslich ueber den signierten Webhook (routes/webhooks.php) gesetzt.
+    Route::post('/billing/checkout', [BillingController::class, 'checkout'])->middleware('throttle:billing')->name('billing.checkout');
+    Route::post('/billing/portal', [BillingController::class, 'portal'])->middleware('throttle:billing')->name('billing.portal');
+    Route::get('/billing/success', [BillingController::class, 'success'])->middleware('throttle:billing')->name('billing.success');
+    Route::get('/billing/cancel', [BillingController::class, 'cancel'])->middleware('throttle:billing')->name('billing.cancel');
 
     Route::get('/connected-apps', [ConnectedAppController::class, 'index'])->middleware('throttle:connected-apps')->name('connected-apps.index');
     Route::delete('/connected-apps/{clientId}', [ConnectedAppController::class, 'destroy'])
