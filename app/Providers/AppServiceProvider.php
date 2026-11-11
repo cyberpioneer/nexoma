@@ -68,6 +68,9 @@ class AppServiceProvider extends ServiceProvider
     /** Webhook-Aufrufe pro Minute und IP, bevor die Signatur geprueft wird (Stripe sendet Ereignisse gebuendelt). */
     public const STRIPE_WEBHOOK_ATTEMPTS_PER_MINUTE = 300;
 
+    /** Anfragen pro Minute und Benutzer fuer Profil und Werdegang. */
+    public const CAREER_PROFILE_ATTEMPTS_PER_MINUTE = 30;
+
     /** Zustimmungen/Ablehnungen pro Minute und Benutzer auf der OAuth-Consent-Seite. */
     public const OAUTH_CONSENT_ATTEMPTS_PER_MINUTE = 30;
 
@@ -201,6 +204,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('billing', fn (Request $request): Limit => Limit::perMinute(self::BILLING_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('career-profile', fn (Request $request): Limit => Limit::perMinute(self::CAREER_PROFILE_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));
 
         RateLimiter::for('stripe-webhook', fn (Request $request): Limit => Limit::perMinute(self::STRIPE_WEBHOOK_ATTEMPTS_PER_MINUTE)
