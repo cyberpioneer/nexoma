@@ -201,4 +201,10 @@ return [
     'saved.error.unavailable' => 'Ahora mismo no se pudo obtener la oferta de la Agencia Federal de Empleo. Inténtalo de nuevo más tarde.',
     'saved.error.limit' => 'Has alcanzado el máximo de :max ofertas guardadas. Quita primero una.',
     'saved.list_label' => 'Ofertas guardadas',
+    'billing.already_subscribed' => 'Ya existe una suscripción activa.',
+    'billing.success_active' => '¡Gracias! La suscripción está activa.',
+    'billing.success_pending' => '¡Gracias! El pago se está procesando y la suscripción se activará en breve.',
+    'billing.canceled' => 'El pago se ha cancelado. No se ha realizado ningún cargo.',
+    'billing.no_subscription' => 'Todavía no hay ninguna suscripción que gestionar.',
+    'billing.unavailable' => 'El procesamiento de pagos no está disponible por el momento. Inténtalo de nuevo más tarde.',
 ];

@@ -24,16 +24,23 @@ use Laravel\Passport\HasApiTokens;
  * @property string|null $locale
  * @property Carbon|null $consented_at
  * @property string|null $consent_version
+ * @property string|null $stripe_customer_id
+ * @property string|null $stripe_subscription_id
+ * @property string|null $stripe_subscription_status
+ * @property Carbon|null $stripe_current_period_end
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
 #[Fillable(['name', 'email', 'password', 'locale'])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token', 'stripe_customer_id', 'stripe_subscription_id', 'stripe_subscription_status', 'stripe_current_period_end'])]
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail, OAuthenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
+
+    /** Stripe-Subscription-Status, der Premium freischaltet (`past_due`, `unpaid`, `canceled` u. a. nicht). */
+    public const ACTIVE_SUBSCRIPTION_STATUSES = ['active', 'trialing'];
 
     /**
      * Sprache fuer Mails und Benachrichtigungen an diesen Benutzer; null, wenn keine gueltige Sprache gespeichert ist.
@@ -43,6 +50,22 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return is_string($this->locale) && array_key_exists($this->locale, config('app.supported_locales'))
             ? $this->locale
             : null;
+    }
+
+    /**
+     * Ob das Stripe-Abonnement aktuell Premium-Funktionen freischaltet: Status `active`/`trialing` und das
+     * bezahlte Periodenende (plus Karenz fuer verspaetete Webhooks) ist nicht ueberschritten. Fail-closed.
+     */
+    public function hasActiveSubscription(): bool
+    {
+        if (! in_array($this->stripe_subscription_status, self::ACTIVE_SUBSCRIPTION_STATUSES, true)) {
+            return false;
+        }
+
+        $periodEnd = $this->stripe_current_period_end;
+
+        return $periodEnd !== null
+            && $periodEnd->addDays((int) config('services.stripe.grace_days'))->isFuture();
     }
 
     /**
@@ -63,6 +86,7 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return [
             'email_verified_at' => 'datetime',
             'consented_at' => 'datetime',
+            'stripe_current_period_end' => 'datetime',
             'password' => 'hashed',
         ];
     }

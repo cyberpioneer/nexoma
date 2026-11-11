@@ -43,4 +43,14 @@ return [
         'global_limit_per_minute' => (int) env('JOBSUCHE_GLOBAL_LIMIT_PER_MINUTE', 0),
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        // Einziger verkaeuflicher Plan; die Preis-ID kommt nie aus einer Anfrage.
+        'price_id' => env('STRIPE_PRICE_ID'),
+        // Tage, die ein Abo nach dem Periodenende noch gilt, falls der Verlaengerungs-Webhook verspaetet eintrifft.
+        'grace_days' => (int) env('STRIPE_GRACE_DAYS', 3),
+    ],
+
 ];

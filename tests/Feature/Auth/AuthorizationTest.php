@@ -77,6 +77,8 @@ function routesRequiringAuthAndVerified(): Collection
         'mcp.oauth.authorization-server', 'mcp.oauth.authorization-server.nested',
         'mcp.oauth.protected-resource', 'mcp.oauth.protected-resource.nested',
         'mcp.oauth.register', 'passport.token',
+        // Stripe-Webhook: oeffentlich, authentifiziert ausschliesslich ueber die Stripe-Signatur (siehe StripeWebhookTest).
+        'stripe.webhook',
     ];
     // `mcp`: POST ist per auth:api + EnsureMcpAccess geschuetzt, GET/DELETE antworten 405 (siehe eigener Test unten).
     $publicUris = ['up', '_inertia/devtools/entries', '_inertia/devtools/entries/{id}', 'mcp'];
@@ -191,6 +193,8 @@ test('the access matrix holds for every protected get route without parameters',
         ->filter(fn (LaravelRoute $route) => in_array('GET', $route->methods(), true) && ! str_contains($route->uri(), '{'))
         // Die OAuth-Consent-Seite braucht gueltige OAuth-Parameter und wird in OAuth/AuthorizationCodeFlowTest geprueft.
         ->reject(fn (LaravelRoute $route) => $route->uri() === 'oauth/authorize')
+        // Die Stripe-Rueckkehrseiten antworten bewusst mit einer Weiterleitung (Zugriffsschutz: StripeBillingTest).
+        ->reject(fn (LaravelRoute $route) => in_array($route->uri(), ['billing/success', 'billing/cancel'], true))
         ->map(fn (LaravelRoute $route) => '/'.$route->uri());
 
     expect($uris)->not->toBeEmpty();
