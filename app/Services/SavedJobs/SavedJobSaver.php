@@ -29,7 +29,8 @@ class SavedJobSaver
             return new SavedJobSaveResult(SavedJobSaveStatus::AlreadySaved, $existing);
         }
 
-        if ($user->savedJobs()->count() >= SavedJob::MAX_PER_USER) {
+        // Das Limit gilt nur fuer manuell gespeicherte Vakanzen; Treffer des Matchers verbrauchen es nicht.
+        if ($user->savedJobs()->manual()->count() >= SavedJob::MAX_PER_USER) {
             return new SavedJobSaveResult(SavedJobSaveStatus::LimitReached);
         }
 
