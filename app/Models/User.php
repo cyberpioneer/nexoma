@@ -28,6 +28,10 @@ use Laravel\Passport\HasApiTokens;
  * @property string|null $stripe_subscription_id
  * @property string|null $stripe_subscription_status
  * @property Carbon|null $stripe_current_period_end
+ * @property string|null $preferred_language
+ * @property string|null $bio
+ * @property string|null $search_location
+ * @property int|null $search_radius
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -38,6 +42,15 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
+
+    /** Hoechstlaenge des Profil-Freitexts in Zeichen. */
+    public const BIO_MAX_LENGTH = 420;
+
+    /** Hoechstlaenge des Wohn-/Suchorts in Zeichen. */
+    public const SEARCH_LOCATION_MAX_LENGTH = 120;
+
+    /** Erlaubte Suchradien in Kilometern. */
+    public const SEARCH_RADII = [5, 10, 25, 50, 100, 200];
 
     /** Stripe-Subscription-Status, der Premium freischaltet (`past_due`, `unpaid`, `canceled` u. a. nicht). */
     public const ACTIVE_SUBSCRIPTION_STATUSES = ['active', 'trialing'];
@@ -66,6 +79,14 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 
         return $periodEnd !== null
             && $periodEnd->addDays((int) config('services.stripe.grace_days'))->isFuture();
+    }
+
+    /**
+     * @return HasMany<CareerEntry, $this>
+     */
+    public function careerEntries(): HasMany
+    {
+        return $this->hasMany(CareerEntry::class);
     }
 
     /**

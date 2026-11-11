@@ -193,6 +193,8 @@ test('the access matrix holds for every protected get route without parameters',
         ->filter(fn (LaravelRoute $route) => in_array('GET', $route->methods(), true) && ! str_contains($route->uri(), '{'))
         // Die OAuth-Consent-Seite braucht gueltige OAuth-Parameter und wird in OAuth/AuthorizationCodeFlowTest geprueft.
         ->reject(fn (LaravelRoute $route) => $route->uri() === 'oauth/authorize')
+        // Premium-Routen (Middleware `subscribed`) sind ohne Abo gesperrt; ihr Zugriffsschutz steht in PaywallTest/CareerProfileTest.
+        ->reject(fn (LaravelRoute $route) => in_array('subscribed', $route->gatherMiddleware(), true))
         // Die Stripe-Rueckkehrseiten antworten bewusst mit einer Weiterleitung (Zugriffsschutz: StripeBillingTest).
         ->reject(fn (LaravelRoute $route) => in_array($route->uri(), ['billing/success', 'billing/cancel'], true))
         ->map(fn (LaravelRoute $route) => '/'.$route->uri());

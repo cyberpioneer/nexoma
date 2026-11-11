@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\CareerEntryController;
+use App\Http\Controllers\CareerProfileController;
 use App\Http\Controllers\ConnectedAppController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LegalPageController;
@@ -51,6 +53,19 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
     Route::post('/billing/portal', [BillingController::class, 'portal'])->middleware('throttle:billing')->name('billing.portal');
     Route::get('/billing/success', [BillingController::class, 'success'])->middleware('throttle:billing')->name('billing.success');
     Route::get('/billing/cancel', [BillingController::class, 'cancel'])->middleware('throttle:billing')->name('billing.cancel');
+
+    // Premium (Release 1.2.0): Profil und Werdegang. Reihenfolge der Middleware: auth, verified (Gruppe), dann subscribed.
+    Route::middleware(['subscribed', 'throttle:career-profile'])->group(function () {
+        Route::get('/profile', [CareerProfileController::class, 'show'])->name('profile.show');
+        Route::put('/profile', [CareerProfileController::class, 'update'])->name('profile.update');
+        Route::post('/career-entries', [CareerEntryController::class, 'store'])->name('career-entries.store');
+        Route::put('/career-entries/{careerEntry}', [CareerEntryController::class, 'update'])
+            ->whereNumber('careerEntry')
+            ->name('career-entries.update');
+        Route::delete('/career-entries/{careerEntry}', [CareerEntryController::class, 'destroy'])
+            ->whereNumber('careerEntry')
+            ->name('career-entries.destroy');
+    });
 
     Route::get('/connected-apps', [ConnectedAppController::class, 'index'])->middleware('throttle:connected-apps')->name('connected-apps.index');
     Route::delete('/connected-apps/{clientId}', [ConnectedAppController::class, 'destroy'])

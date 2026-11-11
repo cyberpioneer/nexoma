@@ -84,14 +84,23 @@ test('release 1.1.0 features stay free for verified users without subscription',
     'upgrade page' => ['billing.upgrade', []],
 ]);
 
-test('no existing release 1.1.0 route carries the paywall middleware', function () {
+test('only the intended premium routes carry the paywall middleware and no release 1.1.0 route does', function () {
     $paywalled = collect(Route::getRoutes()->getRoutes())
         ->filter(fn (LaravelRoute $route): bool => ! str_starts_with($route->uri(), '_test/')
             && in_array('subscribed', $route->gatherMiddleware(), true))
         ->map(fn (LaravelRoute $route): string => implode('|', $route->methods()).' '.$route->uri())
-        ->values()->all();
+        ->sort()->values()->all();
 
-    expect($paywalled)->toBe([]);
+    // Neue Premium-Routen (ab TASK-004) hier bewusst ergaenzen; Routen aus Release 1.1.0 duerfen nie erscheinen.
+    $expected = [
+        'DELETE career-entries/{careerEntry}',
+        'GET|HEAD profile',
+        'POST career-entries',
+        'PUT career-entries/{careerEntry}',
+        'PUT profile',
+    ];
+
+    expect($paywalled)->toBe($expected);
 });
 
 test('the purchase and management endpoints are reachable without subscription', function () {
