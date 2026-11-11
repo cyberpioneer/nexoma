@@ -219,4 +219,5 @@ return [
     'billing.upgrade.active_title' => 'Tu suscripción está activa',
     'billing.upgrade.active_lead' => 'Todas las funciones premium están a tu disposición. El método de pago y la cancelación se gestionan en el portal de clientes de Stripe.',
     'billing.upgrade.payment_note' => 'El pago se procesa a través de Stripe.',
+    'billing.nav' => 'Premium',
 ];

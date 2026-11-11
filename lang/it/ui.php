@@ -219,4 +219,5 @@ return [
     'billing.upgrade.active_title' => 'Il tuo abbonamento è attivo',
     'billing.upgrade.active_lead' => 'Tutte le funzioni premium sono a tua disposizione. Metodo di pagamento e disdetta si gestiscono nel portale clienti di Stripe.',
     'billing.upgrade.payment_note' => 'Il pagamento è elaborato tramite Stripe.',
+    'billing.nav' => 'Premium',
 ];

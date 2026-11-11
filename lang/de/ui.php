@@ -219,4 +219,5 @@ return [
     'billing.upgrade.active_title' => 'Ihr Abonnement ist aktiv',
     'billing.upgrade.active_lead' => 'Alle Premium-Funktionen stehen Ihnen zur Verfügung. Zahlungsart und Kündigung verwalten Sie im Kundenportal von Stripe.',
     'billing.upgrade.payment_note' => 'Die Zahlung wird über Stripe abgewickelt.',
+    'billing.nav' => 'Premium',
 ];

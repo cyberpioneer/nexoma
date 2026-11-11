@@ -219,4 +219,5 @@ return [
     'billing.upgrade.active_title' => 'Ваша підписка активна',
     'billing.upgrade.active_lead' => 'Усі преміум-функції вам доступні. Спосіб оплати та скасування підписки ви налаштовуєте в клієнтському порталі Stripe.',
     'billing.upgrade.payment_note' => 'Платіж обробляється через Stripe.',
+    'billing.nav' => 'Преміум',
 ];
