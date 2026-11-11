@@ -16,7 +16,7 @@ class BioOptimizer
     private const TARGET_CHARACTERS = 400;
 
     /** Englische Sprachnamen je unterstuetztem Sprachcode (nie Rohwerte aus Anfragen in den Prompt). */
-    private const LANGUAGE_NAMES = [
+    public const LANGUAGE_NAMES = [
         'de' => 'German',
         'en' => 'English',
         'ru' => 'Russian',
