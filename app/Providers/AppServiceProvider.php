@@ -71,6 +71,9 @@ class AppServiceProvider extends ServiceProvider
     /** Anfragen pro Minute und Benutzer fuer Profil und Werdegang. */
     public const CAREER_PROFILE_ATTEMPTS_PER_MINUTE = 30;
 
+    /** KI-Optimierungen des Profiltexts pro Minute und Benutzer (jeder Aufruf verursacht Kosten beim KI-Dienst). */
+    public const OPTIMIZE_BIO_ATTEMPTS_PER_MINUTE = 5;
+
     /** Zustimmungen/Ablehnungen pro Minute und Benutzer auf der OAuth-Consent-Seite. */
     public const OAUTH_CONSENT_ATTEMPTS_PER_MINUTE = 30;
 
@@ -207,6 +210,9 @@ class AppServiceProvider extends ServiceProvider
             ->by($this->userOrIpKey($request)));
 
         RateLimiter::for('career-profile', fn (Request $request): Limit => Limit::perMinute(self::CAREER_PROFILE_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('optimize-bio', fn (Request $request): Limit => Limit::perMinute(self::OPTIMIZE_BIO_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));
 
         RateLimiter::for('stripe-webhook', fn (Request $request): Limit => Limit::perMinute(self::STRIPE_WEBHOOK_ATTEMPTS_PER_MINUTE)

@@ -58,6 +58,9 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
     Route::middleware(['subscribed', 'throttle:career-profile'])->group(function () {
         Route::get('/profile', [CareerProfileController::class, 'show'])->name('profile.show');
         Route::put('/profile', [CareerProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile/optimize-bio', [CareerProfileController::class, 'optimizeBio'])
+            ->middleware('throttle:optimize-bio')
+            ->name('profile.optimize-bio');
         Route::post('/career-entries', [CareerEntryController::class, 'store'])->name('career-entries.store');
         Route::put('/career-entries/{careerEntry}', [CareerEntryController::class, 'update'])
             ->whereNumber('careerEntry')
