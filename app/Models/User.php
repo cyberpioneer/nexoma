@@ -90,6 +90,14 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     }
 
     /**
+     * @return HasMany<SeenJobReference, $this>
+     */
+    public function seenJobReferences(): HasMany
+    {
+        return $this->hasMany(SeenJobReference::class);
+    }
+
+    /**
      * @return HasMany<SavedJob, $this>
      */
     public function savedJobs(): HasMany
