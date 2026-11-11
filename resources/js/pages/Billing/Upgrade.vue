@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Form, Head, usePage } from '@inertiajs/vue3';
 import { checkout, portal } from '@/routes/billing';
+import { show as profileShow } from '@/routes/profile';
 import Button from '@/components/Button.vue';
 import Card from '@/components/Card.vue';
 import PageHeader from '@/components/PageHeader.vue';
@@ -78,6 +79,11 @@ const features = [
                         {{ t('billing.upgrade.subscribe') }}
                     </Button>
                 </Form>
+                <div v-if="isSubscribed">
+                    <Button :href="profileShow()" size="lg">
+                        {{ t('billing.upgrade.profile_link') }}
+                    </Button>
+                </div>
                 <Form
                     v-if="canManage"
                     v-bind="portal.form()"
