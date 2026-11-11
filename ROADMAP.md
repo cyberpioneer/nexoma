@@ -51,7 +51,7 @@
     - AK-4: Policies und Pest-Tests stellen sicher, dass Benutzer ausschließlich ihre eigenen Profil- und Werdegangsdaten lesen, anlegen, ändern und löschen können.
   - **Review-Schwerpunkte (`security-reviewer`):** IDOR-Schutz bei `CareerEntry`-Operationen, Mass-Assignment-Schutz (`$fillable`), strikte Validierung der 420-Zeichen-Grenze und erlaubter Sprachcodes.
 
-- [ ] **TASK-005 (#15): Vue-3-Formular für Profil, Sprachwahl und Berufs-/Ausbildungswerdegang**
+- [x] **TASK-005 (#15): Vue-3-Formular für Profil, Sprachwahl und Berufs-/Ausbildungswerdegang**
   - **Ziel:** Benutzeroberfläche zur Eingabe und Pflege von Profil, Sprache, Wohn-/Suchort und Werdegang (geschützt hinter der Stripe-Paywall).
   - **Akzeptanzkriterien:**
     - AK-1: Formular unter Nutzung von Vue 3 (Composition API mit `script setup`) und Inertia.js im bestehenden Nexoma-Design-System (`paper`, `surface`, `ink` etc.).
