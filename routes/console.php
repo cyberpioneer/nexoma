@@ -37,3 +37,13 @@ Artisan::command('oauth:prune-clients', function () {
 
 Schedule::command('passport:purge')->hourly();
 Schedule::command('oauth:prune-clients')->daily();
+
+// AI Matcher: alle JOB_MATCHER_INTERVAL_MINUTES Minuten (Vielfache seit Mitternacht, 0 = aus) fuer berechtigte Benutzer.
+Schedule::command('jobs:match')
+    ->everyMinute()
+    ->when(function (): bool {
+        $interval = (int) config('matcher.interval_minutes');
+
+        return $interval > 0 && ((now()->hour * 60 + now()->minute) % $interval) === 0;
+    })
+    ->withoutOverlapping();

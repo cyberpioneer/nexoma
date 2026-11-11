@@ -82,6 +82,19 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     }
 
     /**
+     * Ob das Profil fuer die automatische Vakanzensuche ausreicht: Sprache und Suchort sind gesetzt, und es gibt einen
+     * Profiltext oder mindestens einen Werdegang-Eintrag.
+     */
+    public function hasCompleteCareerProfile(): bool
+    {
+        if ($this->preferred_language === null || trim((string) $this->search_location) === '') {
+            return false;
+        }
+
+        return trim((string) $this->bio) !== '' || $this->careerEntries()->exists();
+    }
+
+    /**
      * @return HasMany<CareerEntry, $this>
      */
     public function careerEntries(): HasMany
