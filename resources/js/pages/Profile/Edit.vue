@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { Form, Head, usePage } from '@inertiajs/vue3';
+import { Form, Head, useHttp, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { store } from '@/actions/App/Http/Controllers/CareerEntryController';
-import { update } from '@/actions/App/Http/Controllers/CareerProfileController';
+import {
+    optimizeBio,
+    update,
+} from '@/actions/App/Http/Controllers/CareerProfileController';
 import Button from '@/components/Button.vue';
 import Card from '@/components/Card.vue';
 import CareerEntryFields from '@/components/CareerEntryFields.vue';
@@ -54,6 +57,52 @@ const canAddEntry = computed(
     () => props.careerEntries.length < props.maxCareerEntries,
 );
 
+/** Gewählte Sprache; das Auswahlfeld meldet Änderungen über das Browser-Ereignis `change`. */
+const language = ref(selectedLanguage.value);
+
+function rememberLanguage(event: Event): void {
+    language.value = (event.target as HTMLSelectElement).value;
+}
+
+const MIN_BIO_LENGTH_FOR_AI = 10;
+
+/** KI-Optimierung: sendet Text und Sprache, übernimmt die Antwort nur ins Formularfeld (gespeichert wird erst über „Profil speichern“). */
+const optimizer = useHttp<
+    { bio: string; preferred_language: string },
+    { bio: string }
+>(optimizeBio(), { bio: '', preferred_language: '' });
+
+async function optimizeWithAi(): Promise<void> {
+    if (bio.value.trim().length < MIN_BIO_LENGTH_FOR_AI) {
+        showToast(t('profile.ai.too_short'));
+
+        return;
+    }
+
+    optimizer.bio = bio.value;
+    optimizer.preferred_language = language.value;
+
+    try {
+        await optimizer.submit({
+            onSuccess: (response) => {
+                bio.value = response.bio;
+                showToast(t('profile.ai.done'), 'success');
+            },
+            onError: (errors) => {
+                showToast(Object.values(errors)[0] ?? t('profile.ai.error'));
+            },
+            onHttpException: () => {
+                showToast(t('profile.ai.error'));
+            },
+            onNetworkError: () => {
+                showToast(t('profile.ai.error'));
+            },
+        });
+    } catch {
+        // Fehler wurden bereits als Meldung angezeigt.
+    }
+}
+
 /** Das Formular für einen neuen Eintrag wird nach dem Speichern zurückgesetzt und neu aufgebaut. */
 const newEntryKey = ref(0);
 
@@ -100,12 +149,27 @@ function onEntryAdded(): void {
                     "
                     :error="errors.bio"
                 />
+                <div class="flex flex-col gap-2">
+                    <div>
+                        <Button
+                            variant="secondary"
+                            :processing="optimizer.processing"
+                            @click="optimizeWithAi"
+                        >
+                            {{ t('profile.ai.optimize') }}
+                        </Button>
+                    </div>
+                    <p class="text-sm text-muted">
+                        {{ t('profile.ai.notice') }}
+                    </p>
+                </div>
                 <SelectField
                     name="preferred_language"
                     :label="t('profile.language.label')"
                     :options="languageOptions"
                     :value="selectedLanguage"
                     :error="errors.preferred_language"
+                    @change="rememberLanguage"
                 />
                 <div class="grid gap-5 sm:grid-cols-2">
                     <TextField

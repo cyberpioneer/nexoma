@@ -256,4 +256,9 @@ return [
     'profile.toast.entry_saved' => 'Eintrag gespeichert.',
     'profile.toast.entry_deleted' => 'Eintrag gelöscht.',
     'billing.upgrade.profile_link' => 'Profil und Werdegang öffnen',
+    'profile.ai.optimize' => 'Mit KI optimieren',
+    'profile.ai.notice' => 'Zur Optimierung wird der Text an einen KI-Dienst (MiniMax) übermittelt. Das Ergebnis wird erst mit „Profil speichern“ übernommen.',
+    'profile.ai.done' => 'Der Text wurde optimiert. Bitte prüfen Sie ihn, bevor Sie speichern.',
+    'profile.ai.too_short' => 'Bitte zuerst einen Profiltext mit mindestens 10 Zeichen eingeben.',
+    'profile.ai.error' => 'Die KI-Optimierung ist derzeit nicht verfügbar. Bitte später erneut versuchen.',
 ];
