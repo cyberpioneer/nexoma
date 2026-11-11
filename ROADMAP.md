@@ -73,7 +73,7 @@
 
 ## Phase 3: Automatische Hintergrund-Vakanzensuche (`ai_matcher`)
 
-- [ ] **TASK-007 (#17): Erweiterung `saved_jobs` & Deduplizierung bereits erwähnter Vakanzen**
+- [x] **TASK-007 (#17): Erweiterung `saved_jobs` & Deduplizierung bereits erwähnter Vakanzen**
   - **Ziel:** Erweiterung der Tabelle `saved_jobs` um KI-Bewertungsfelder, Quell-Attribut (`manual` vs. `ai_matcher`) und Schutz vor doppelter Aufnahme/Erwähnung.
   - **Akzeptanzkriterien:**
     - AK-1: Migration erweitert `saved_jobs` um: `source` (`'manual'` | `'ai_matcher'`, Default `'manual'`), `ai_summary` (String, max. 255 Zeichen, nullable), `temperature` (unsignedTinyInteger 1–10, nullable), `distance_km` (Integer/Decimal, nullable), `briefed_at` (Timestamp, nullable).
