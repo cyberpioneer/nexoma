@@ -31,6 +31,8 @@ class CareerProfileController extends Controller
                 $user->careerEntries()->orderByDesc('from_date')->orderByDesc('id')->limit(CareerEntry::MAX_PER_USER)->get(),
             )->resolve($request),
             'maxCareerEntries' => CareerEntry::MAX_PER_USER,
+            'maxBioLength' => User::BIO_MAX_LENGTH,
+            'searchRadii' => User::SEARCH_RADII,
         ]);
     }
 

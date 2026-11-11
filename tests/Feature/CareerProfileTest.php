@@ -83,7 +83,9 @@ test('the profile page shows only the own whitelisted data', function () {
         ->has('careerEntries', 1)
         ->where('careerEntries.0.what', 'Eigener Eintrag')
         ->has('careerEntries.0', fn (Assert $entry) => $entry->hasAll(['id', 'what', 'where', 'from_date', 'to_date', 'qualification_or_role']))
-        ->where('maxCareerEntries', CareerEntry::MAX_PER_USER));
+        ->where('maxCareerEntries', CareerEntry::MAX_PER_USER)
+        ->where('maxBioLength', User::BIO_MAX_LENGTH)
+        ->where('searchRadii', User::SEARCH_RADII));
 
     expect($response->getContent())->not->toContain('Fremder Eintrag')->not->toContain($other->email);
 });
