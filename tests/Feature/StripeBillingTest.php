@@ -66,7 +66,7 @@ test('a user with an active subscription is not sent to stripe again', function 
     $user->forceFill(['stripe_subscription_status' => 'active', 'stripe_current_period_end' => now()->addMonth()])->save();
 
     $this->actingAs($user)->post(route('billing.checkout'))
-        ->assertRedirect(route('dashboard'))
+        ->assertRedirect(route('billing.upgrade'))
         ->assertSessionHas('status', __('ui.billing.already_subscribed'));
 
     expect($this->stripe->requests)->toBeEmpty();
@@ -86,7 +86,7 @@ test('checkout without stripe configuration fails closed without calling stripe'
     config(['services.stripe.'.$missing => null]);
 
     $this->actingAs(User::factory()->create())->post(route('billing.checkout'))
-        ->assertRedirect(route('dashboard'))
+        ->assertRedirect(route('billing.upgrade'))
         ->assertSessionHasErrors(['billing' => __('ui.billing.unavailable')]);
 
     expect($this->stripe->requests)->toBeEmpty();
@@ -97,7 +97,7 @@ test('a stripe api error is reported generically without leaking details', funct
 
     $response = $this->actingAs(User::factory()->create())->post(route('billing.checkout'));
 
-    $response->assertRedirect(route('dashboard'))->assertSessionHasErrors(['billing' => __('ui.billing.unavailable')]);
+    $response->assertRedirect(route('billing.upgrade'))->assertSessionHasErrors(['billing' => __('ui.billing.unavailable')]);
     expect(json_encode(session()->all()))->not->toContain('sk_test_fake_secret');
 });
 
@@ -106,7 +106,7 @@ test('the customer portal needs an existing stripe customer', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)->post(route('billing.portal'))
-        ->assertRedirect(route('dashboard'))
+        ->assertRedirect(route('billing.upgrade'))
         ->assertSessionHasErrors(['billing' => __('ui.billing.no_subscription')]);
 
     $user->forceFill(['stripe_customer_id' => 'cus_77'])->save();
@@ -121,7 +121,7 @@ test('a non https stripe url is rejected', function () {
         ->respond('POST', '/v1/checkout/sessions', ['id' => 'cs_1', 'object' => 'checkout.session', 'url' => 'javascript:alert(1)']);
 
     $this->actingAs(User::factory()->create())->post(route('billing.checkout'))
-        ->assertRedirect(route('dashboard'))
+        ->assertRedirect(route('billing.upgrade'))
         ->assertSessionHasErrors('billing');
 });
 
@@ -129,10 +129,10 @@ test('the return pages only show a message and never activate the subscription',
     $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('billing.success'))
-        ->assertRedirect(route('dashboard'))
+        ->assertRedirect(route('billing.upgrade'))
         ->assertSessionHas('status', __('ui.billing.success_pending'));
     $this->actingAs($user)->get(route('billing.cancel'))
-        ->assertRedirect(route('dashboard'))
+        ->assertRedirect(route('billing.upgrade'))
         ->assertSessionHas('status', __('ui.billing.canceled'));
 
     expect($user->fresh()->hasActiveSubscription())->toBeFalse();
@@ -156,7 +156,7 @@ test('billing endpoints are rate limited per user', function () {
     $this->actingAs(User::factory()->create());
 
     foreach (range(1, AppServiceProvider::BILLING_ATTEMPTS_PER_MINUTE) as $attempt) {
-        $this->get(route('billing.cancel'))->assertRedirect(route('dashboard'));
+        $this->get(route('billing.cancel'))->assertRedirect(route('billing.upgrade'));
     }
 
     $this->get(route('billing.cancel'))->assertTooManyRequests();
@@ -199,6 +199,6 @@ test('subscription columns cannot be mass assigned and are not exposed to the cl
     $subscriber = User::factory()->create();
     $subscriber->forceFill(['stripe_customer_id' => 'cus_visible', 'stripe_subscription_status' => 'active', 'stripe_current_period_end' => now()->addMonth()])->save();
 
-    $this->actingAs($subscriber)->get(route('dashboard'))
+    $this->actingAs($subscriber)->get(route('billing.upgrade'))
         ->assertInertia(fn ($page) => $page->where('auth.user', fn ($shared) => ! str_contains(json_encode($shared), 'stripe')));
 });
