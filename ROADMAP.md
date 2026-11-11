@@ -30,7 +30,7 @@
     - AK-4: Alle neuen UI-Texte sind in allen 6 Sprachen (`lang/*/ui.php`) hinterlegt; Pest-Feature-Tests für Checkout und Webhooks sind grün.
   - **Review-Schwerpunkte (`security-reviewer`):** Webhook-Signaturvalidierung, Schutz vor Manipulation des Abo-Status durch Client-Requests, keine Preis-/Plan-Übergabe aus unvalidierten Benutzereingaben.
 
-- [ ] **TASK-003 (#13): Paywall-Middleware (`EnsureUserIsSubscribed`) für neue Premium-Funktionen**
+- [x] **TASK-003 (#13): Paywall-Middleware (`EnsureUserIsSubscribed`) für neue Premium-Funktionen**
   - **Ziel:** Absicherung aller neuen kostenpflichtigen Funktionen aus Release 1.2.0 bei gleichzeitiger Beibehaltung der kostenlosen Nutzung aller 1.1.0-Funktionen.
   - **Akzeptanzkriterien:**
     - AK-1: Middleware `EnsureUserIsSubscribed` blockiert Zugriffe ohne aktives Abo (Redirect auf Upgrade-Seite bzw. `402/403` bei JSON/XHR).
