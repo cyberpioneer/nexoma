@@ -42,7 +42,7 @@
 
 ## Phase 2: Profil, Werdegang & KI-Optimierung (MiniMax)
 
-- [ ] **TASK-004 (#14): Datenbank-Schema, Models, Form Requests & Resources für Profil und Werdegang**
+- [x] **TASK-004 (#14): Datenbank-Schema, Models, Form Requests & Resources für Profil und Werdegang**
   - **Ziel:** Persistenzschicht für Profil-Freitext, Sprachwahl, Suchort und den Berufs-/Ausbildungswerdegang ohne Verwendung von DTOs.
   - **Akzeptanzkriterien:**
     - AK-1: Speicherung am Benutzerprofil für: `preferred_language` (`de`, `en`, `ru`, `uk`, `es`, `it`), `bio` (Freitext bis max. 420 Zeichen), `search_location` (Wohn-/Suchort) und `search_radius` (Umkreis: 5, 10, 25, 50, 100, 200 km).
