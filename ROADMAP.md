@@ -81,7 +81,7 @@
     - AK-3: Bestehendes manuelles Speichern über Web und MCP (`save_job`) setzt weiterhin zuverlässig `source = 'manual'`.
   - **Review-Schwerpunkte (`security-reviewer`):** Datenintegrität durch Datenbank-Constraints, keine Regression beim bestehenden MCP-Tool `save_job`.
 
-- [ ] **TASK-008 (#18): Hintergrund-Job für KI-Vakanzensuche, Bewertung (1–10) & Distanz**
+- [x] **TASK-008 (#18): Hintergrund-Job für KI-Vakanzensuche, Bewertung (1–10) & Distanz**
   - **Ziel:** Regelmäßiger Hintergrund-Job (Intervall über `.env` konfigurierbar), der für aktive Premium-Profile bis zu 10 neue Vakanzen sucht, bewertet und in `saved_jobs` speichert.
   - **Akzeptanzkriterien:**
     - AK-1: Steuerung des Ausführungsintervalls über `.env` (z. B. `JOB_MATCHER_INTERVAL_MINUTES`) im Laravel Scheduler; verarbeitet werden nur Benutzer mit aktivem Abo und ausgefülltem Profil.
