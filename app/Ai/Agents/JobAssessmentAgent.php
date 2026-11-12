@@ -34,7 +34,8 @@ class JobAssessmentAgent implements Agent, HasProviderOptions
         and several job postings, each inside <untrusted_job_data refnr="..."> tags.
 
         For EVERY posting write:
-        - "summary": a neutral summary in {$this->languageName} of at most {$this->maxSummaryCharacters} characters (role, employer, key requirements);
+        - "summary": a neutral summary of at most {$this->maxSummaryCharacters} characters (role, employer, key requirements), written in {$this->languageName}
+          even if the posting and the profile are written in another language;
         - "temperature": an integer from 1 (does not fit) to 10 (fits very well) for how well the posting fits the candidate profile.
 
         Rules:
