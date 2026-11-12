@@ -47,13 +47,20 @@ class MatchJobsForUserJob implements ShouldBeUnique, ShouldQueue
         }
 
         try {
-            $matcher->run($user);
+            $result = $matcher->run($user);
         } catch (Throwable $exception) {
             // Nur Klasse und Benutzer-ID protokollieren; Texte, Antworten und Zugangsdaten gehoeren nicht ins Log
             // und nicht in die Tabelle der fehlgeschlagenen Jobs.
             Log::error('Matcher-Lauf fehlgeschlagen.', ['user' => $this->userId, 'exception' => $exception::class]);
 
             $this->fail(new RuntimeException('Matcher-Lauf fehlgeschlagen.'));
+
+            return;
+        }
+
+        // Neue Vorschlaege werden im Audio-Briefing vorgelesen (Queue `piper`, je Benutzer eindeutig).
+        if ($result['saved'] > 0) {
+            GenerateAudioBriefingJob::dispatch($user->id);
         }
     }
 }

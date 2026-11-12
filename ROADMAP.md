@@ -103,7 +103,7 @@
     - AK-3: `PiperTtsService::synthesize()` startet `/opt/piper/venv/bin/python3 -m piper` über `Process::run()` mit Argument-Array ohne Shell, übergibt den Sprechtext (max. 8000 Zeichen) per `stdin`, prüft Exit-Code sowie RIFF/WAVE-Header, speichert die `<uuid>.wav`-Datei auf der Disk `private` (`storage/app/private/`) und löscht die temporäre Datei garantiert.
   - **Review-Schwerpunkte (`security-reviewer`):** Ausschluss von Command-Injection und Path-Traversal (Stimmmodell darf nur über die feste Sprach-Whitelist aufgelöst werden, niemals direkt aus Benutzereingaben), Speicherung ausschließlich im privaten Storage.
 
-- [ ] **TASK-010 (#20): Queue-Job `GenerateAudioBriefingJob` & geschützter Audio-Stream**
+- [x] **TASK-010 (#20): Queue-Job `GenerateAudioBriefingJob` & geschützter Audio-Stream**
   - **Ziel:** Automatische Generierung eines Audio-Briefings nach jedem Matcher-Lauf (nur für neue `ai_matcher`-Vakanzen) und Bereitstellung des Streaming-Endpunkts.
   - **Akzeptanzkriterien:**
     - AK-1: Nach jedem Matcher-Lauf werden ausschließlich Vakanzen des Benutzers mit `source = 'ai_matcher'` und `briefed_at IS NULL` herangezogen.

@@ -119,6 +119,17 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     }
 
     /**
+     * Beim Loeschen des Benutzers werden die Briefings einzeln geloescht, damit auch ihre Audiodateien
+     * (personenbezogene Daten) entfernt werden; die reine Datenbank-Kaskade wuerde sie liegen lassen.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (User $user): void {
+            $user->audioBriefings()->each(fn (AudioBriefing $briefing) => $briefing->delete());
+        });
+    }
+
+    /**
      * @return HasMany<AudioBriefing, $this>
      */
     public function audioBriefings(): HasMany

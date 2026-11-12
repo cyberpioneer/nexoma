@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Audio-Briefing eines Benutzers. `user_id` sowie Status, Pfad, Dauer und Fehlercode sind nicht massenzuweisbar;
@@ -40,6 +41,19 @@ class AudioBriefing extends Model
     public const STATUS_FAILED = 'failed';
 
     public const STATUSES = [self::STATUS_PENDING, self::STATUS_PROCESSING, self::STATUS_READY, self::STATUS_FAILED];
+
+    /**
+     * Beim Loeschen eines Briefings wird auch die Audiodatei entfernt. (Beim Loeschen des Benutzers greift
+     * die Datenbank-Kaskade ohne Model-Ereignis; die Dateien bleiben dann bis zu einer Bereinigung liegen.)
+     */
+    protected static function booted(): void
+    {
+        static::deleted(function (AudioBriefing $briefing): void {
+            if ($briefing->storage_path !== null) {
+                Storage::disk((string) config('services.piper.disk', 'local'))->delete($briefing->storage_path);
+            }
+        });
+    }
 
     /**
      * @return BelongsTo<User, $this>
