@@ -121,7 +121,7 @@
   - **Akzeptanzkriterien:**
     - AK-1: Das Dashboard zeigt die Anzahl der gespeicherten Vakanzen und die Anzahl der gespeicherten Audio-Briefings des Benutzers an.
     - AK-2: Das neueste fertige Audio-Briefing wird auf dem Dashboard als Player mit Play/Stop-Button, Audiospur/Fortschrittsanzeige und Geschwindigkeitsschalter (`1x`, `1.25x`, `1.5x`, `2x`) dargestellt.
-    - AK-3: In der Tabelle/Liste `saved_jobs` werden für `ai_matcher`-Vakanzen der KI-Vermerk (`ai_summary`), die Temperatur/Passung (`1–10`) und die Distanz (`distance_km`) angezeigt.
+    - AK-3: In der Tabelle/Liste `saved_jobs` werden für `ai_matcher`-Vakanzen der KI-Vermerk (`ai_summary`), die Temperatur/Passung (`1–10`) und die Distanz (`distance_km`) angezeigt. **[vorgezogen und umgesetzt am 2026-11-12: Liste `/saved-jobs`, vom `security-reviewer` freigegeben]**
     - AK-4: Alle neuen Texte sind in allen 6 Sprachen (`lang/*/ui.php`) vorhanden; Pest-Tests prüfen die korrekte Datenbereitstellung.
   - **Review-Schwerpunkte (`security-reviewer`):** Strikte Mandantentrennung bei Zählern und neuestem Briefing, sichere Textausgabe ohne `v-html` (XSS-Schutz für `ai_summary`).
 

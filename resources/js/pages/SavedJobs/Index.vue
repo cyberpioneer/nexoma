@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import Button from '@/components/Button.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import PageHeader from '@/components/PageHeader.vue';
@@ -14,12 +15,20 @@ defineOptions({ layout: AppLayout });
 const props = defineProps<{ savedJobs: SavedJob[] }>();
 
 const { t } = useTranslate();
+
+const hasAiSuggestions = computed(() =>
+    props.savedJobs.some((job) => job.ai !== undefined),
+);
 </script>
 
 <template>
     <div class="flex flex-col gap-8">
         <Head :title="t('saved.title')" />
         <PageHeader :title="t('saved.title')" :lead="t('saved.lead')" />
+
+        <p v-if="hasAiSuggestions" class="max-w-2xl text-sm text-muted">
+            {{ t('saved.ai.hint') }}
+        </p>
 
         <ul
             v-if="props.savedJobs.length > 0"
