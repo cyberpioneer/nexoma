@@ -53,4 +53,22 @@ return [
         'grace_days' => (int) env('STRIPE_GRACE_DAYS', 3),
     ],
 
+    'piper' => [
+        'python_binary' => env('PIPER_PYTHON_BINARY', '/opt/piper/venv/bin/python3'),
+        'data_dir' => env('PIPER_DATA_DIR', '/opt/piper/voices'),
+        'timeout' => (int) env('PIPER_TIMEOUT', 300),
+        // Disk `local` zeigt auf storage/app/private (nicht oeffentlich erreichbar).
+        'disk' => 'local',
+        'directory' => 'audio-briefings',
+        // Feste Whitelist Sprache => Stimme (Dateiname ohne .onnx in `data_dir`); nie aus Benutzereingaben.
+        'voices' => [
+            'de' => 'de_DE-thorsten-high',
+            'en' => 'en_US-lessac-high',
+            'es' => 'es_ES-davefx-medium',
+            'it' => 'it_IT-paola-medium',
+            'ru' => 'ru_RU-dmitri-medium',
+            'uk' => 'uk_UA-ukrainian_tts-medium',
+        ],
+    ],
+
 ];
