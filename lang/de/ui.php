@@ -261,4 +261,11 @@ return [
     'profile.ai.done' => 'Der Text wurde optimiert. Bitte prüfen Sie ihn, bevor Sie speichern.',
     'profile.ai.too_short' => 'Bitte zuerst einen Profiltext mit mindestens 10 Zeichen eingeben.',
     'profile.ai.error' => 'Die KI-Optimierung ist derzeit nicht verfügbar. Bitte später erneut versuchen.',
+    'saved.ai.badge' => 'KI-Vorschlag',
+    'saved.ai.summary' => 'Zusammenfassung',
+    'saved.ai.fit' => 'Passung',
+    'saved.ai.fit_value' => ':value von 10',
+    'saved.ai.distance' => 'Entfernung',
+    'saved.ai.distance_value' => ':km km',
+    'saved.ai.hint' => 'KI-Vorschläge stammen aus der automatischen Suche. Zusammenfassung und Passung wurden von einer KI erstellt und können Fehler enthalten; sie sind nur ein Hinweis.',
 ];

@@ -261,4 +261,11 @@ return [
     'profile.ai.done' => 'El texto se ha optimizado. Revísalo antes de guardar.',
     'profile.ai.too_short' => 'Escribe primero un texto de perfil de al menos 10 caracteres.',
     'profile.ai.error' => 'La optimización con IA no está disponible por el momento. Inténtalo de nuevo más tarde.',
+    'saved.ai.badge' => 'Sugerencia de IA',
+    'saved.ai.summary' => 'Resumen',
+    'saved.ai.fit' => 'Afinidad',
+    'saved.ai.fit_value' => ':value de 10',
+    'saved.ai.distance' => 'Distancia',
+    'saved.ai.distance_value' => ':km km',
+    'saved.ai.hint' => 'Las sugerencias de IA proceden de la búsqueda automática. El resumen y la afinidad los ha creado una IA y pueden contener errores; son solo una orientación.',
 ];

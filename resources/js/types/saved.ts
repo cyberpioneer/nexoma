@@ -11,6 +11,13 @@ export type SavedState = {
     note: string | null;
 };
 
+/** KI-Angaben eines Vorschlags der automatischen Suche (nur bei Matcher-Einträgen vorhanden). */
+export type SavedJobAi = {
+    summary: string | null;
+    temperature: number | null;
+    distanceKm: number | null;
+};
+
 export type SavedJob = {
     id: number;
     refnr: string;
@@ -19,4 +26,6 @@ export type SavedJob = {
     location: string | null;
     note: string | null;
     savedAt: string | null;
+    /** Nur bei Vorschlägen der automatischen Suche. */
+    ai?: SavedJobAi;
 };

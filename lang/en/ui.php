@@ -261,4 +261,11 @@ return [
     'profile.ai.done' => 'The text has been optimized. Please review it before saving.',
     'profile.ai.too_short' => 'Please enter a profile text of at least 10 characters first.',
     'profile.ai.error' => 'AI optimization is currently unavailable. Please try again later.',
+    'saved.ai.badge' => 'AI suggestion',
+    'saved.ai.summary' => 'Summary',
+    'saved.ai.fit' => 'Fit',
+    'saved.ai.fit_value' => ':value out of 10',
+    'saved.ai.distance' => 'Distance',
+    'saved.ai.distance_value' => ':km km',
+    'saved.ai.hint' => 'AI suggestions come from the automatic search. The summary and the fit were created by an AI and may contain errors; they are only a hint.',
 ];
