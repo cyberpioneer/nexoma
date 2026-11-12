@@ -94,6 +94,7 @@ test('only the intended premium routes carry the paywall middleware and no relea
     // Neue Premium-Routen (ab TASK-004) hier bewusst ergaenzen; Routen aus Release 1.1.0 duerfen nie erscheinen.
     $expected = [
         'DELETE career-entries/{careerEntry}',
+        'GET|HEAD audio-briefings/{audioBriefing}/stream',
         'GET|HEAD profile',
         'POST career-entries',
         'POST profile/optimize-bio',
