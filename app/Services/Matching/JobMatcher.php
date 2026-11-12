@@ -107,7 +107,7 @@ class JobMatcher
      */
     private function searchTerm(User $user, string $profile): string
     {
-        $key = 'matcher:term:'.$user->id.':'.sha1($profile);
+        $key = 'matcher:term:v2:'.$user->id.':'.sha1($profile);
 
         return Cache::remember($key, now()->addDays(self::SEARCH_TERM_CACHE_DAYS), function () use ($profile): string {
             $answer = (string) (new SearchTermAgent)->prompt($profile)->text;
@@ -216,7 +216,9 @@ class JobMatcher
         }
 
         $agent = new JobAssessmentAgent($languageName, self::SUMMARY_TARGET_CHARACTERS);
-        $answer = (string) $agent->prompt($profile."\n\n".implode("\n\n", $blocks))->text;
+        $answer = (string) $agent->prompt(
+            $profile."\n\n".implode("\n\n", $blocks)."\n\nWrite every \"summary\" in {$languageName}. Answer with the JSON array only.",
+        )->text;
 
         return $this->parseAssessments($answer, array_keys($candidates));
     }
