@@ -95,7 +95,7 @@
 
 ## Phase 4: Audio-Briefings mit Piper TTS
 
-- [ ] **TASK-009 (#19): `audio_briefings`-Schema & `PiperTtsService` mit 6-Sprachen-Mapping**
+- [x] **TASK-009 (#19): `audio_briefings`-Schema & `PiperTtsService` mit 6-Sprachen-Mapping**
   - **Ziel:** Umsetzung der lokalen Text-to-Speech-Synthese gemäß `desc.briefing.md` unter Verwendung der 6 vorhandenen ONNX-Stimmen in `/opt/piper/voices`.
   - **Akzeptanzkriterien:**
     - AK-1: Migration und Eloquent Model `AudioBriefing` (`user_id`, `locale`, `content_hash`, `speech_text`, `storage_path`, `duration_ms`, `status`, `error_code`).

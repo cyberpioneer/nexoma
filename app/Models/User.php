@@ -119,6 +119,14 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     }
 
     /**
+     * @return HasMany<AudioBriefing, $this>
+     */
+    public function audioBriefings(): HasMany
+    {
+        return $this->hasMany(AudioBriefing::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
