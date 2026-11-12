@@ -57,8 +57,10 @@ test('legal:check currently reports exactly the deliberately open placeholders',
         '[Frist der Logfile-Speicherung]',
         '[Name und Anschrift des Hosters]',
         '[Name und Anschrift des E-Mail-Anbieters]',
+        '[Name und Anschrift des Zahlungsdienstleisters (Stripe)]',
         '[Name und Anschrift des KI-Anbieters (MiniMax)]',
         '[Verarbeitungsort des KI-Anbieters sowie Angemessenheitsbeschluss oder geeignete Garantien nach Art. 45 bzw. Art. 46 DSGVO]',
+        '[Verarbeitungsort des Zahlungsdienstleisters sowie Angemessenheitsbeschluss oder geeignete Garantien nach Art. 45 bzw. Art. 46 DSGVO]',
     ]);
 
     $this->artisan('legal:check')->assertExitCode(1);
