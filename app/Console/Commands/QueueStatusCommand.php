@@ -30,23 +30,26 @@ class QueueStatusCommand extends Command
             return self::SUCCESS;
         }
 
+        $once = (bool) $this->option('once');
         $interval = max(1, (int) $this->option('interval'));
         $last = null;
         $lastPrinted = 0;
 
-        do {
+        while (true) {
             $line = $this->statusLine();
 
-            if ($line !== $last || time() - $lastPrinted >= self::HEARTBEAT_SECONDS || $this->option('once')) {
+            if ($last === null || $line !== $last || time() - $lastPrinted >= self::HEARTBEAT_SECONDS) {
                 $this->line($line);
                 $last = $line;
                 $lastPrinted = time();
             }
 
-            if (! $this->option('once')) {
-                sleep($interval);
+            if ($once) {
+                break;
             }
-        } while (! $this->option('once'));
+
+            sleep($interval);
+        }
 
         return self::SUCCESS;
     }
