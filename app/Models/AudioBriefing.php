@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Database\Factories\AudioBriefingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -61,6 +63,17 @@ class AudioBriefing extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Nur fertige Briefings mit Audiodatei.
+     *
+     * @param  Builder<AudioBriefing>  $query
+     */
+    #[Scope]
+    protected function ready(Builder $query): void
+    {
+        $query->where('status', self::STATUS_READY)->whereNotNull('storage_path');
     }
 
     public function markProcessing(): void

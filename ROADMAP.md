@@ -116,7 +116,7 @@
 
 ## Phase 5: Dashboard-Erweiterung & `/saved-briefings`
 
-- [ ] **TASK-011 (#21): Dashboard-Ergänzung (Zähler, Player mit Geschwindigkeitsschalter & Vakanzen-Anzeige)**
+- [x] **TASK-011 (#21): Dashboard-Ergänzung (Zähler, Player mit Geschwindigkeitsschalter & Vakanzen-Anzeige)**
   - **Ziel:** Erweiterung des Dashboards um Kennzahlen, den Audio-Player für das neueste Briefing sowie die Darstellung der KI-Attribute in der Liste gespeicherter Vakanzen.
   - **Akzeptanzkriterien:**
     - AK-1: Das Dashboard zeigt die Anzahl der gespeicherten Vakanzen und die Anzahl der gespeicherten Audio-Briefings des Benutzers an.
