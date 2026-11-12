@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\QueueStatusCommand;
 use App\Services\OAuth\RedirectUriDisplay;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\DevCommands;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Date;
@@ -109,6 +111,19 @@ class AppServiceProvider extends ServiceProvider
         $this->configureUrlGeneration();
         $this->configureRateLimiting();
         $this->configurePassport();
+        $this->configureDevProcesses();
+    }
+
+    /**
+     * Entwicklungsprozesse von `php artisan dev`: Der Worker bedient alle Queues der Anwendung (sync, default, ai fuer den
+     * Matcher, piper fuer die Audio-Briefings; die Standardvorgabe des Frameworks kennt nur `default`). Der Prozess
+     * "status" zeigt wartende, laufende und fehlgeschlagene Jobs je Queue; alle Ausgaben tragen Zeitstempel.
+     */
+    protected function configureDevProcesses(): void
+    {
+        DevCommands::artisan('queue:listen --queue='.implode(',', QueueStatusCommand::QUEUES).' --tries=1 --timeout=0', 'queue')->purple();
+        DevCommands::artisan('queue:status', 'status')->orange();
+        DevCommands::withTimestamps();
     }
 
     /**
