@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AudioBriefingController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CareerEntryController;
 use App\Http\Controllers\CareerProfileController;
@@ -69,6 +70,12 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
             ->whereNumber('careerEntry')
             ->name('career-entries.destroy');
     });
+
+    // Premium: Audio-Briefings. Auslieferung nur an den Besitzer (Policy), mit Range-Unterstuetzung fuer den Player.
+    Route::get('/audio-briefings/{audioBriefing}/stream', [AudioBriefingController::class, 'stream'])
+        ->whereNumber('audioBriefing')
+        ->middleware(['subscribed', 'throttle:audio-stream'])
+        ->name('audio-briefings.stream');
 
     Route::get('/connected-apps', [ConnectedAppController::class, 'index'])->middleware('throttle:connected-apps')->name('connected-apps.index');
     Route::delete('/connected-apps/{clientId}', [ConnectedAppController::class, 'destroy'])
