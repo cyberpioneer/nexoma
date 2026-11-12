@@ -5,6 +5,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CareerEntryController;
 use App\Http\Controllers\CareerProfileController;
 use App\Http\Controllers\ConnectedAppController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\LocaleController;
@@ -29,7 +30,7 @@ Route::post('/locale', [LocaleController::class, 'update'])->middleware('throttl
 // Alle geschuetzten Routen gehoeren in diese Gruppe (auth + verified), z. B. kuenftige
 // Jobsuche-, Detail- und Profilrouten. Der Route-Inventar-Test erzwingt das.
 Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function () {
-    Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/jobs', [JobController::class, 'index'])->middleware('throttle:jobsuche')->name('jobs.index');
     Route::get('/jobs/{refnr}', [JobController::class, 'show'])
