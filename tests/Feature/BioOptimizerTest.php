@@ -164,15 +164,15 @@ test('the endpoint is rate limited per user', function () {
 });
 
 test('the ai configuration reads the specified environment variables and exposes no secret to the client', function () {
-    $provider = config('ai.providers.openai-compatible');
+    $provider = config('ai.providers.ionos');
 
-    expect(config('ai.default'))->toBe('openai-compatible')
+    expect(config('ai.default'))->toBe('ionos')
         ->and($provider['driver'])->toBe('openai-compatible')
         ->and($provider)->toHaveKeys(['url', 'key', 'models'])
         ->and((string) file_get_contents(config_path('ai.php')))
-        ->toContain("env('OPENAI_COMPATIBLE_URL')")->toContain("env('OPENAI_COMPATIBLE_API_KEY')");
+        ->toContain("env('IONOS_AI_BASE_URL')")->toContain("env('IONOS_AI_KEY')");
 
-    config(['ai.providers.openai-compatible.key' => 'sk-test-secret-value']);
+    config(['ai.providers.ionos.key' => 'sk-test-secret-value']);
     config(['inertia.testing.ensure_pages_exist' => false]);
 
     $response = $this->actingAs(premiumBioUser())->get(route('profile.show'))->assertOk();
@@ -183,6 +183,6 @@ test('the ai configuration reads the specified environment variables and exposes
 test('the agent switches off the thinking phase of the provider', function () {
     $agent = new BioOptimizerAgent('German', 400);
 
-    expect($agent->providerOptions('openai-compatible'))->toBe(['thinking' => ['type' => 'disabled']])
+    expect($agent->providerOptions('ionos'))->toBe(['thinking' => ['type' => 'disabled']])
         ->and((string) $agent->instructions())->toContain('German')->toContain('400');
 });

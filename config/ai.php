@@ -2,28 +2,31 @@
 
 /*
 |--------------------------------------------------------------------------
-| Laravel AI SDK: Nexoma-Konfiguration
+| KI-Anbieter
 |--------------------------------------------------------------------------
 |
-| Nexoma nutzt ausschliesslich MiniMax ueber den OpenAI-kompatiblen Endpunkt
-| (https://platform.minimax.io/docs/api-reference/text-openai-api).
-| Zugangsdaten stehen nur in .env: OPENAI_COMPATIBLE_API_KEY, OPENAI_COMPATIBLE_URL
-| (z. B. https://api.minimax.io/v1) und optional OPENAI_COMPATIBLE_MODEL.
-| Die Datei ersetzt den Abschnitt `providers` der SDK-Vorgabe vollstaendig.
+| Nexoma nutzt ausschliesslich den IONOS AI Model Hub (Rechenzentrum in Deutschland) ueber den
+| OpenAI-kompatiblen Endpunkt des Laravel AI SDK (Treiber `openai-compatible`).
+| Zugangsdaten und Modelle stehen nur in .env: IONOS_AI_BASE_URL, IONOS_AI_KEY sowie die Modelle
+| IONOS_AI_MODEL_DEFAULT (Standard), IONOS_AI_MODEL_FAST (guenstigstes) und IONOS_AI_MODEL_SMART (staerkstes).
 |
 */
 
 return [
 
-    'default' => 'openai-compatible',
+    'default' => 'ionos',
 
     'providers' => [
-        'openai-compatible' => [
+        'ionos' => [
             'driver' => 'openai-compatible',
-            'url' => env('OPENAI_COMPATIBLE_URL'),
-            'key' => env('OPENAI_COMPATIBLE_API_KEY'),
+            'url' => env('IONOS_AI_BASE_URL'),
+            'key' => env('IONOS_AI_KEY'),
             'models' => [
-                'text' => ['default' => env('OPENAI_COMPATIBLE_MODEL', 'MiniMax-M3')],
+                'text' => [
+                    'default' => env('IONOS_AI_MODEL_DEFAULT', 'mistralai/Mistral-Small-24B-Instruct'),
+                    'cheapest' => env('IONOS_AI_MODEL_FAST', env('IONOS_AI_MODEL_DEFAULT', 'mistralai/Mistral-Small-24B-Instruct')),
+                    'smartest' => env('IONOS_AI_MODEL_SMART', env('IONOS_AI_MODEL_DEFAULT', 'mistralai/Mistral-Small-24B-Instruct')),
+                ],
             ],
         ],
     ],

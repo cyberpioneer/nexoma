@@ -17,8 +17,8 @@ use InvalidArgumentException;
 use RuntimeException;
 
 /**
- * Automatische Vakanzensuche fuer einen Benutzer: Suchbegriff aus Profil und Werdegang ableiten (MiniMax),
- * neue Stellen bei der BA suchen, bewerten (MiniMax) und als `ai_matcher` speichern.
+ * Automatische Vakanzensuche fuer einen Benutzer: Suchbegriff aus Profil und Werdegang ableiten (KI-Dienst),
+ * neue Stellen bei der BA suchen, bewerten (KI-Dienst) und als `ai_matcher` speichern.
  *
  * Stellendaten sind Fremddaten und gelangen nur gekapselt (`<untrusted_job_data>`) in den Prompt; jede Ausgabe der KI
  * wird vor dem Speichern strikt validiert. Es werden nie mehr als {@see self::MAX_NEW_JOBS} Vakanzen je Lauf verarbeitet.

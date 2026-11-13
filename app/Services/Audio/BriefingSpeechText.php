@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use RuntimeException;
 
 /**
- * Erzeugt den Sprechtext eines Audio-Briefings aus bewerteten Vakanzen (MiniMax). Die Vakanzdaten gelangen nur
+ * Erzeugt den Sprechtext eines Audio-Briefings aus bewerteten Vakanzen (KI-Dienst). Die Vakanzdaten gelangen nur
  * gekapselt (`<untrusted_job_data>`) in den Prompt; die Antwort wird bereinigt und auf das Limit des TTS-Dienstes begrenzt.
  */
 class BriefingSpeechText

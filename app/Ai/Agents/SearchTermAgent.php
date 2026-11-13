@@ -34,7 +34,7 @@ class SearchTermAgent implements Agent, HasProviderOptions
     }
 
     /**
-     * MiniMax: Denkphase abschalten (kurze, direkte Antwort).
+     * KI-Dienst: Denkphase abschalten (kurze, direkte Antwort).
      *
      * @return array<string, mixed>
      */
