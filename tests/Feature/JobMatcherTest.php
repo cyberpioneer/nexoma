@@ -8,6 +8,7 @@ use App\Models\SavedJob;
 use App\Models\SeenJobReference;
 use App\Models\User;
 use App\Services\Matching\JobMatcher;
+use App\Services\Matching\MatcherQuota;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Support\Carbon;
@@ -429,4 +430,121 @@ test('the scheduler runs the command at multiples of the configured interval onl
 test('the matcher reads its interval from the environment variable and never exceeds ten new vacancies', function () {
     expect(file_get_contents(config_path('matcher.php')))->toContain("env('JOB_MATCHER_INTERVAL_MINUTES'")
         ->and(JobMatcher::MAX_NEW_JOBS)->toBe(10);
+});
+
+test('the main switch stops the command, the single start, the scheduler and already queued jobs', function () {
+    Queue::fake();
+    config()->set('matcher.enabled', false);
+    $user = matcherUser();
+
+    $this->artisan('jobs:match')->assertSuccessful();
+    $this->artisan('jobs:match', ['--user' => $user->id])->assertSuccessful();
+    Queue::assertNothingPushed();
+
+    $event = collect(app(Schedule::class)->events())->first(fn ($event) => str_contains((string) $event->command, 'jobs:match'));
+    Carbon::setTestNow('2026-11-12 12:00:00');
+    expect($event->filtersPass(app()))->toBeFalse();
+    Carbon::setTestNow();
+
+    // Ein bereits eingereihter Job ruft weder die BA noch den KI-Dienst auf.
+    (new MatchJobsForUserJob($user->id))->handle(app(JobMatcher::class));
+    Http::assertNothingSent();
+    expect(SavedJob::query()->count())->toBe(0);
+});
+
+test('the main switch and the weekly limit are read from the environment', function () {
+    $config = file_get_contents(config_path('matcher.php'));
+
+    expect($config)->toContain("env('JOB_MATCHER_ENABLED'")
+        ->and($config)->toContain("env('JOB_MATCHER_MAX_RUNS_PER_WEEK', 2)");
+});
+
+test('each subscriber gets at most the configured number of scheduled runs per week, spread evenly', function () {
+    Queue::fake();
+    config()->set('matcher.max_runs_per_week', 2);
+    config()->set('matcher.interval_minutes', 60);
+    $user = matcherUser();
+
+    Carbon::setTestNow('2026-11-02 08:00:00');
+    $this->artisan('jobs:match')->assertSuccessful();
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(1);
+
+    // Intervallsperre abgelaufen, aber der Mindestabstand (3,5 Tage) noch nicht.
+    Carbon::setTestNow('2026-11-02 12:00:00');
+    Cache::forget('matcher:lock:'.$user->id);
+    $this->artisan('jobs:match')->assertSuccessful();
+    Carbon::setTestNow('2026-11-05 07:00:00');
+    Cache::forget('matcher:lock:'.$user->id);
+    $this->artisan('jobs:match')->assertSuccessful();
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(1);
+
+    // Zweiter Lauf nach 3,5 Tagen.
+    Carbon::setTestNow('2026-11-05 21:00:00');
+    Cache::forget('matcher:lock:'.$user->id);
+    $this->artisan('jobs:match')->assertSuccessful();
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(2);
+
+    // Danach ist das Wochenlimit erreicht, bis der erste Lauf aus dem 7-Tage-Fenster faellt.
+    Carbon::setTestNow('2026-11-08 12:00:00');
+    Cache::forget('matcher:lock:'.$user->id);
+    $this->artisan('jobs:match')->assertSuccessful();
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(2);
+
+    Carbon::setTestNow('2026-11-09 09:00:00');
+    Cache::forget('matcher:lock:'.$user->id);
+    $this->artisan('jobs:match')->assertSuccessful();
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(3);
+
+    Carbon::setTestNow();
+});
+
+/** Gibt die Eindeutigkeitssperre des Jobs frei, damit ein erneutes Einreihen in `Queue::fake()` moeglich ist. */
+function releaseUniqueMatcherLock(User ...$users): void
+{
+    foreach ($users as $user) {
+        Cache::forget('matcher:lock:'.$user->id);
+        Cache::lock('laravel_unique_job:'.MatchJobsForUserJob::class.':'.$user->id)->forceRelease();
+    }
+}
+
+test('the weekly limit is counted per user and zero means unlimited', function () {
+    Queue::fake();
+    config()->set('matcher.max_runs_per_week', 1);
+    $first = matcherUser();
+    $second = matcherUser();
+
+    $this->artisan('jobs:match')->assertSuccessful();
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(2);
+
+    config()->set('matcher.max_runs_per_week', 0);
+    releaseUniqueMatcherLock($first, $second);
+    $this->artisan('jobs:match')->assertSuccessful();
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(4);
+});
+
+test('a manual single start ignores the weekly limit', function () {
+    Queue::fake();
+    config()->set('matcher.max_runs_per_week', 1);
+    $user = matcherUser();
+
+    $this->artisan('jobs:match')->assertSuccessful();
+    releaseUniqueMatcherLock($user);
+    $this->artisan('jobs:match', ['--user' => $user->id])->assertSuccessful();
+
+    expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(2);
+});
+
+test('a blocked quota lock fails closed for that user without affecting the others', function () {
+    config()->set('matcher.max_runs_per_week', 2);
+    $blocked = matcherUser();
+    $free = matcherUser();
+    $lock = Cache::lock('matcher:runs:'.$blocked->id.':lock', 30);
+    expect($lock->get())->toBeTrue();
+
+    $quota = app(MatcherQuota::class);
+
+    expect($quota->reserve($blocked))->toBeFalse()
+        ->and($quota->reserve($free))->toBeTrue();
+
+    $lock->release();
 });

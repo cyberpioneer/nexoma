@@ -133,3 +133,39 @@
     - AK-3: `PRODUCT.md` ist auf den neuen Ist-Zustand von Release 1.2.0 aktualisiert.
     - AK-4: Die gesamte Test-Suite (`php artisan test --compact`) und `vendor/bin/pint --dirty --format agent` laufen fehlerfrei durch; alle Karten im GitHub-Projekt `"NEXOMA"` stehen auf `Done`.
   - **Review-Schwerpunkte (`security-reviewer`):** Abschließende Prüfung von `/saved-briefings` auf Autorisierung, Pagination/Datenbegrenzung und Einhaltung aller Regeln aus `AGENTS.md` und `PROJECT.md`.
+---
+
+## Go-Live-Checkliste Release 1.2.0
+
+Stand: 2026-11-13. Vorgaben des Betreibers: Piper und Betriebssystem des Servers entsprechen der lokalen Umgebung; die Produktions-`.env` ist angepasst; Cloudflare-Tunnel ist nur für lokale Tests relevant; eine fehlgeschlagene Zahlung führt dazu, dass der Benutzer Standard-Benutzer bleibt (kein Premium), ein Protokoll dafür folgt erst in einer späteren Version (saubere Pipeline). Haken `[x]` = vom Betreiber bestätigt oder im Repository belegt; `[ ]` = offen.
+
+### Rechtliches (Blocker)
+- [ ] **Datenschutzerklärung:** `php artisan legal:check` muss grün sein. Aktuell 7 offene Platzhalter: Frist der Logfile-Speicherung, Hoster, E-Mail-Anbieter, Zahlungsdienstleister (Stripe), KI-Anbieter (MiniMax), Verarbeitungsort/Garantien (Art. 45/46 DSGVO) für MiniMax und für Stripe.
+- [ ] **Rechtliche Prüfung** (keine Rechtsberatung durch den Assistenten): Auftragsverarbeitung mit MiniMax und Stripe-Rolle, Drittlandübermittlung, Speicherdauer von `saved_jobs`/Briefings/Audiodateien, Rechtsgrundlage bzw. Einwilligung für die automatische Suche und KI-Bewertung (ggf. Datenschutz-Folgenabschätzung), Kennzeichnung von KI-Texten und synthetischer Stimme, Widerrufsbelehrung/AGB und Impressum für das kostenpflichtige Angebot.
+
+### Stripe (live)
+- [ ] **Live-Konto aktivieren:** Das Konto „NEXOMA“ (Organisation NOMNiX) zeigt im Dashboard noch „Einrichtung fortsetzen“; Geschäfts-, Identitäts- und Bankdaten müssen vom Betreiber selbst eingegeben werden.
+- [ ] **Produkt und Preis (live)** wie in der Sandbox: Produkt „Nexoma Premium“ (Beschreibung: „Premium-Funktionen von Nexoma: Profil und Werdegang, automatische Vakanzensuche, Audio-Briefings“), Preis 4,95 EUR, monatlich, wiederkehrend. Steuerbehandlung (USt., Stripe Tax, Kleinunternehmerregelung) vorab klären. Die Live-Preis-ID kommt in `STRIPE_PRICE_ID` der Produktions-`.env`.
+- [ ] **Webhook-Endpunkt (live):** `POST https://nexoma.me/stripe/webhook` mit den Ereignissen `customer.subscription.created`, `.updated`, `.deleted`, `.paused`, `.resumed`. Das Signing-Secret (`whsec_…`) trägt der Betreiber selbst in `.env` ein; ohne Secret antwortet der Webhook mit 500 (fail closed).
+- [ ] **Kundenportal (live)** wie in der Sandbox konfigurieren: Kündigung zum Periodenende, Zahlungsart ändern, Rechnungsverlauf, Kundendaten (Name, E-Mail, Adresse, Telefon) ändern; Abo-Wechsel und Pausieren aus.
+- [ ] **Live-Schlüssel** (`STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID`) nur in der Produktions-`.env`, nie im Repository; `APP_URL=https://nexoma.me` (Rückkehr-URLs von Checkout und Portal hängen davon ab).
+- [ ] **Webhook-Ende-zu-Ende:** Die Webhook-Logik wurde bisher nur mit Fakes getestet (in der Sandbox ist kein Endpunkt angelegt). Vor dem Go-Live mit der Stripe-CLI (`stripe listen --forward-to …/stripe/webhook`) oder einem Testlauf im Sandbox-Modus prüfen: Abo anlegen, Status `active`, Kündigung → Zugang endet.
+- [ ] **Echter Zahlungstest** im Live-Modus (kleiner Betrag, anschließend Kündigung/Erstattung) und Prüfung, dass Premium nach Zahlung freigeschaltet wird und bei Zahlungsausfall (`past_due`/`unpaid`/`canceled`) wieder entfällt.
+
+### Server und Betrieb
+- [x] **Piper** samt Python-Venv und Stimmen (de, en, es, it, ru, uk) entspricht laut Betreiber der lokalen Umgebung; `services.piper.python_binary`/`data_dir` und Schreibrechte auf `storage/app/private` prüfen.
+- [x] **Produktions-`.env`** laut Betreiber angepasst. Neue optionale Schlüssel dieser Version (Standardwerte genügen): `JOB_MATCHER_ENABLED` (Standard `true`), `JOB_MATCHER_MAX_RUNS_PER_WEEK` (Standard `2`), `JOB_MATCHER_INTERVAL_MINUTES` (Standard `360`).
+- [ ] **Queue-Worker** unter Supervisor/systemd für `sync,default,ai,piper` (ohne `piper` entstehen keine Audio-Briefings); nach jedem Deployment `php artisan queue:restart`.
+- [ ] **Scheduler:** Cron `* * * * * php artisan schedule:run` (startet `jobs:match`).
+- [ ] **Migration:** `php artisan migrate --force` führt nur die noch ausstehenden Migrationen aus (u. a. `audio_briefings`) und löscht keine bestehenden Daten; `--force` unterdrückt lediglich die Rückfrage in Produktion. Niemals `migrate:fresh`, `migrate:reset` oder `db:wipe`. Ein Datenbank-Backup vorher ist die übliche Vorsichtsmaßnahme.
+- [ ] **Cache:** Das Wochenlimit des Matchers liegt im Cache (Treiber `database`); `cache:clear` oder `optimize:clear` im Deployment setzt es zurück und erlaubt erneute Läufe.
+- [ ] **Proxy:** `TRUSTED_PROXIES` nur setzen, wenn die Anwendung hinter einem Reverse-Proxy läuft (Cloudflare-Tunnel ist nur lokal relevant).
+
+### Kosten und Steuerung (umgesetzt)
+- [x] **Hauptschalter** `JOB_MATCHER_ENABLED=false` stoppt Planer, Kommando `jobs:match` (auch `--user`) und bereits eingereihte Matcher-Jobs.
+- [x] **Wochenlimit** `JOB_MATCHER_MAX_RUNS_PER_WEEK` (Standard 2) je Abonnent, gleichmäßig verteilt (Mindestabstand 7 Tage / Anzahl); `--user` für manuelle Tests ignoriert das Limit.
+
+### Abnahme
+- [x] Pest-Suite, PHPStan, Pint, Build und CI laut Betreiber grün (Stand 13.11.2026).
+- [x] Russischer Sprechtext und Player vom Betreiber geprüft; Übersetzungen sind maschinell erzeugt.
+- [ ] Nach dem Deployment: Registrierung, Abo-Abschluss, Profil, `php artisan jobs:match --user=<id>`, Briefing abspielen, Kündigung im Kundenportal.

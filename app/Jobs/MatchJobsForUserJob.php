@@ -40,6 +40,11 @@ class MatchJobsForUserJob implements ShouldBeUnique, ShouldQueue
 
     public function handle(JobMatcher $matcher): void
     {
+        // Hauptschalter: bereits eingereihte Jobs stoppen ebenfalls (JOB_MATCHER_ENABLED=false).
+        if (! config('matcher.enabled')) {
+            return;
+        }
+
         $user = User::query()->find($this->userId);
 
         if ($user === null) {
