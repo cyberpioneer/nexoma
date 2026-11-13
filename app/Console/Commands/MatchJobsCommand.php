@@ -4,17 +4,24 @@ namespace App\Console\Commands;
 
 use App\Jobs\MatchJobsForUserJob;
 use App\Models\User;
+use App\Services\Matching\MatcherQuota;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
-#[Signature('jobs:match {--user= : Nur diesen Benutzer (ID) starten, ohne Intervallsperre}')]
+#[Signature('jobs:match {--user= : Nur diesen Benutzer (ID) starten, ohne Intervallsperre und Wochenlimit}')]
 #[Description('Startet die automatische Vakanzensuche (AI Matcher) fuer berechtigte Benutzer auf der Queue "ai"')]
 class MatchJobsCommand extends Command
 {
-    public function handle(): int
+    public function handle(MatcherQuota $quota): int
     {
+        if (! config('matcher.enabled')) {
+            $this->info('Der Matcher ist ausgeschaltet (JOB_MATCHER_ENABLED=false).');
+
+            return self::SUCCESS;
+        }
+
         $userOption = $this->option('user');
 
         if ($userOption !== null) {
@@ -35,7 +42,7 @@ class MatchJobsCommand extends Command
             ->whereIn('stripe_subscription_status', User::ACTIVE_SUBSCRIPTION_STATUSES)
             ->whereNotNull('preferred_language')
             ->whereNotNull('search_location')
-            ->chunkById(100, function ($users) use ($interval, &$dispatched): void {
+            ->chunkById(100, function ($users) use ($interval, $quota, &$dispatched): void {
                 foreach ($users as $user) {
                     if (! $user->hasActiveSubscription() || ! $user->hasCompleteCareerProfile()) {
                         continue;
@@ -43,6 +50,11 @@ class MatchJobsCommand extends Command
 
                     // Hoechstens ein Lauf je Benutzer und Intervall; die Sperre bleibt auch nach einem Fehler bestehen.
                     if (! Cache::add('matcher:lock:'.$user->id, true, now()->addMinutes(max(1, $interval - 1)))) {
+                        continue;
+                    }
+
+                    // Wochenlimit je Benutzer (JOB_MATCHER_MAX_RUNS_PER_WEEK), gleichmaessig verteilt.
+                    if (! $quota->reserve($user)) {
                         continue;
                     }
 
