@@ -257,7 +257,7 @@ return [
     'profile.toast.entry_deleted' => 'Voce eliminata.',
     'billing.upgrade.profile_link' => 'Apri profilo e percorso',
     'profile.ai.optimize' => 'Ottimizza con IA',
-    'profile.ai.notice' => 'Per l’ottimizzazione il testo viene inviato a un servizio di IA (MiniMax). Il risultato viene applicato solo cliccando su «Salva profilo».',
+    'profile.ai.notice' => 'Per l’ottimizzazione il testo viene inviato a un servizio di IA (IONOS). Il risultato viene applicato solo cliccando su «Salva profilo».',
     'profile.ai.done' => 'Il testo è stato ottimizzato. Controllalo prima di salvare.',
     'profile.ai.too_short' => 'Inserisci prima un testo del profilo di almeno 10 caratteri.',
     'profile.ai.error' => 'L’ottimizzazione con IA non è al momento disponibile. Riprova più tardi.',

@@ -48,7 +48,7 @@ class BriefingSpeechAgent implements Agent, HasProviderOptions
     }
 
     /**
-     * MiniMax: Denkphase abschalten (spart Tokens, die Antwort enthaelt nur den Text).
+     * KI-Dienst: Denkphase abschalten (spart Tokens, die Antwort enthaelt nur den Text).
      *
      * @return array<string, mixed>
      */

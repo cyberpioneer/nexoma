@@ -257,7 +257,7 @@ return [
     'profile.toast.entry_deleted' => 'Entry deleted.',
     'billing.upgrade.profile_link' => 'Open profile and career history',
     'profile.ai.optimize' => 'Optimize with AI',
-    'profile.ai.notice' => 'For optimization the text is sent to an AI service (MiniMax). The result is only applied when you click “Save profile”.',
+    'profile.ai.notice' => 'For optimization the text is sent to an AI service (IONOS). The result is only applied when you click “Save profile”.',
     'profile.ai.done' => 'The text has been optimized. Please review it before saving.',
     'profile.ai.too_short' => 'Please enter a profile text of at least 10 characters first.',
     'profile.ai.error' => 'AI optimization is currently unavailable. Please try again later.',

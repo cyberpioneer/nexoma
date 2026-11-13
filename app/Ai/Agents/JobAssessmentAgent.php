@@ -48,7 +48,7 @@ class JobAssessmentAgent implements Agent, HasProviderOptions
     }
 
     /**
-     * MiniMax: Denkphase abschalten (strikt formatierte, direkte Antwort).
+     * KI-Dienst: Denkphase abschalten (strikt formatierte, direkte Antwort).
      *
      * @return array<string, mixed>
      */

@@ -46,17 +46,14 @@ test('legal:check succeeds without open placeholders', function () {
     rmdir($directory);
 });
 
-test('legal:check currently reports exactly the deliberately open placeholders', function () {
+test('legal:check currently reports no open placeholders in the shipped texts', function () {
     $documents = new LegalDocuments;
     $found = collect($documents->files())
         ->flatMap(fn (string $file): array => $documents->placeholders((string) file_get_contents($file)))
         ->pluck('placeholder')
         ->all();
 
-    expect($found)->toBe([
-        '[Name und Anschrift des KI-Anbieters (MiniMax)]',
-        '[Verarbeitungsort des KI-Anbieters sowie Angemessenheitsbeschluss oder geeignete Garantien nach Art. 45 bzw. Art. 46 DSGVO]',
-    ]);
+    expect($found)->toBe([]);
 
-    $this->artisan('legal:check')->assertExitCode(1);
+    $this->artisan('legal:check')->assertExitCode(0);
 });
