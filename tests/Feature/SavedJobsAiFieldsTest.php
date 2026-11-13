@@ -183,10 +183,11 @@ test('the database keeps references unique per user and removes them with the us
     $user = User::factory()->create();
     SeenJobReference::factory()->for($user)->create(['refnr' => 'R-dup']);
 
-    expect(fn () => SeenJobReference::factory()->for($user)->create(['refnr' => 'R-dup']))->toThrow(UniqueConstraintViolationException::class);
+    // Jede erwartete Verletzung laeuft in einem Savepoint: PostgreSQL bricht sonst die umschliessende Test-Transaktion ab.
+    expect(fn () => DB::transaction(fn () => SeenJobReference::factory()->for($user)->create(['refnr' => 'R-dup'])))->toThrow(UniqueConstraintViolationException::class);
 
     SavedJob::factory()->for($user)->create(['refnr' => 'R-dup']);
-    expect(fn () => SavedJob::factory()->aiMatcher()->for($user)->create(['refnr' => 'R-dup']))->toThrow(UniqueConstraintViolationException::class);
+    expect(fn () => DB::transaction(fn () => SavedJob::factory()->aiMatcher()->for($user)->create(['refnr' => 'R-dup'])))->toThrow(UniqueConstraintViolationException::class);
 
     $user->delete();
 
