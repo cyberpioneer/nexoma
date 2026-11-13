@@ -7,7 +7,7 @@ use App\Models\User;
 use RuntimeException;
 
 /**
- * Optimiert den Profiltext ueber MiniMax (Laravel AI SDK). Der Benutzertext wird als Daten gekapselt,
+ * Optimiert den Profiltext ueber den KI-Dienst (Laravel AI SDK). Der Benutzertext wird als Daten gekapselt,
  * die Sprache ueber eine feste Whitelist aufgeloest und das Zeichenlimit strikt eingehalten.
  */
 class BioOptimizer
