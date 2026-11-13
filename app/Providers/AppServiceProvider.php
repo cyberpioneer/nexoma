@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\QueueStatusCommand;
 use App\Services\OAuth\RedirectUriDisplay;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\DevCommands;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Date;
@@ -19,6 +21,7 @@ use Inertia\Inertia;
 use Laravel\Mcp\Server\Registrar;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Scope;
+use Stripe\StripeClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -61,6 +64,21 @@ class AppServiceProvider extends ServiceProvider
     /** Anfragen pro Minute und Benutzer fuer gespeicherte Vakanzen (Speichern ruft ggf. die BA-API ab). */
     public const SAVED_JOBS_ATTEMPTS_PER_MINUTE = 30;
 
+    /** Anfragen pro Minute und Benutzer fuer Checkout/Kundenportal (jeder Aufruf erzeugt eine Stripe-Sitzung). */
+    public const BILLING_ATTEMPTS_PER_MINUTE = 10;
+
+    /** Webhook-Aufrufe pro Minute und IP, bevor die Signatur geprueft wird (Stripe sendet Ereignisse gebuendelt). */
+    public const STRIPE_WEBHOOK_ATTEMPTS_PER_MINUTE = 300;
+
+    /** Anfragen pro Minute und Benutzer fuer Profil und Werdegang. */
+    public const CAREER_PROFILE_ATTEMPTS_PER_MINUTE = 30;
+
+    /** KI-Optimierungen des Profiltexts pro Minute und Benutzer (jeder Aufruf verursacht Kosten beim KI-Dienst). */
+    public const OPTIMIZE_BIO_ATTEMPTS_PER_MINUTE = 5;
+
+    /** Anfragen pro Minute und Benutzer an den Audio-Stream (ein Player sendet mehrere Range-Anfragen). */
+    public const AUDIO_STREAM_ATTEMPTS_PER_MINUTE = 120;
+
     /** Zustimmungen/Ablehnungen pro Minute und Benutzer auf der OAuth-Consent-Seite. */
     public const OAUTH_CONSENT_ATTEMPTS_PER_MINUTE = 30;
 
@@ -79,6 +97,10 @@ class AppServiceProvider extends ServiceProvider
         // routes/web.php (Consent, auth + verified) und routes/ai.php (Token-Endpunkt) angelegt.
         Passport::ignoreRoutes();
 
+        $this->app->singleton(StripeClient::class, fn (): StripeClient => new StripeClient([
+            'api_key' => (string) config('services.stripe.secret'),
+        ]));
+
         // Kein Device-Code-Grant: weder Route noch Grant werden genutzt.
         Passport::$deviceCodeGrantEnabled = false;
     }
@@ -92,6 +114,19 @@ class AppServiceProvider extends ServiceProvider
         $this->configureUrlGeneration();
         $this->configureRateLimiting();
         $this->configurePassport();
+        $this->configureDevProcesses();
+    }
+
+    /**
+     * Entwicklungsprozesse von `php artisan dev`: Der Worker bedient alle Queues der Anwendung (sync, default, ai fuer den
+     * Matcher, piper fuer die Audio-Briefings; die Standardvorgabe des Frameworks kennt nur `default`). Der Prozess
+     * "status" zeigt wartende, laufende und fehlgeschlagene Jobs je Queue; alle Ausgaben tragen Zeitstempel.
+     */
+    protected function configureDevProcesses(): void
+    {
+        DevCommands::artisan('queue:listen --queue='.implode(',', QueueStatusCommand::QUEUES).' --tries=1 --timeout=0', 'queue')->purple();
+        DevCommands::artisan('queue:status', 'status')->orange();
+        DevCommands::withTimestamps();
     }
 
     /**
@@ -188,6 +223,21 @@ class AppServiceProvider extends ServiceProvider
                     ->by('ip:'.$request->ip()),
             ];
         });
+
+        RateLimiter::for('billing', fn (Request $request): Limit => Limit::perMinute(self::BILLING_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('career-profile', fn (Request $request): Limit => Limit::perMinute(self::CAREER_PROFILE_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('optimize-bio', fn (Request $request): Limit => Limit::perMinute(self::OPTIMIZE_BIO_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('audio-stream', fn (Request $request): Limit => Limit::perMinute(self::AUDIO_STREAM_ATTEMPTS_PER_MINUTE)
+            ->by($this->userOrIpKey($request)));
+
+        RateLimiter::for('stripe-webhook', fn (Request $request): Limit => Limit::perMinute(self::STRIPE_WEBHOOK_ATTEMPTS_PER_MINUTE)
+            ->by('ip:'.$request->ip()));
 
         RateLimiter::for('locale', fn (Request $request): Limit => Limit::perMinute(self::LOCALE_ATTEMPTS_PER_MINUTE)
             ->by($this->userOrIpKey($request)));

@@ -18,7 +18,8 @@ class SavedJobController extends Controller
 {
     /**
      * Eigene gespeicherte Vakanzen, neueste zuerst. Nur Whitelist-Felder des angemeldeten Benutzers,
-     * hoechstens {@see SavedJob::MAX_PER_USER} Eintraege.
+     * hoechstens {@see SavedJob::MAX_PER_USER} Eintraege. Vorschlaege des Matchers enthalten zusaetzlich `ai`
+     * (Zusammenfassung, Passung 1 bis 10, Entfernung in km).
      */
     public function index(Request $request): Response
     {
@@ -27,15 +28,28 @@ class SavedJobController extends Controller
             ->latest('id')
             ->limit(SavedJob::MAX_PER_USER)
             ->get()
-            ->map(fn (SavedJob $savedJob): array => [
-                'id' => $savedJob->id,
-                'refnr' => $savedJob->refnr,
-                'title' => $savedJob->title,
-                'employer' => $savedJob->employer,
-                'location' => $savedJob->location,
-                'note' => $savedJob->note,
-                'savedAt' => $savedJob->created_at?->format('Y-m-d'),
-            ])
+            ->map(function (SavedJob $savedJob): array {
+                $row = [
+                    'id' => $savedJob->id,
+                    'refnr' => $savedJob->refnr,
+                    'title' => $savedJob->title,
+                    'employer' => $savedJob->employer,
+                    'location' => $savedJob->location,
+                    'note' => $savedJob->note,
+                    'savedAt' => $savedJob->created_at?->format('Y-m-d'),
+                ];
+
+                // Nur Vorschlaege des Matchers tragen KI-Angaben; manuell gespeicherte Eintraege bleiben unveraendert.
+                if ($savedJob->source === SavedJob::SOURCE_AI_MATCHER) {
+                    $row['ai'] = [
+                        'summary' => $savedJob->ai_summary,
+                        'temperature' => $savedJob->temperature,
+                        'distanceKm' => $savedJob->distance_km,
+                    ];
+                }
+
+                return $row;
+            })
             ->all();
 
         return Inertia::render('SavedJobs/Index', ['savedJobs' => $savedJobs]);

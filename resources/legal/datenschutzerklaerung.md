@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Stand: 10. November 2026
+Stand: 12. November 2026
 
 Diese Datenschutzerklärung informiert gemäß Art. 13 der Datenschutz-Grundverordnung (DSGVO) darüber, welche personenbezogenen Daten bei der Nutzung von Nexoma verarbeitet werden, zu welchen Zwecken und auf welcher Rechtsgrundlage.
 
@@ -77,7 +77,38 @@ Zur Sicherheit und Nachvollziehbarkeit wird jeder Zugriff über diese Schnittste
 
 Was ein verbundener KI-Dienst mit den abgerufenen Ergebnissen macht, liegt in der Verantwortung des jeweiligen Dienstes. Das gilt auch für die Vermerke, die der KI-Dienst im Rahmen des Speicherns an uns übermittelt: Deren Verarbeitung beim KI-Dienst liegt in dessen Verantwortung. Bitte beachten Sie dessen Datenschutzhinweise.
 
-## 8. Cookies und Zugriff auf das Endgerät
+## 8. Premium: Abonnement, Profil, Werdegang und KI-Funktionen
+
+### Abonnement und Zahlung
+
+Die Premium-Funktionen sind kostenpflichtig und werden als Abonnement abgerechnet. Wenn Sie ein Abonnement abschließen, leitet unser Server Sie zur Bezahlseite unseres Zahlungsdienstleisters [Name und Anschrift des Zahlungsdienstleisters (Stripe)] weiter. Dabei legen wir dort für Sie einen Kunden an und übermitteln Ihre E-Mail-Adresse und Ihre interne Benutzerkennung. Ihre Zahlungsdaten (z. B. Karten- oder Kontodaten) geben Sie direkt beim Zahlungsdienstleister ein; wir erhalten und speichern sie nicht. In Ihrem Konto speichern wir die Kennung Ihres Kunden und Ihres Abonnements, den Status (z. B. aktiv oder gekündigt) und das Ende des bezahlten Zeitraums. Diese Angaben erhalten wir vom Zahlungsdienstleister, der uns Statusänderungen automatisch meldet; die Meldungen werden anhand einer Signatur auf Echtheit geprüft. Zahlungsart und Kündigung verwalten Sie im Kundenportal des Zahlungsdienstleisters. Bitte beachten Sie auch dessen Datenschutzhinweise.
+
+Zweck ist die Abwicklung des Abonnements und die Freischaltung der Premium-Funktionen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Die Abonnementdaten werden bis zur Löschung Ihres Kontos gespeichert, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen (Art. 6 Abs. 1 lit. c DSGVO).
+
+### Profil und Werdegang
+
+Für die Premium-Funktionen können Sie in Ihrem Konto ein Profil mit Werdegang anlegen. Gespeichert werden Ihre gewünschte Sprache, ein Profiltext (höchstens 420 Zeichen), ein Wohn- oder Suchort, ein Suchradius sowie Einträge Ihres Berufs- und Ausbildungswerdegangs (Was, Wo, Zeitraum, Abschluss oder Tätigkeit) mit der Zuordnung zu Ihrem Konto. Alle diese Angaben sind freiwillig und nur für Sie in Ihrem angemeldeten Konto sichtbar. Bitte tragen Sie dort keine sensiblen Angaben (z. B. Gesundheitsdaten) und keine Daten Dritter ein. Zweck ist die Bereitstellung der Premium-Funktionen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Die Angaben werden gespeichert, bis Sie sie ändern oder einzelne Werdegang-Einträge löschen oder Ihr Konto gelöscht wird; mit dem Konto werden alle Profilangaben und Einträge gelöscht.
+
+### KI-Optimierung des Profiltextes
+
+Im Profil können Sie Ihren Profiltext mit der Schaltfläche „Mit KI optimieren“ sprachlich überarbeiten lassen. Nur wenn Sie diese Schaltfläche betätigen, übermittelt unser Server den Text, der in diesem Moment im Profiltextfeld steht, sowie die gewählte Sprache an den KI-Dienst von [Name und Anschrift des KI-Anbieters (MiniMax)]. Die Übermittlung erfolgt nie automatisch und ist freiwillig; ohne sie können Sie Nexoma vollständig nutzen. Weitere Angaben zu Ihrem Konto (Name, E-Mail-Adresse, Benutzerkennung) werden nicht übermittelt; die Anfrage kommt von unserem Server. Der KI-Dienst gibt eine überarbeitete Fassung zurück, die wir Ihnen im Formular anzeigen. Gespeichert wird sie nur, wenn Sie anschließend „Profil speichern“ wählen. Der übermittelte Text wird in unseren Protokollen nicht aufgezeichnet.
+
+Zweck ist die von Ihnen gewünschte Überarbeitung Ihres Profiltextes. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der von Ihnen ausgelösten Funktion). Der Anbieter verarbeitet den Text in unserem Auftrag; mit ihm besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO. Angaben zum Verarbeitungsort und zu einer Übermittlung außerhalb der EU bzw. des EWR finden Sie in Abschnitt 12. Bitte geben Sie im Profiltext nichts an, was nicht an einen solchen Dienst übermittelt werden soll.
+
+### Automatische Vakanzensuche und Bewertung
+
+Mit einem aktiven Abonnement und einem ausgefüllten Profil (Sprache, Suchort sowie Profiltext oder mindestens ein Werdegang-Eintrag) sucht Nexoma in regelmäßigen Abständen (derzeit alle sechs Stunden) automatisch im Hintergrund nach neuen Stellenangeboten, ohne dass Sie etwas auslösen müssen. Dabei geschieht Folgendes:
+
+1. Unser Server übermittelt Ihren Profiltext und Ihren Werdegang (Was, Wo, Zeitraum, Abschluss oder Tätigkeit) an den oben genannten KI-Anbieter. Der KI-Dienst leitet daraus einen Suchbegriff ab. Dieser wird bis zu sieben Tage zwischengespeichert, solange sich Ihr Profil nicht ändert.
+2. Mit diesem Suchbegriff, Ihrem Suchort und Ihrem Suchradius fragt unser Server die Bundesagentur für Arbeit ab (wie bei der Stellensuche in Abschnitt 6, ohne Angaben zu Ihrem Konto).
+3. Für bis zu zehn neue Stellenangebote je Lauf übermitteln wir Titel, Arbeitgeber, Ort und Beschreibung des Angebots (Angaben der Bundesagentur für Arbeit) zusammen mit Ihrem Profiltext und Ihrem Werdegang an den KI-Dienst. Dieser fasst jedes Angebot zusammen und bewertet auf einer Skala von 1 bis 10, wie gut es zu Ihrem Profil passt.
+4. Wir speichern die Angebote in Ihrer Liste „Gespeichert“ mit Zusammenfassung, Bewertung und, wenn die Bundesagentur für Arbeit sie angibt, der Entfernung. Zusätzlich merken wir uns die Referenznummern aller gefundenen Angebote, auch wenn Sie ein Angebot später löschen, damit es Ihnen nicht erneut vorgeschlagen wird.
+
+Weitere Angaben zu Ihrem Konto (Name, E-Mail-Adresse, Benutzerkennung) werden nicht an den KI-Dienst übermittelt. Die Bewertung durch KI kann fehlerhaft sein; sie ist ein Hinweis für Sie und keine Entscheidung. Zweck ist, Ihnen passende Stellenangebote vorzuschlagen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der Premium-Funktion). Der Anbieter verarbeitet die Daten in unserem Auftrag; Angaben zum Verarbeitungsort finden Sie in Abschnitt 12. Die automatische Suche endet, wenn Ihr Abonnement endet. Ein eigener Schalter nur für die automatische Suche ist derzeit nicht vorgesehen.
+
+Gespeicherte Vorschläge bleiben bis zu ihrer Löschung durch Sie oder bis zur Löschung Ihres Kontos gespeichert; die gemerkten Referenznummern werden mit dem Konto gelöscht.
+
+## 9. Cookies und Zugriff auf das Endgerät
 
 Nexoma setzt ausschließlich technisch notwendige Cookies ein:
 
@@ -90,23 +121,27 @@ Zur Sitzung werden auf dem Server Sitzungskennung, Benutzerkennung, IP-Adresse, 
 
 Die Speicherung von Informationen im Endgerät oder der Zugriff darauf ist nach § 25 Abs. 2 Nr. 2 des Telekommunikation-Digitale-Dienste-Datenschutz-Gesetzes (TDDDG) ohne Einwilligung zulässig, soweit sie unbedingt erforderlich ist, damit der ausdrücklich gewünschte digitale Dienst bereitgestellt werden kann. Analyse-, Marketing- oder Einbettungsdienste Dritter werden nicht eingesetzt.
 
-## 9. Schriften
+## 10. Schriften
 
 Die verwendeten Schriften (Inter und Source Serif 4) werden beim Erstellen der Anwendung heruntergeladen und von unserem eigenen Server ausgeliefert. Beim Seitenaufruf findet kein Abruf bei einem Schriftendienst eines Dritten statt und es wird keine Verbindung zu externen Schriftenservern aufgebaut.
 
-## 10. Empfänger der Daten
+## 11. Empfänger der Daten
 
-Personenbezogene Daten werden nur weitergegeben, soweit dies zur Erfüllung der genannten Zwecke erforderlich ist. Empfänger sind der Hosting-Anbieter und der E-Mail-Anbieter als Auftragsverarbeiter, die Bundesagentur für Arbeit (Suchangaben, siehe Abschnitt 6) sowie auf Ihre Veranlassung ein von Ihnen verbundener KI-Dienst. Eine Weitergabe an Behörden erfolgt nur aufgrund gesetzlicher Verpflichtung.
+Personenbezogene Daten werden nur weitergegeben, soweit dies zur Erfüllung der genannten Zwecke erforderlich ist. Empfänger sind der Hosting-Anbieter und der E-Mail-Anbieter als Auftragsverarbeiter, die Bundesagentur für Arbeit (Suchangaben, siehe Abschnitt 6), der Zahlungsdienstleister für das Abonnement (Abschnitt 8) sowie auf Ihre Veranlassung ein von Ihnen verbundener KI-Dienst (Abschnitt 7). Der Anbieter des KI-Dienstes für die Premium-Funktionen (Optimierung Ihres Profiltextes und automatische Vakanzensuche, Abschnitt 8) erhält Ihre Profilangaben und Stellendaten, soweit dort beschrieben. Eine Weitergabe an Behörden erfolgt nur aufgrund gesetzlicher Verpflichtung.
 
-## 11. Übermittlung in Drittländer
+## 12. Übermittlung in Drittländer
 
-Eine Übermittlung in Länder außerhalb der EU bzw. des EWR durch uns findet nicht statt. Ob der Hosting-Anbieter oder der E-Mail-Anbieter Daten in Drittländern verarbeitet, ergibt sich aus deren Angaben; dann gelten die Garantien nach Kapitel V DSGVO. Bei einem von Ihnen verbundenen KI-Dienst richtet sich der Verarbeitungsort nach dem Dienst.
+Eine Übermittlung in Länder außerhalb der EU bzw. des EWR durch uns findet, abgesehen von der KI-Optimierung, nicht statt. Ob der Hosting-Anbieter oder der E-Mail-Anbieter Daten in Drittländern verarbeitet, ergibt sich aus deren Angaben; dann gelten die Garantien nach Kapitel V DSGVO. Bei einem von Ihnen verbundenen KI-Dienst richtet sich der Verarbeitungsort nach dem Dienst.
 
-## 12. Speicherdauer
+Bei den KI-Funktionen (Optimierung des Profiltextes und automatische Vakanzensuche, Abschnitt 8) kann der Anbieter die übermittelten Angaben außerhalb der EU bzw. des EWR verarbeiten: [Verarbeitungsort des KI-Anbieters sowie Angemessenheitsbeschluss oder geeignete Garantien nach Art. 45 bzw. Art. 46 DSGVO]. Eine solche Übermittlung ist nur zulässig, wenn ein Angemessenheitsbeschluss der Europäischen Kommission vorliegt oder geeignete Garantien bestehen, etwa Standarddatenschutzklauseln. Eine Kopie der Garantien erhalten Sie auf Anfrage an die oben genannte Kontaktadresse.
+
+Auch der Zahlungsdienstleister (Abschnitt 8) kann Daten außerhalb der EU bzw. des EWR verarbeiten: [Verarbeitungsort des Zahlungsdienstleisters sowie Angemessenheitsbeschluss oder geeignete Garantien nach Art. 45 bzw. Art. 46 DSGVO]. Auch hier gilt: Eine Übermittlung ist nur mit Angemessenheitsbeschluss oder geeigneten Garantien zulässig, und eine Kopie der Garantien erhalten Sie auf Anfrage.
+
+## 13. Speicherdauer
 
 Personenbezogene Daten werden gelöscht, sobald der Zweck der Verarbeitung entfallen ist und keine gesetzlichen Aufbewahrungsfristen entgegenstehen. Konkrete Fristen sind in den jeweiligen Abschnitten genannt.
 
-## 13. Ihre Rechte
+## 14. Ihre Rechte
 
 Gegenüber dem Verantwortlichen bestehen nach der DSGVO folgende Rechte:
 
@@ -120,7 +155,7 @@ Gegenüber dem Verantwortlichen bestehen nach der DSGVO folgende Rechte:
 
 Zur Ausübung der Rechte genügt eine Nachricht an die oben genannte Kontaktadresse.
 
-## 14. Beschwerderecht
+## 15. Beschwerderecht
 
 Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig ist insbesondere die Aufsichtsbehörde Ihres gewöhnlichen Aufenthaltsorts oder Arbeitsplatzes oder die für den Verantwortlichen zuständige Behörde. Für den Verantwortlichen ist das:
 
@@ -128,15 +163,15 @@ Bayerisches Landesamt für Datenschutzaufsicht (BayLDA)
 Promenade 18
 91522 Ansbach
 
-## 15. Bereitstellung der Daten
+## 16. Bereitstellung der Daten
 
 Für die bloße Ansicht der öffentlichen Seiten müssen Sie keine Daten aktiv bereitstellen; die technisch erforderlichen Verbindungsdaten fallen beim Aufruf an. Für das Benutzerkonto sind Name, E-Mail-Adresse und Passwort erforderlich; ohne sie kann kein Konto angelegt und die Stellensuche nicht genutzt werden. Bei Kontaktaufnahme ist die Angabe einer Rückkontaktmöglichkeit erforderlich, damit die Anfrage beantwortet werden kann.
 
-## 16. Automatisierte Entscheidungsfindung
+## 17. Automatisierte Entscheidungsfindung
 
-Eine automatisierte Entscheidungsfindung einschließlich Profiling findet nicht statt.
+Eine automatisierte Entscheidung, die Ihnen gegenüber rechtliche Wirkung entfaltet oder Sie in ähnlicher Weise erheblich beeinträchtigt (Art. 22 DSGVO), findet nicht statt. Die KI-Optimierung (Abschnitt 8) überarbeitet nur den von Ihnen eingegebenen Text. Die automatische Vakanzensuche (Abschnitt 8) bewertet jedoch automatisiert mithilfe von KI, wie gut Stellenangebote zu Ihren Profilangaben passen. Das ist eine automatisierte Verarbeitung Ihrer Daten zur Bewertung persönlicher Aspekte (Profiling im Sinne des Art. 4 Nr. 4 DSGVO). Die Logik besteht darin, dass ein KI-Sprachmodell Ihren Profiltext und Ihren Werdegang mit dem Text des Stellenangebots vergleicht. Die Bewertung dient nur als Hinweis für Sie, hat keine rechtlichen Folgen für Sie und wird nicht an Arbeitgeber oder sonstige Dritte weitergegeben.
 
-## 17. Änderungen
+## 18. Änderungen
 
 Diese Datenschutzerklärung wird angepasst, wenn sich Verarbeitungen oder die Rechtslage ändern. Es gilt die jeweils veröffentlichte Fassung.
 
@@ -153,5 +188,8 @@ Hinweise zum Entwurf (vor Veröffentlichung entfernen; dieser Kommentar wird nie
 - Allgemeine Anwendungslogs (laravel.log) können bei Fehlern technische Angaben enthalten; Aufbewahrung (LOG_DAILY_DAYS bzw. Standard) und Inhalt vor Veröffentlichung gegen die Produktionskonfiguration prüfen.
 - Ein Verzeichnis der Verarbeitungstätigkeiten (Art. 30 DSGVO) und ggf. ein Datenschutzbeauftragter sind nicht Teil dieses Textes (nicht geprüft).
 - Registrierung (REG-CONSENT-1): Pflicht-Checkbox "Kenntnisnahme" mit Speicherung von consented_at und consent_version (config/legal.php, bei jeder inhaltlichen Änderung zusammen mit "Stand" erhöhen). Rechtlich ungeprüft: Kenntnisnahme ist keine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO; Rechtsgrundlage lit. f für den Nachweis und Speicherdauer (wie das Konto) prüfen.
+- KI-Optimierung (TASK-006): Am Code geprüft: Endpunkt POST /profile/optimize-bio (Premium, 5 Aufrufe je Minute und Benutzer), übermittelt wird nur der Profiltext (10 bis 420 Zeichen) und die Sprache, keine Benutzerkennung/E-Mail; Antwort wird nur im Formular angezeigt und nicht gespeichert; Protokoll enthält nur die Exception-Klasse. Anbieter laut Konfiguration MiniMax über einen OpenAI-kompatiblen Endpunkt (OPENAI_COMPATIBLE_URL, Annahme laut Anbieter-Doku: api.minimax.io). Über lawdb bestätigt (Fundstellen im Wortlaut der DSGVO, ELI eli/reg/2016/679/oj): Art. 13 (Informationspflicht, einschließlich Absicht der Drittlandübermittlung, Angemessenheitsbeschluss, Garantien nach Art. 46/47/49), Art. 15 Abs. 2 (Unterrichtung über Garantien), Art. 28 (Auftragsverarbeiter), Art. 44 bis 46 und Art. 49 (Kapitel V, Standarddatenschutzklauseln in Art. 46). UNGEPRÜFT/VOR VERÖFFENTLICHUNG KLÄREN: Name, Anschrift und Sitz des Anbieters; Verarbeitungsort; ob ein Angemessenheitsbeschluss besteht oder welche Garantien gelten; ob ein Auftragsverarbeitungsvertrag nach Art. 28 DSGVO tatsächlich abgeschlossen ist (Aussage im Text wäre sonst falsch); ob der Anbieter Eingaben speichert oder zu eigenen Zwecken (z. B. Training) nutzt (dann ggf. keine reine Auftragsverarbeitung); Aufbewahrungsdauer beim Anbieter; ob der Anbieter über die API anonyme oder personenbezogene Metadaten (z. B. IP-Adresse des Servers, Schlüssel-Kennung) erhält. Profil und Werdegang (TASK-004/005): users.preferred_language, bio, search_location, search_radius und Tabelle career_entries (Kaskade beim Löschen des Kontos); Einträge sind einzeln löschbar.
+- Bei jeder inhaltlichen Änderung "Stand" und config/legal.php gemeinsam erhöhen. Audio-Briefings (Piper, lokal) sind noch zu ergänzen, sobald sie ausgeliefert werden.
+- Automatische Vakanzensuche (TASK-008) und Zahlung (TASK-002) am Code geprüft: Command jobs:match (Queue ai, Intervall JOB_MATCHER_INTERVAL_MINUTES, Standard 360 Minuten = sechs Stunden; Text anpassen, wenn der Wert geändert wird), übermittelt werden Profiltext und Werdegang (Suchbegriff), danach je Lauf bis zu 10 neue Stellen (Titel, Arbeitgeber, Ort, Beschreibung auf 3000 Zeichen gekürzt) zusammen mit Profil und Werdegang; Suchbegriff 7 Tage im Anwendungs-Cache (Datenbank); gespeichert werden ai_summary, temperature (1 bis 10) und distance_km (aus der BA-Antwort); Tabelle seen_job_references (Benutzer, Referenznummer, Kaskade beim Löschen des Kontos). Stripe: beim Checkout wird ein Kunde mit E-Mail-Adresse und Benutzerkennung (metadata/client_reference_id) angelegt; am Benutzer werden stripe_customer_id, stripe_subscription_id, stripe_subscription_status und stripe_current_period_end gespeichert; Webhook mit Signaturprüfung; Kundenportal bei Stripe. Über lawdb bestätigt (DSGVO, eli/reg/2016/679/oj): Art. 4 Nr. 4 (Profiling), Art. 22 Abs. 1, Art. 13 Abs. 2 lit. f und Art. 14 (Information zu automatisierter Entscheidungsfindung nur in den Fällen des Art. 22 Abs. 1 und 4), Art. 6 Abs. 1 lit. c, Art. 17, Art. 21 (Widerspruchsrecht gilt nur für lit. e und f). Rechtliche Einschätzung des Entwurfs (ungeprüft): Die KI-Bewertung der Passung ist Profiling nach Art. 4 Nr. 4, aber keine Entscheidung nach Art. 22 Abs. 1 (keine rechtliche oder ähnlich erhebliche Wirkung). Offene Punkte: Name, Anschrift, Rolle (Verantwortlicher oder Auftragsverarbeiter) und Verarbeitungsort von Stripe sowie Garantien; ob ein Vertrag nach Art. 28 DSGVO mit dem KI-Anbieter besteht; steuer- und handelsrechtliche Aufbewahrungspflichten für Abrechnungsdaten (Dauer); ob wegen der automatischen Übermittlung von Profil und Werdegang an einen KI-Anbieter außerhalb der EU eine Datenschutz-Folgenabschätzung (Art. 35) oder eine ausdrückliche Einwilligung (Art. 6 Abs. 1 lit. a) bzw. ein Schalter zum Abschalten der automatischen Suche sinnvoll ist (derzeit läuft sie automatisch, solange ein aktives Abo und ein ausgefülltes Profil vorliegen; Rechtsgrundlage im Entwurf: lit. b). Noch nicht aufgenommen: Audio-Briefings (Piper, TASK-009 bis TASK-012) und die Anzeige auf dem Dashboard.
 - Platzhalter in [eckigen Klammern] ersetzen; `php artisan legal:check` listet sie auf.
 -->

@@ -13,6 +13,6 @@ return [
     |
     */
 
-    'privacy_version' => '2026-11-10',
+    'privacy_version' => '2026-11-12',
 
 ];

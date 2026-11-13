@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\AudioBriefingController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\CareerEntryController;
+use App\Http\Controllers\CareerProfileController;
 use App\Http\Controllers\ConnectedAppController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\LocaleController;
@@ -25,7 +30,7 @@ Route::post('/locale', [LocaleController::class, 'update'])->middleware('throttl
 // Alle geschuetzten Routen gehoeren in diese Gruppe (auth + verified), z. B. kuenftige
 // Jobsuche-, Detail- und Profilrouten. Der Route-Inventar-Test erzwingt das.
 Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function () {
-    Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/jobs', [JobController::class, 'index'])->middleware('throttle:jobsuche')->name('jobs.index');
     Route::get('/jobs/{refnr}', [JobController::class, 'show'])
@@ -43,6 +48,39 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
         ->whereNumber('savedJob')
         ->middleware('throttle:saved-jobs')
         ->name('saved-jobs.destroy');
+
+    // Premium-Abo (Stripe). Der Status wird ausschliesslich ueber den signierten Webhook (routes/webhooks.php) gesetzt.
+    Route::get('/upgrade', [BillingController::class, 'show'])->middleware('throttle:billing')->name('billing.upgrade');
+    Route::post('/billing/checkout', [BillingController::class, 'checkout'])->middleware('throttle:billing')->name('billing.checkout');
+    Route::post('/billing/portal', [BillingController::class, 'portal'])->middleware('throttle:billing')->name('billing.portal');
+    Route::get('/billing/success', [BillingController::class, 'success'])->middleware('throttle:billing')->name('billing.success');
+    Route::get('/billing/cancel', [BillingController::class, 'cancel'])->middleware('throttle:billing')->name('billing.cancel');
+
+    // Premium (Release 1.2.0): Profil und Werdegang. Reihenfolge der Middleware: auth, verified (Gruppe), dann subscribed.
+    Route::middleware(['subscribed', 'throttle:career-profile'])->group(function () {
+        Route::get('/profile', [CareerProfileController::class, 'show'])->name('profile.show');
+        Route::put('/profile', [CareerProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile/optimize-bio', [CareerProfileController::class, 'optimizeBio'])
+            ->middleware('throttle:optimize-bio')
+            ->name('profile.optimize-bio');
+        Route::post('/career-entries', [CareerEntryController::class, 'store'])->name('career-entries.store');
+        Route::put('/career-entries/{careerEntry}', [CareerEntryController::class, 'update'])
+            ->whereNumber('careerEntry')
+            ->name('career-entries.update');
+        Route::delete('/career-entries/{careerEntry}', [CareerEntryController::class, 'destroy'])
+            ->whereNumber('careerEntry')
+            ->name('career-entries.destroy');
+    });
+
+    // Premium: Audio-Briefings. Auslieferung nur an den Besitzer (Policy), mit Range-Unterstuetzung fuer den Player.
+    Route::get('/saved-briefings', [AudioBriefingController::class, 'index'])
+        ->middleware(['subscribed', 'throttle:audio-stream'])
+        ->name('saved-briefings.index');
+
+    Route::get('/audio-briefings/{audioBriefing}/stream', [AudioBriefingController::class, 'stream'])
+        ->whereNumber('audioBriefing')
+        ->middleware(['subscribed', 'throttle:audio-stream'])
+        ->name('audio-briefings.stream');
 
     Route::get('/connected-apps', [ConnectedAppController::class, 'index'])->middleware('throttle:connected-apps')->name('connected-apps.index');
     Route::delete('/connected-apps/{clientId}', [ConnectedAppController::class, 'destroy'])

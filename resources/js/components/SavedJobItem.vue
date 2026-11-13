@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import Badge from '@/components/Badge.vue';
 import Button from '@/components/Button.vue';
 import Card from '@/components/Card.vue';
 import TextareaField from '@/components/TextareaField.vue';
@@ -55,6 +56,36 @@ function remove(): void {
 
 <template>
     <Card as="li" class="flex flex-col gap-4">
+        <ul v-if="job.ai" class="flex flex-wrap gap-2">
+            <li>
+                <Badge tone="lilac">{{ t('saved.ai.badge') }}</Badge>
+            </li>
+            <li v-if="job.ai.temperature">
+                <Badge tone="sage">
+                    {{ t('saved.ai.fit') }}:
+                    {{
+                        t('saved.ai.fit_value', {
+                            value: String(job.ai.temperature),
+                        })
+                    }}
+                </Badge>
+            </li>
+            <li
+                v-if="
+                    job.ai.distanceKm !== undefined &&
+                    job.ai.distanceKm !== null
+                "
+            >
+                <Badge tone="sky">
+                    {{ t('saved.ai.distance') }}:
+                    {{
+                        t('saved.ai.distance_value', {
+                            km: String(job.ai.distanceKm),
+                        })
+                    }}
+                </Badge>
+            </li>
+        </ul>
         <h2 class="text-xl break-words">
             <Link
                 :href="show(job.refnr)"
@@ -79,6 +110,11 @@ function remove(): void {
                 </dd>
             </div>
         </dl>
+
+        <div v-if="job.ai?.summary" class="max-w-prose">
+            <p class="text-sm font-medium">{{ t('saved.ai.summary') }}</p>
+            <p class="break-words">{{ job.ai.summary }}</p>
+        </div>
 
         <form
             v-if="editing"
