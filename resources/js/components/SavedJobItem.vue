@@ -56,9 +56,36 @@ function remove(): void {
 
 <template>
     <Card as="li" class="flex flex-col gap-4">
-        <p v-if="job.ai">
-            <Badge tone="lilac">{{ t('saved.ai.badge') }}</Badge>
-        </p>
+        <ul v-if="job.ai" class="flex flex-wrap gap-2">
+            <li>
+                <Badge tone="lilac">{{ t('saved.ai.badge') }}</Badge>
+            </li>
+            <li v-if="job.ai.temperature">
+                <Badge tone="sage">
+                    {{ t('saved.ai.fit') }}:
+                    {{
+                        t('saved.ai.fit_value', {
+                            value: String(job.ai.temperature),
+                        })
+                    }}
+                </Badge>
+            </li>
+            <li
+                v-if="
+                    job.ai.distanceKm !== undefined &&
+                    job.ai.distanceKm !== null
+                "
+            >
+                <Badge tone="sky">
+                    {{ t('saved.ai.distance') }}:
+                    {{
+                        t('saved.ai.distance_value', {
+                            km: String(job.ai.distanceKm),
+                        })
+                    }}
+                </Badge>
+            </li>
+        </ul>
         <h2 class="text-xl break-words">
             <Link
                 :href="show(job.refnr)"
@@ -75,33 +102,6 @@ function remove(): void {
             <div v-if="job.location">
                 <dt class="sr-only">{{ t('jobs.location') }}</dt>
                 <dd class="break-words">{{ job.location }}</dd>
-            </div>
-            <div v-if="job.ai?.temperature">
-                <dt class="inline font-medium">{{ t('saved.ai.fit') }}:</dt>
-                <dd class="inline">
-                    {{
-                        t('saved.ai.fit_value', {
-                            value: String(job.ai.temperature),
-                        })
-                    }}
-                </dd>
-            </div>
-            <div
-                v-if="
-                    job.ai?.distanceKm !== undefined &&
-                    job.ai.distanceKm !== null
-                "
-            >
-                <dt class="inline font-medium">
-                    {{ t('saved.ai.distance') }}:
-                </dt>
-                <dd class="inline">
-                    {{
-                        t('saved.ai.distance_value', {
-                            km: String(job.ai.distanceKm),
-                        })
-                    }}
-                </dd>
             </div>
             <div v-if="job.savedAt" class="text-muted">
                 <dt class="inline">{{ t('saved.saved_on') }}:</dt>
