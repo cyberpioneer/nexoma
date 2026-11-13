@@ -125,7 +125,7 @@
     - AK-4: Alle neuen Texte sind in allen 6 Sprachen (`lang/*/ui.php`) vorhanden; Pest-Tests prüfen die korrekte Datenbereitstellung.
   - **Review-Schwerpunkte (`security-reviewer`):** Strikte Mandantentrennung bei Zählern und neuestem Briefing, sichere Textausgabe ohne `v-html` (XSS-Schutz für `ai_summary`).
 
-- [ ] **TASK-012 (#22): Separate Liste unter `/saved-briefings` & Dokumentation (`PRODUCT.md`)**
+- [x] **TASK-012 (#22): Separate Liste unter `/saved-briefings` & Dokumentation (`PRODUCT.md`)**
   - **Ziel:** Eigene Übersichtsseite für alle gespeicherten Audio-Briefings unter `/saved-briefings` und abschließende Aktualisierung des Produktzustands.
   - **Akzeptanzkriterien:**
     - AK-1: Unter `GET /saved-briefings` (geschützt durch Auth + `EnsureUserIsSubscribed`) wird die chronologische Liste aller gespeicherten Audio-Briefings des Benutzers mit Abspielmöglichkeit (Player inkl. Play/Stop, Audiospur, Geschwindigkeitsschalter) angezeigt.

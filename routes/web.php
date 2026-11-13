@@ -73,6 +73,10 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
     });
 
     // Premium: Audio-Briefings. Auslieferung nur an den Besitzer (Policy), mit Range-Unterstuetzung fuer den Player.
+    Route::get('/saved-briefings', [AudioBriefingController::class, 'index'])
+        ->middleware(['subscribed', 'throttle:audio-stream'])
+        ->name('saved-briefings.index');
+
     Route::get('/audio-briefings/{audioBriefing}/stream', [AudioBriefingController::class, 'stream'])
         ->whereNumber('audioBriefing')
         ->middleware(['subscribed', 'throttle:audio-stream'])

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\AudioBriefing;
 use App\Policies\AudioBriefingPolicy;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+use Inertia\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -14,6 +17,36 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class AudioBriefingController extends Controller
 {
+    /** Anzahl der Briefings je Seite der Liste (Datenbegrenzung). */
+    public const PER_PAGE = 10;
+
+    /**
+     * Liste der eigenen, fertigen Briefings (neueste zuerst). Es werden nur Whitelist-Felder ausgegeben; Sprechtext,
+     * Dateipfad und Fehlercode verlassen den Server nicht.
+     */
+    public function index(Request $request): Response
+    {
+        $user = $request->user();
+        abort_if($user === null, 401);
+
+        $page = $user->audioBriefings()->ready()->latest()->latest('id')->paginate(self::PER_PAGE)->withQueryString();
+
+        return Inertia::render('SavedBriefings/Index', [
+            'briefings' => $page->getCollection()->map(fn (AudioBriefing $briefing): array => [
+                'id' => $briefing->id,
+                'durationMs' => $briefing->duration_ms ?? 0,
+                'createdAt' => $briefing->created_at?->format('Y-m-d'),
+            ])->values()->all(),
+            'pagination' => [
+                'currentPage' => $page->currentPage(),
+                'lastPage' => $page->lastPage(),
+                'total' => $page->total(),
+                'previousUrl' => $page->previousPageUrl(),
+                'nextUrl' => $page->nextPageUrl(),
+            ],
+        ]);
+    }
+
     public function stream(AudioBriefing $audioBriefing): BinaryFileResponse
     {
         Gate::authorize('view', $audioBriefing);

@@ -96,6 +96,7 @@ test('only the intended premium routes carry the paywall middleware and no relea
         'DELETE career-entries/{careerEntry}',
         'GET|HEAD audio-briefings/{audioBriefing}/stream',
         'GET|HEAD profile',
+        'GET|HEAD saved-briefings',
         'POST career-entries',
         'POST profile/optimize-bio',
         'PUT career-entries/{careerEntry}',

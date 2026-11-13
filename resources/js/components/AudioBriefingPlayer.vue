@@ -61,6 +61,12 @@ async function togglePlayback(): Promise<void> {
     applySpeed();
 
     try {
+        // Es soll immer nur ein Briefing gleichzeitig laufen (die anderen melden `pause` und setzen ihren Zustand zurueck).
+        document.querySelectorAll('audio').forEach((other) => {
+            if (other !== element) {
+                other.pause();
+            }
+        });
         await element.play();
         playing.value = true;
     } catch {
@@ -131,6 +137,7 @@ onBeforeUnmount(() => audio.value?.pause());
             preload="none"
             @timeupdate="onTimeUpdate"
             @loadedmetadata="onLoadedMetadata"
+            @pause="playing = false"
             @ended="onEnded"
             @error="onError"
         />

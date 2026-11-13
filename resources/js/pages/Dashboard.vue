@@ -7,6 +7,7 @@ import PageHeader from '@/components/PageHeader.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatDate } from '@/lib/dates';
 import { useTranslate } from '@/lib/translate';
+import { index as savedBriefingsIndex } from '@/routes/saved-briefings';
 import { index as savedJobsIndex } from '@/routes/saved-jobs';
 import type { DashboardAudio } from '@/types';
 
@@ -50,7 +51,12 @@ const page = usePage();
                 </Card>
                 <Card v-if="audio" tone="sky" class="flex flex-col gap-1">
                     <dt class="text-sm font-medium">
-                        {{ t('dashboard.stats.briefings') }}
+                        <Link
+                            :href="savedBriefingsIndex()"
+                            class="underline-offset-4 hover:underline"
+                        >
+                            {{ t('dashboard.stats.briefings') }}
+                        </Link>
                     </dt>
                     <dd class="text-4xl font-semibold tabular-nums">
                         {{ audio.count }}

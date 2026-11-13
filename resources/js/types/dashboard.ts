@@ -10,3 +10,12 @@ export type DashboardAudio = {
     count: number;
     latest: AudioBriefingSummary | null;
 };
+
+/** Seitenangaben der Briefing-Liste (nur Whitelist-Felder). */
+export type BriefingPagination = {
+    currentPage: number;
+    lastPage: number;
+    total: number;
+    previousUrl: string | null;
+    nextUrl: string | null;
+};
