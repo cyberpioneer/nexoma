@@ -155,7 +155,7 @@ Stand: 2026-11-13. Vorgaben des Betreibers: Piper und Betriebssystem des Servers
 ### Server und Betrieb
 - [x] **Piper** samt Python-Venv und Stimmen (de, en, es, it, ru, uk) entspricht laut Betreiber der lokalen Umgebung; `services.piper.python_binary`/`data_dir` und Schreibrechte auf `storage/app/private` prüfen.
 - [x] **Produktions-`.env`** laut Betreiber angepasst. Neue optionale Schlüssel dieser Version (Standardwerte genügen): `JOB_MATCHER_ENABLED` (Standard `true`), `JOB_MATCHER_MAX_RUNS_PER_WEEK` (Standard `2`), `JOB_MATCHER_INTERVAL_MINUTES` (Standard `360`).
-- [ ] **Queue-Worker** unter Supervisor/systemd für `sync,default,ai,piper` (ohne `piper` entstehen keine Audio-Briefings); nach jedem Deployment `php artisan queue:restart`.
+- [ ] **Queue-Worker** unter Supervisor/systemd für die Queues `default,ai,piper` (`--queue=default,ai,piper --timeout=360`, `DB_QUEUE_RETRY_AFTER=400`; `sync` ist keine Queue, sondern ein Verbindungstreiber) (ohne `piper` entstehen keine Audio-Briefings); nach jedem Deployment `php artisan queue:restart`.
 - [ ] **Scheduler:** Cron `* * * * * php artisan schedule:run` (startet `jobs:match`).
 - [ ] **Migration:** `php artisan migrate --force` führt nur die noch ausstehenden Migrationen aus (u. a. `audio_briefings`) und löscht keine bestehenden Daten; `--force` unterdrückt lediglich die Rückfrage in Produktion. Niemals `migrate:fresh`, `migrate:reset` oder `db:wipe`. Ein Datenbank-Backup vorher ist die übliche Vorsichtsmaßnahme.
 - [ ] **Cache:** Das Wochenlimit des Matchers liegt im Cache (Treiber `database`); `cache:clear` oder `optimize:clear` im Deployment setzt es zurück und erlaubt erneute Läufe.
