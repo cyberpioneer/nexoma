@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Stand: 12. November 2026
+Stand: 13. November 2026
 
 Diese Datenschutzerklärung informiert gemäß Art. 13 der Datenschutz-Grundverordnung (DSGVO) darüber, welche personenbezogenen Daten bei der Nutzung von Nexoma verarbeitet werden, zu welchen Zwecken und auf welcher Rechtsgrundlage.
 
@@ -31,9 +31,9 @@ Beim Aufruf der Website verarbeitet der Webserver technisch erforderliche Daten,
 - übertragene Datenmenge,
 - Referrer-URL, Browsertyp und Betriebssystem.
 
-Zweck ist die Auslieferung der Website sowie die Gewährleistung von Stabilität und Sicherheit. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse liegt im sicheren und fehlerfreien Betrieb der Website. Die Logfiles werden nach [Frist der Logfile-Speicherung] gelöscht, sofern sie nicht zur Aufklärung eines Sicherheitsvorfalls länger benötigt werden.
+Zweck ist die Auslieferung der Website sowie die Gewährleistung von Stabilität und Sicherheit. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse liegt im sicheren und fehlerfreien Betrieb der Website. Die Logfiles werden nach 7 Tagen gelöscht, sofern sie nicht zur Aufklärung eines Sicherheitsvorfalls länger benötigt werden.
 
-Hosting-Anbieter: [Name und Anschrift des Hosters]. Mit dem Anbieter besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.
+Hosting-Anbieter: netcup GmbH, Emmy-Noether-Straße 10, 76131 Karlsruhe, Deutschland. Mit dem Anbieter besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.
 
 Daneben schreibt die Anwendung technische Fehler- und Warnprotokolle. Diese können im Einzelfall technische Angaben zu einer Anfrage enthalten, etwa die IP-Adresse oder die E-Mail-Adresse eines betroffenen Benutzerkontos. Zweck ist die Fehlerbehebung und die Sicherheit des Betriebs, Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Diese Protokolle werden nach 14 Tagen gelöscht (täglich rotierende Dateien). Für E-Mail-Versand und Hintergrundaufgaben legt die Anwendung vorübergehend Einträge in einer Warteschlange in der Datenbank ab, die nach der Verarbeitung gelöscht werden.
 
@@ -51,7 +51,7 @@ Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung des Kontos und de
 
 ### E-Mail-Versand
 
-Die E-Mails zur Bestätigung der E-Mail-Adresse und zum Zurücksetzen des Passworts werden über [Name und Anschrift des E-Mail-Anbieters] versendet. Der Anbieter verarbeitet dabei E-Mail-Adresse, Inhalt und Versandzeitpunkt als Auftragsverarbeiter nach Art. 28 DSGVO.
+Die E-Mails zur Bestätigung der E-Mail-Adresse und zum Zurücksetzen des Passworts werden über den E-Mail-Dienst iCloud+ der Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Irland, versendet (SMTP-Server smtp.mail.me.com, Absenderdomain nomnix.net). Der Anbieter verarbeitet dabei E-Mail-Adresse, Inhalt und Versandzeitpunkt als Auftragsverarbeiter nach Art. 28 DSGVO.
 
 ## 6. Stellensuche
 
@@ -81,7 +81,7 @@ Was ein verbundener KI-Dienst mit den abgerufenen Ergebnissen macht, liegt in de
 
 ### Abonnement und Zahlung
 
-Die Premium-Funktionen sind kostenpflichtig und werden als Abonnement abgerechnet. Wenn Sie ein Abonnement abschließen, leitet unser Server Sie zur Bezahlseite unseres Zahlungsdienstleisters [Name und Anschrift des Zahlungsdienstleisters (Stripe)] weiter. Dabei legen wir dort für Sie einen Kunden an und übermitteln Ihre E-Mail-Adresse und Ihre interne Benutzerkennung. Ihre Zahlungsdaten (z. B. Karten- oder Kontodaten) geben Sie direkt beim Zahlungsdienstleister ein; wir erhalten und speichern sie nicht. In Ihrem Konto speichern wir die Kennung Ihres Kunden und Ihres Abonnements, den Status (z. B. aktiv oder gekündigt) und das Ende des bezahlten Zeitraums. Diese Angaben erhalten wir vom Zahlungsdienstleister, der uns Statusänderungen automatisch meldet; die Meldungen werden anhand einer Signatur auf Echtheit geprüft. Zahlungsart und Kündigung verwalten Sie im Kundenportal des Zahlungsdienstleisters. Bitte beachten Sie auch dessen Datenschutzhinweise.
+Die Premium-Funktionen sind kostenpflichtig und werden als Abonnement abgerechnet. Wenn Sie ein Abonnement abschließen, leitet unser Server Sie zur Bezahlseite unseres Zahlungsdienstleisters Stripe Payments Europe, Limited, Dublin, Irland (Konzern: Stripe, Inc., USA) weiter. Dabei legen wir dort für Sie einen Kunden an und übermitteln Ihre E-Mail-Adresse und Ihre interne Benutzerkennung. Ihre Zahlungsdaten (z. B. Karten- oder Kontodaten) geben Sie direkt beim Zahlungsdienstleister ein; wir erhalten und speichern sie nicht. In Ihrem Konto speichern wir die Kennung Ihres Kunden und Ihres Abonnements, den Status (z. B. aktiv oder gekündigt) und das Ende des bezahlten Zeitraums. Diese Angaben erhalten wir vom Zahlungsdienstleister, der uns Statusänderungen automatisch meldet; die Meldungen werden anhand einer Signatur auf Echtheit geprüft. Zahlungsart und Kündigung verwalten Sie im Kundenportal des Zahlungsdienstleisters. Bitte beachten Sie auch dessen Datenschutzhinweise.
 
 Zweck ist die Abwicklung des Abonnements und die Freischaltung der Premium-Funktionen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Die Abonnementdaten werden bis zur Löschung Ihres Kontos gespeichert, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen (Art. 6 Abs. 1 lit. c DSGVO).
 
@@ -135,7 +135,7 @@ Eine Übermittlung in Länder außerhalb der EU bzw. des EWR durch uns findet, a
 
 Bei den KI-Funktionen (Optimierung des Profiltextes und automatische Vakanzensuche, Abschnitt 8) kann der Anbieter die übermittelten Angaben außerhalb der EU bzw. des EWR verarbeiten: [Verarbeitungsort des KI-Anbieters sowie Angemessenheitsbeschluss oder geeignete Garantien nach Art. 45 bzw. Art. 46 DSGVO]. Eine solche Übermittlung ist nur zulässig, wenn ein Angemessenheitsbeschluss der Europäischen Kommission vorliegt oder geeignete Garantien bestehen, etwa Standarddatenschutzklauseln. Eine Kopie der Garantien erhalten Sie auf Anfrage an die oben genannte Kontaktadresse.
 
-Auch der Zahlungsdienstleister (Abschnitt 8) kann Daten außerhalb der EU bzw. des EWR verarbeiten: [Verarbeitungsort des Zahlungsdienstleisters sowie Angemessenheitsbeschluss oder geeignete Garantien nach Art. 45 bzw. Art. 46 DSGVO]. Auch hier gilt: Eine Übermittlung ist nur mit Angemessenheitsbeschluss oder geeigneten Garantien zulässig, und eine Kopie der Garantien erhalten Sie auf Anfrage.
+Auch der Zahlungsdienstleister (Abschnitt 8) kann Daten außerhalb der EU bzw. des EWR, insbesondere in den USA, verarbeiten. Der Zahlungsdienstleister stützt Übermittlungen nach eigenen Angaben auf den Angemessenheitsbeschluss zum EU-U.S. Data Privacy Framework (Art. 45 DSGVO, soweit die Empfänger zertifiziert sind) sowie auf Standardvertragsklauseln der Europäischen Kommission (Art. 46 DSGVO). Auch hier gilt: Eine Übermittlung ist nur mit Angemessenheitsbeschluss oder geeigneten Garantien zulässig, und eine Kopie der Garantien erhalten Sie auf Anfrage.
 
 ## 13. Speicherdauer
 
@@ -184,7 +184,7 @@ Hinweise zum Entwurf (vor Veröffentlichung entfernen; dieser Kommentar wird nie
 - Am Code geprüft: Registrierung (Name, E-Mail, Passwort-Hash, Sprache), Sessions in der Datenbank mit IP und User-Agent, Cookie-Name aus config/session.php (Standard: Slug des APP_NAME + "-session"; bei gesetztem SESSION_COOKIE anpassen), Gültigkeit 120 Minuten (SESSION_LIFETIME), Remember-Cookie über die Anmelden-Checkbox, Limiter-Zähler je IP/E-Mail, Zwischenspeicher für Stellendetails 6 Stunden (JobsucheApiClient::DETAILS_CACHE_SECONDS, Schlüssel nur mit Referenznummer), kein Suchverlauf je Benutzer, OAuth-Tokens 1 Stunde / Refresh 30 Tage (AppServiceProvider), Bereinigung stündlich/täglich (routes/console.php), Audit-Felder (McpAuditLogger::FIELDS), Aufbewahrung MCP_AUDIT_LOG_DAYS (Standard 90; bei geänderter Einstellung Text anpassen), Schriften selbst gehostet (public/build/assets/*.woff2, FrontendHygieneTest), Kontolöschung nicht implementiert (ROADMAP.md).
 - Gespeicherte Stellenangebote am Code geprüft: Tabelle saved_jobs (user_id mit Kaskade beim Löschen des Kontos, refnr, title, employer, location, note, Zeitstempel; eindeutig je Benutzer und Referenznummer), Auszug wird serverseitig über die BA-Details geholt, höchstens 100 je Benutzer (SavedJobController), Vermerk wird nirgends protokolliert (Review SJ-1), MCP-Tool save_job (MCP-SAVE-1) speichert auf Anweisung des KI-Dienstes für den Token-Benutzer (Auszug serverseitig, Limit 100 und 30 Schreibaufrufe je Minute und Benutzer), kein MCP-Tool zum Abrufen, Ändern oder Löschen; Audit-Log ohne Referenznummer und Vermerk. Abschnitte 6 und 7 entsprechend angepasst, rechtlich prüfen. UNGEPRÜFT: Datensicherungen (Backups) des Hosters und deren Aufbewahrung; Hinweis auf Art. 9 DSGVO (besondere Kategorien) im Vermerk rechtlich prüfen.
 - Nicht aufgenommen (zu prüfen): Der Service Worker der PWA speichert nur öffentliche Build-Dateien und Symbole im Browser (kein Personenbezug); ob ein Hinweis in Abschnitt 8 gewünscht ist, ist offen.
-- Nicht geprüft: tatsächlicher Mail-Anbieter, Hoster, Logfile-Frist, Verarbeitung in Drittländern durch Hoster/Mail-Anbieter, Datenschutzhinweise der Bundesagentur für Arbeit (ggf. verlinken).
+- Angaben des Betreibers (13.11.2026): Hoster netcup GmbH (Karlsruhe), Logfile-Frist 7 Tage, E-Mail-Versand über Apple iCloud+ (smtp.mail.me.com). UNGEPRÜFT: AV-Verträge mit netcup und Apple (Art. 28) tatsächlich abgeschlossen bzw. Bedingungen akzeptiert; Anschrift Stripe Payments Europe, Limited (Anschrift nicht belegt, aus Stripe-Dokumenten nicht ersichtlich, im Text bewusst weggelassen); Angaben zu Stripe-Transfers stammen aus stripe.com/de/privacy, Zertifizierung des konkreten Empfängers prüfen; Verarbeitung in Drittländern durch Hoster/Apple; MiniMax (Anbieter, Verarbeitungsort, Garantien) bleibt als Platzhalter offen. Nicht geprüft: Datenschutzhinweise der Bundesagentur für Arbeit (ggf. verlinken).
 - Allgemeine Anwendungslogs (laravel.log) können bei Fehlern technische Angaben enthalten; Aufbewahrung (LOG_DAILY_DAYS bzw. Standard) und Inhalt vor Veröffentlichung gegen die Produktionskonfiguration prüfen.
 - Ein Verzeichnis der Verarbeitungstätigkeiten (Art. 30 DSGVO) und ggf. ein Datenschutzbeauftragter sind nicht Teil dieses Textes (nicht geprüft).
 - Registrierung (REG-CONSENT-1): Pflicht-Checkbox "Kenntnisnahme" mit Speicherung von consented_at und consent_version (config/legal.php, bei jeder inhaltlichen Änderung zusammen mit "Stand" erhöhen). Rechtlich ungeprüft: Kenntnisnahme ist keine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO; Rechtsgrundlage lit. f für den Nachweis und Speicherdauer (wie das Konto) prüfen.
