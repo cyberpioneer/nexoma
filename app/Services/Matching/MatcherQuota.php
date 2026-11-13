@@ -3,6 +3,7 @@
 namespace App\Services\Matching;
 
 use App\Models\User;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -29,27 +30,32 @@ class MatcherQuota
 
         $key = 'matcher:runs:'.$user->id;
 
-        return (bool) Cache::lock($key.':lock', 10)->block(5, function () use ($key, $max): bool {
-            $now = now();
-            $windowStart = $now->copy()->subMinutes(self::WINDOW_MINUTES)->getTimestamp();
+        try {
+            return (bool) Cache::lock($key.':lock', 10)->block(2, function () use ($key, $max): bool {
+                $now = now();
+                $windowStart = $now->copy()->subMinutes(self::WINDOW_MINUTES)->getTimestamp();
 
-            /** @var list<int> $runs */
-            $runs = array_values(array_filter(
-                (array) Cache::get($key, []),
-                fn (mixed $timestamp): bool => is_int($timestamp) && $timestamp > $windowStart,
-            ));
+                /** @var list<int> $runs */
+                $runs = array_values(array_filter(
+                    (array) Cache::get($key, []),
+                    fn (mixed $timestamp): bool => is_int($timestamp) && $timestamp > $windowStart,
+                ));
 
-            $minimumGap = intdiv(self::WINDOW_MINUTES * 60, $max);
-            $last = $runs === [] ? null : max($runs);
+                $minimumGap = intdiv(self::WINDOW_MINUTES * 60, $max);
+                $last = $runs === [] ? null : max($runs);
 
-            if (count($runs) >= $max || ($last !== null && $now->getTimestamp() - $last < $minimumGap)) {
-                return false;
-            }
+                if (count($runs) >= $max || ($last !== null && $now->getTimestamp() - $last < $minimumGap)) {
+                    return false;
+                }
 
-            $runs[] = $now->getTimestamp();
-            Cache::put($key, $runs, $now->copy()->addMinutes(self::WINDOW_MINUTES));
+                $runs[] = $now->getTimestamp();
+                Cache::put($key, $runs, $now->copy()->addMinutes(self::WINDOW_MINUTES));
 
-            return true;
-        });
+                return true;
+            });
+        } catch (LockTimeoutException) {
+            // Fail closed: ohne Sperre kein Lauf (und keine Stoerung der uebrigen Benutzer).
+            return false;
+        }
     }
 }

@@ -8,6 +8,7 @@ use App\Models\SavedJob;
 use App\Models\SeenJobReference;
 use App\Models\User;
 use App\Services\Matching\JobMatcher;
+use App\Services\Matching\MatcherQuota;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Support\Carbon;
@@ -531,4 +532,19 @@ test('a manual single start ignores the weekly limit', function () {
     $this->artisan('jobs:match', ['--user' => $user->id])->assertSuccessful();
 
     expect(Queue::pushed(MatchJobsForUserJob::class))->toHaveCount(2);
+});
+
+test('a blocked quota lock fails closed for that user without affecting the others', function () {
+    config()->set('matcher.max_runs_per_week', 2);
+    $blocked = matcherUser();
+    $free = matcherUser();
+    $lock = Cache::lock('matcher:runs:'.$blocked->id.':lock', 30);
+    expect($lock->get())->toBeTrue();
+
+    $quota = app(MatcherQuota::class);
+
+    expect($quota->reserve($blocked))->toBeFalse()
+        ->and($quota->reserve($free))->toBeTrue();
+
+    $lock->release();
 });
