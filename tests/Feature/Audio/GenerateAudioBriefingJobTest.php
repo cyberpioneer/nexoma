@@ -124,6 +124,21 @@ test('at most ten jobs are briefed per run and the rest follows in the next brie
         ->and(app(BriefingGenerator::class)->generate($user))->toBeNull();
 });
 
+test('the newest unbriefed jobs are briefed first and the oldest wait for the next briefing', function () {
+    $user = briefingUser();
+    $jobs = collect(range(1, 12))->map(fn () => matcherJob($user));
+    BriefingSpeechAgent::fake(['Briefing mit den neuesten Stellen.']);
+    fakeBriefingTts();
+
+    app(BriefingGenerator::class)->generate($user);
+
+    $briefedIds = $user->savedJobs()->whereNotNull('briefed_at')->pluck('id')->sort()->values()->all();
+    $waitingIds = $user->savedJobs()->whereNull('briefed_at')->pluck('id')->sort()->values()->all();
+
+    expect($briefedIds)->toBe($jobs->skip(2)->pluck('id')->sort()->values()->all())
+        ->and($waitingIds)->toBe($jobs->take(2)->pluck('id')->sort()->values()->all());
+});
+
 test('without new jobs nothing is generated and no model is called', function () {
     $user = briefingUser();
     BriefingSpeechAgent::fake()->preventStrayPrompts();

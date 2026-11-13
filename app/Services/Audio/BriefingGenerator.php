@@ -14,7 +14,7 @@ use Throwable;
 
 /**
  * Erzeugt das Audio-Briefing eines Benutzers aus den noch nicht erwaehnten Matcher-Vakanzen (`ai_matcher`,
- * `briefed_at IS NULL`). Idempotent ueber `content_hash` (Sprache + Vakanz-IDs): Ein fertiges Briefing wird nie
+ * `briefed_at IS NULL`), die neuesten zuerst (hoechstens {@see JobMatcher::MAX_NEW_JOBS} je Briefing). Idempotent ueber `content_hash` (Sprache + Vakanz-IDs): Ein fertiges Briefing wird nie
  * doppelt erzeugt, ein fehlgeschlagenes beim naechsten Lauf mit demselben Text erneut vertont.
  * `briefed_at` wird erst gesetzt, wenn die Audiodatei fertig ist.
  */
@@ -39,7 +39,7 @@ class BriefingGenerator
         $jobs = $user->savedJobs()
             ->where('source', SavedJob::SOURCE_AI_MATCHER)
             ->whereNull('briefed_at')
-            ->orderBy('id')
+            ->orderByDesc('id')
             ->limit(JobMatcher::MAX_NEW_JOBS)
             ->get();
 
