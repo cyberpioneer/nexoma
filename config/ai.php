@@ -24,8 +24,8 @@ return [
             'models' => [
                 'text' => [
                     'default' => env('IONOS_AI_MODEL_DEFAULT', 'mistralai/Mistral-Small-24B-Instruct'),
-                    'cheapest' => env('IONOS_AI_MODEL_FAST'),
-                    'smartest' => env('IONOS_AI_MODEL_SMART'),
+                    'cheapest' => env('IONOS_AI_MODEL_FAST', env('IONOS_AI_MODEL_DEFAULT', 'mistralai/Mistral-Small-24B-Instruct')),
+                    'smartest' => env('IONOS_AI_MODEL_SMART', env('IONOS_AI_MODEL_DEFAULT', 'mistralai/Mistral-Small-24B-Instruct')),
                 ],
             ],
         ],
