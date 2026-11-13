@@ -44,6 +44,6 @@ Schedule::command('jobs:match')
     ->when(function (): bool {
         $interval = (int) config('matcher.interval_minutes');
 
-        return $interval > 0 && ((now()->hour * 60 + now()->minute) % $interval) === 0;
+        return (bool) config('matcher.enabled') && $interval > 0 && ((now()->hour * 60 + now()->minute) % $interval) === 0;
     })
     ->withoutOverlapping();
