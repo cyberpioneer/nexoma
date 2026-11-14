@@ -65,10 +65,8 @@ function label(invoice: InvoiceSummary): string {
                 class="flex flex-col gap-4"
             >
                 <Card
-                    v-for="invoice in invoices"
-                    :key="
-                        invoice.number ?? invoice.viewUrl ?? invoice.date ?? ''
-                    "
+                    v-for="(invoice, index) in invoices"
+                    :key="`${index}-${invoice.number ?? ''}`"
                     as="li"
                     class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
                 >
