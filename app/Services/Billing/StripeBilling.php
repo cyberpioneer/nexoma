@@ -18,6 +18,12 @@ use Stripe\StripeClient;
  */
 class StripeBilling
 {
+    /** Anzahl der Rechnungen, die der Rechnungsliste hoechstens abgerufen werden. */
+    public const INVOICE_LIMIT = 24;
+
+    /** Rechnungsstatus, die angezeigt werden (Entwuerfe nicht). */
+    public const INVOICE_STATUSES = ['paid', 'open', 'void', 'uncollectible'];
+
     /** Subscription-Events, die einen Abgleich des Status ausloesen. */
     public const SUBSCRIPTION_EVENTS = [
         'customer.subscription.created',
@@ -76,6 +82,50 @@ class StripeBilling
         ]);
 
         return $this->urlOf($session->url);
+    }
+
+    /**
+     * Liefert die Rechnungen des Stripe-Kunden dieses Benutzers (neueste zuerst, nur Whitelist-Felder). Entwuerfe
+     * bleiben verborgen. Die Kunden-ID stammt ausschliesslich aus der Datenbank, nie aus einer Anfrage.
+     *
+     * @return list<array{number: string|null, date: string|null, total: int, currency: string, status: string, viewUrl: string|null, pdfUrl: string|null}>
+     */
+    public function invoicesFor(User $user): array
+    {
+        if ($user->stripe_customer_id === null) {
+            return [];
+        }
+
+        /** @var array<string, mixed> $response */
+        $response = $this->stripe()->invoices->all([
+            'customer' => $user->stripe_customer_id,
+            'limit' => self::INVOICE_LIMIT,
+        ])->toArray();
+
+        $invoices = [];
+
+        foreach (is_array($response['data'] ?? null) ? $response['data'] : [] as $invoice) {
+            $status = is_array($invoice) ? ($invoice['status'] ?? null) : null;
+            $currency = is_string($invoice['currency'] ?? null) ? strtoupper($invoice['currency']) : '';
+
+            if (! in_array($status, self::INVOICE_STATUSES, true) || preg_match('/\A[A-Z]{3}\z/', $currency) !== 1) {
+                continue;
+            }
+
+            $created = $invoice['created'] ?? null;
+
+            $invoices[] = [
+                'number' => is_string($invoice['number'] ?? null) ? mb_substr($invoice['number'], 0, 64) : null,
+                'date' => is_int($created) ? now()->setTimestamp($created)->format('Y-m-d') : null,
+                'total' => is_int($invoice['total'] ?? null) ? $invoice['total'] : 0,
+                'currency' => $currency,
+                'status' => $status,
+                'viewUrl' => $this->stripeUrlOrNull($invoice['hosted_invoice_url'] ?? null),
+                'pdfUrl' => $this->stripeUrlOrNull($invoice['invoice_pdf'] ?? null),
+            ];
+        }
+
+        return $invoices;
     }
 
     /**
@@ -199,6 +249,18 @@ class StripeBilling
         $latest = max(array_map(fn (mixed $value): int => is_int($value) ? $value : 0, $timestamps));
 
         return $latest > 0 ? now()->setTimestamp($latest) : null;
+    }
+
+    /** Nur https-Links auf stripe.com (Rechnungsseite, PDF); alles andere wird verworfen. */
+    private function stripeUrlOrNull(mixed $url): ?string
+    {
+        if (! is_string($url) || ! str_starts_with($url, 'https://')) {
+            return null;
+        }
+
+        $host = parse_url($url, PHP_URL_HOST);
+
+        return is_string($host) && ($host === 'stripe.com' || str_ends_with($host, '.stripe.com')) ? $url : null;
     }
 
     private function urlOf(mixed $url): string
