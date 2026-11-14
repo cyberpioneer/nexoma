@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Providers\AppServiceProvider;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\Support\FakeStripeHttpClient;
 
 beforeEach(function () {
@@ -140,6 +141,25 @@ test('the return pages only show a message and never activate the subscription',
     $user->forceFill(['stripe_subscription_status' => 'active', 'stripe_current_period_end' => now()->addMonth()])->save();
 
     $this->actingAs($user)->get(route('billing.success'))->assertSessionHas('status', __('ui.billing.success_active'));
+});
+
+test('after the return from stripe the upgrade page asks the client to wait for the webhook', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('billing.success'))->assertSessionHas('billing_pending', true);
+    $this->actingAs($user)->followingRedirects()->get(route('billing.success'))
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Billing/Upgrade')
+            ->where('isSubscribed', false)
+            ->where('awaitingConfirmation', true)
+            ->etc());
+
+    $this->actingAs($user)->get(route('billing.upgrade'))
+        ->assertInertia(fn (Assert $page) => $page->where('awaitingConfirmation', false)->etc());
+
+    $user->forceFill(['stripe_subscription_status' => 'active', 'stripe_current_period_end' => now()->addMonth()])->save();
+
+    $this->actingAs($user)->get(route('billing.success'))->assertSessionHas('billing_pending', false);
 });
 
 test('billing routes require a verified login', function () {

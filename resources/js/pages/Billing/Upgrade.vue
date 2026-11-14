@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Form, Head, usePage } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { Form, Head, router, usePage } from '@inertiajs/vue3';
+import { onBeforeUnmount, onMounted, watch } from 'vue';
 import { checkout, portal } from '@/routes/billing';
 import { show as profileShow } from '@/routes/profile';
 import Button from '@/components/Button.vue';
@@ -12,17 +12,67 @@ import { useTranslate } from '@/lib/translate';
 
 defineOptions({ layout: AppLayout });
 
-defineProps<{ isSubscribed: boolean; canManage: boolean }>();
+const props = defineProps<{
+    isSubscribed: boolean;
+    canManage: boolean;
+    awaitingConfirmation: boolean;
+}>();
 
 const { t } = useTranslate();
 const page = usePage();
+
+/** Wie oft und in welchem Abstand nach der Rückkehr von Stripe nachgefragt wird, bis der Webhook angekommen ist. */
+const POLL_INTERVAL_MS = 2000;
+const POLL_MAX_ATTEMPTS = 15;
+
+let pollTimer: ReturnType<typeof setInterval> | null = null;
+
+function stopPolling(): void {
+    if (pollTimer !== null) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+    }
+}
+
+/** Fragt nur den Status ab (keine Freischaltung durch den Client): Der Webhook setzt den Status serverseitig. */
+function startPolling(): void {
+    let attempts = 0;
+
+    pollTimer = setInterval(() => {
+        attempts += 1;
+
+        if (props.isSubscribed || attempts > POLL_MAX_ATTEMPTS) {
+            stopPolling();
+
+            return;
+        }
+
+        router.reload({ only: ['isSubscribed', 'canManage'] });
+    }, POLL_INTERVAL_MS);
+}
+
+watch(
+    () => props.isSubscribed,
+    (subscribed) => {
+        if (subscribed) {
+            stopPolling();
+            showToast(t('billing.success_active'), 'success');
+        }
+    },
+);
 
 /** Rückkehr von Stripe (Erfolg/Abbruch): die Meldung des Servers einmalig als Toast zeigen. */
 onMounted(() => {
     if (page.props.status) {
         showToast(page.props.status, 'success');
     }
+
+    if (props.awaitingConfirmation && !props.isSubscribed) {
+        startPolling();
+    }
 });
+
+onBeforeUnmount(stopPolling);
 
 /** Fehler des Servers (z. B. Zahlungsabwicklung nicht verfügbar) als Toast zeigen. */
 function notifyFailure(errors: Record<string, string>): void {
