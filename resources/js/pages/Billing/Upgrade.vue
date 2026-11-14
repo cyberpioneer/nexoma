@@ -21,34 +21,34 @@ const props = defineProps<{
 const { t } = useTranslate();
 const page = usePage();
 
-/** Wie oft und in welchem Abstand nach der Rückkehr von Stripe nachgefragt wird, bis der Webhook angekommen ist. */
-const POLL_INTERVAL_MS = 2000;
-const POLL_MAX_ATTEMPTS = 15;
+/**
+ * Wartezeiten (ms) zwischen den Nachfragen nach der Rückkehr von Stripe, bis der Webhook angekommen ist. Insgesamt
+ * 6 Nachfragen in 30 s: zusammen mit der Rückkehr- und der Upgrade-Anfrage bleibt das unter dem Limit der
+ * Billing-Routen (10 pro Minute und Benutzer).
+ */
+const POLL_DELAYS_MS = [3000, 3000, 4000, 5000, 7000, 8000];
 
-let pollTimer: ReturnType<typeof setInterval> | null = null;
+let pollTimer: ReturnType<typeof setTimeout> | null = null;
 
 function stopPolling(): void {
     if (pollTimer !== null) {
-        clearInterval(pollTimer);
+        clearTimeout(pollTimer);
         pollTimer = null;
     }
 }
 
 /** Fragt nur den Status ab (keine Freischaltung durch den Client): Der Webhook setzt den Status serverseitig. */
-function startPolling(): void {
-    let attempts = 0;
+function schedulePoll(attempt: number): void {
+    if (attempt >= POLL_DELAYS_MS.length || props.isSubscribed) {
+        return;
+    }
 
-    pollTimer = setInterval(() => {
-        attempts += 1;
-
-        if (props.isSubscribed || attempts > POLL_MAX_ATTEMPTS) {
-            stopPolling();
-
-            return;
-        }
-
-        router.reload({ only: ['isSubscribed', 'canManage'] });
-    }, POLL_INTERVAL_MS);
+    pollTimer = setTimeout(() => {
+        router.reload({
+            only: ['isSubscribed', 'canManage'],
+            onSuccess: () => schedulePoll(attempt + 1),
+        });
+    }, POLL_DELAYS_MS[attempt]);
 }
 
 watch(
@@ -68,7 +68,7 @@ onMounted(() => {
     }
 
     if (props.awaitingConfirmation && !props.isSubscribed) {
-        startPolling();
+        schedulePoll(0);
     }
 });
 
