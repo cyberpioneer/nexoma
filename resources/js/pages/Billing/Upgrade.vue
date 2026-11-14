@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Form, Head, usePage } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { Form, Head, router, usePage } from '@inertiajs/vue3';
+import { onBeforeUnmount, onMounted, watch } from 'vue';
 import { checkout, portal } from '@/routes/billing';
 import { show as profileShow } from '@/routes/profile';
 import Button from '@/components/Button.vue';
@@ -12,17 +12,67 @@ import { useTranslate } from '@/lib/translate';
 
 defineOptions({ layout: AppLayout });
 
-defineProps<{ isSubscribed: boolean; canManage: boolean }>();
+const props = defineProps<{
+    isSubscribed: boolean;
+    canManage: boolean;
+    awaitingConfirmation: boolean;
+}>();
 
 const { t } = useTranslate();
 const page = usePage();
+
+/**
+ * Wartezeiten (ms) zwischen den Nachfragen nach der Rückkehr von Stripe, bis der Webhook angekommen ist. Insgesamt
+ * 6 Nachfragen in 30 s: zusammen mit der Rückkehr- und der Upgrade-Anfrage bleibt das unter dem Limit der
+ * Billing-Routen (10 pro Minute und Benutzer).
+ */
+const POLL_DELAYS_MS = [3000, 3000, 4000, 5000, 7000, 8000];
+
+let pollTimer: ReturnType<typeof setTimeout> | null = null;
+
+function stopPolling(): void {
+    if (pollTimer !== null) {
+        clearTimeout(pollTimer);
+        pollTimer = null;
+    }
+}
+
+/** Fragt nur den Status ab (keine Freischaltung durch den Client): Der Webhook setzt den Status serverseitig. */
+function schedulePoll(attempt: number): void {
+    if (attempt >= POLL_DELAYS_MS.length || props.isSubscribed) {
+        return;
+    }
+
+    pollTimer = setTimeout(() => {
+        router.reload({
+            only: ['isSubscribed', 'canManage'],
+            onSuccess: () => schedulePoll(attempt + 1),
+        });
+    }, POLL_DELAYS_MS[attempt]);
+}
+
+watch(
+    () => props.isSubscribed,
+    (subscribed) => {
+        if (subscribed) {
+            stopPolling();
+            showToast(t('billing.success_active'), 'success');
+        }
+    },
+);
 
 /** Rückkehr von Stripe (Erfolg/Abbruch): die Meldung des Servers einmalig als Toast zeigen. */
 onMounted(() => {
     if (page.props.status) {
         showToast(page.props.status, 'success');
     }
+
+    if (props.awaitingConfirmation && !props.isSubscribed) {
+        schedulePoll(0);
+    }
 });
+
+onBeforeUnmount(stopPolling);
 
 /** Fehler des Servers (z. B. Zahlungsabwicklung nicht verfügbar) als Toast zeigen. */
 function notifyFailure(errors: Record<string, string>): void {
