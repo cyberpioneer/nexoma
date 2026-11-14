@@ -6,6 +6,7 @@ use App\Http\Controllers\CareerEntryController;
 use App\Http\Controllers\CareerProfileController;
 use App\Http\Controllers\ConnectedAppController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\LocaleController;
@@ -55,6 +56,9 @@ Route::middleware(['auth', 'verified', EncryptHistory::class])->group(function (
     Route::post('/billing/portal', [BillingController::class, 'portal'])->middleware('throttle:billing')->name('billing.portal');
     Route::get('/billing/success', [BillingController::class, 'success'])->middleware('throttle:billing')->name('billing.success');
     Route::get('/billing/cancel', [BillingController::class, 'cancel'])->middleware('throttle:billing')->name('billing.cancel');
+
+    // Rechnungsliste (Rechnungen liegen bei Stripe). Bewusst ohne `subscribed`: Auch nach einer Kuendigung bleiben die Rechnungen abrufbar.
+    Route::get('/invoices', [InvoiceController::class, 'index'])->middleware('throttle:billing')->name('invoices.index');
 
     // Premium (Release 1.2.0): Profil und Werdegang. Reihenfolge der Middleware: auth, verified (Gruppe), dann subscribed.
     Route::middleware(['subscribed', 'throttle:career-profile'])->group(function () {

@@ -135,6 +135,18 @@
   - **Review-Schwerpunkte (`security-reviewer`):** Abschließende Prüfung von `/saved-briefings` auf Autorisierung, Pagination/Datenbegrenzung und Einhaltung aller Regeln aus `AGENTS.md` und `PROJECT.md`.
 ---
 
+## Phase 6: Rechnungen (Nachtrag zu 1.2.0)
+
+- [x] **TASK-013 (#33): Rechnungsliste unter `/invoices` (Rechnungen von Stripe)**
+  - **Ziel:** Abonnenten sehen ihre Rechnungen und können sie herunterladen. Entscheidung (Option A): Stripe erstellt Rechnung und PDF, Nexoma zeigt sie nur an. Es werden keine Rechnungen erzeugt oder gespeichert. Rechtlicher Rahmen: Kleinunternehmer (§ 19 UStG, Hinweis in der Stripe-Fußzeile), nur Privatkunden, Kleinbetragsrechnung (§ 33 UStDV); keine Steuerberatung.
+  - **Akzeptanzkriterien:**
+    - AK-1: `GET /invoices` (Name `invoices.index`, Auth und verifizierte E-Mail, Limiter `billing`, bewusst ohne `subscribed`, damit Rechnungen nach einer Kündigung abrufbar bleiben) listet die Rechnungen des eigenen Stripe-Kunden (neueste zuerst, höchstens 24, ohne Entwürfe).
+    - AK-2: Ausgegeben werden nur Whitelist-Felder (Nummer, Datum, Betrag, Währung, Status, Link zur Rechnungsseite und zur PDF). Links nur `https` auf `stripe.com`; keine Kunden-ID, E-Mail oder Rechnungs-ID im Seitenquelltext. Die Kunden-ID stammt aus der Datenbank, nie aus der Anfrage.
+    - AK-3: Ohne Stripe-Kunden leere Liste ohne Stripe-Aufruf; bei Stripe-Fehler Hinweis „nicht abrufbar“ und Log nur mit der Exception-Klasse.
+    - AK-4: Menüpunkt „Rechnungen“, alle Texte in 6 Sprachen, Pest-Tests, Pint, PHPStan, `types:check`, Build grün.
+  - **Voraussetzungen außerhalb des Codes (Betreiber):** In Stripe Rechnungsdaten pflegen (Anschrift, Steuernummer unter „Steuer-ID“, Fußzeile mit dem Hinweis nach § 19 UStG, bereits gesetzt); dem eingeschränkten Schlüssel das Recht **Invoices: Lesen** geben (neuer Schlüssel, Rechte lassen sich nachträglich nicht ändern); danach `STRIPE_SECRET` austauschen. Ohne das Recht zeigt die Seite „nicht abrufbar“.
+  - **Review-Schwerpunkte (`security-reviewer`):** Mandantentrennung (nur eigener Kunde), Whitelist/URL-Prüfung, kein Leck von Stripe-Kennungen, Fehlerprotokoll ohne Inhalt, Route ohne Paywall bewusst.
+
 ## Go-Live-Checkliste Release 1.2.0
 
 Stand: 2026-11-13. Vorgaben des Betreibers: Piper und Betriebssystem des Servers entsprechen der lokalen Umgebung; die Produktions-`.env` ist angepasst; Cloudflare-Tunnel ist nur für lokale Tests relevant; eine fehlgeschlagene Zahlung führt dazu, dass der Benutzer Standard-Benutzer bleibt (kein Premium), ein Protokoll dafür folgt erst in einer späteren Version (saubere Pipeline). Haken `[x]` = vom Betreiber bestätigt oder im Repository belegt; `[ ]` = offen.
