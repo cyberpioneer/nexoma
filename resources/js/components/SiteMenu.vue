@@ -9,6 +9,7 @@ import { useTranslate } from '@/lib/translate';
 import { dashboard } from '@/routes';
 import { upgrade } from '@/routes/billing';
 import { index as connectedAppsIndex } from '@/routes/connected-apps';
+import { index as invoicesIndex } from '@/routes/invoices';
 import { index as jobsIndex } from '@/routes/jobs';
 import { index as savedJobsIndex } from '@/routes/saved-jobs';
 
@@ -34,6 +35,11 @@ const links = computed(() => [
         prefix: connectedAppsIndex().url,
     },
     { label: t('billing.nav'), href: upgrade(), prefix: upgrade().url },
+    {
+        label: t('invoices.nav'),
+        href: invoicesIndex(),
+        prefix: invoicesIndex().url,
+    },
 ]);
 
 function open(): void {
