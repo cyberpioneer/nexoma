@@ -32,6 +32,7 @@ class BillingController extends Controller
         return Inertia::render('Billing/Upgrade', [
             'isSubscribed' => $user->hasActiveSubscription(),
             'canManage' => $user->stripe_customer_id !== null,
+            'awaitingConfirmation' => (bool) $request->session()->get('billing_pending', false),
         ]);
     }
 
@@ -73,11 +74,11 @@ class BillingController extends Controller
      */
     public function success(Request $request): RedirectResponse
     {
-        $message = $this->user($request)->hasActiveSubscription()
-            ? __('ui.billing.success_active')
-            : __('ui.billing.success_pending');
+        $isActive = $this->user($request)->hasActiveSubscription();
+        $message = $isActive ? __('ui.billing.success_active') : __('ui.billing.success_pending');
 
-        return redirect()->route('billing.upgrade')->with('status', $message);
+        // Der Webhook trifft oft erst nach der Rueckkehr ein: die Seite fragt dann kurz nach (nur lesend).
+        return redirect()->route('billing.upgrade')->with('status', $message)->with('billing_pending', ! $isActive);
     }
 
     /**

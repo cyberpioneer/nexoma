@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Providers\AppServiceProvider;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\Support\FakeStripeHttpClient;
 
 beforeEach(function () {
@@ -140,6 +141,36 @@ test('the return pages only show a message and never activate the subscription',
     $user->forceFill(['stripe_subscription_status' => 'active', 'stripe_current_period_end' => now()->addMonth()])->save();
 
     $this->actingAs($user)->get(route('billing.success'))->assertSessionHas('status', __('ui.billing.success_active'));
+});
+
+test('after the return from stripe the upgrade page asks the client to wait for the webhook', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('billing.success'))->assertSessionHas('billing_pending', true);
+    $this->actingAs($user)->followingRedirects()->get(route('billing.success'))
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Billing/Upgrade')
+            ->where('isSubscribed', false)
+            ->where('awaitingConfirmation', true)
+            ->etc());
+
+    $this->actingAs($user)->get(route('billing.upgrade'))
+        ->assertInertia(fn (Assert $page) => $page->where('awaitingConfirmation', false)->etc());
+
+    $user->forceFill(['stripe_subscription_status' => 'active', 'stripe_current_period_end' => now()->addMonth()])->save();
+
+    $this->actingAs($user)->get(route('billing.success'))->assertSessionHas('billing_pending', false);
+});
+
+test('the polling of the upgrade page stays below the rate limit of the billing routes', function () {
+    preg_match('/POLL_DELAYS_MS = \[([^\]]+)\]/', (string) file_get_contents(resource_path('js/pages/Billing/Upgrade.vue')), $matches);
+    $delays = array_map('intval', explode(',', $matches[1] ?? ''));
+
+    // Rueckkehr (success) und Weiterleitung (upgrade) zaehlen ebenfalls gegen das Limit.
+    expect($delays)->not->toBeEmpty()
+        ->and(count($delays) + 2)->toBeLessThan(AppServiceProvider::BILLING_ATTEMPTS_PER_MINUTE)
+        ->and(array_sum($delays))->toBeGreaterThanOrEqual(30000)
+        ->and(min($delays))->toBeGreaterThanOrEqual(3000);
 });
 
 test('billing routes require a verified login', function () {
